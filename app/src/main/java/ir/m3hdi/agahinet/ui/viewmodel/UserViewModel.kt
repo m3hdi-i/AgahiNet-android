@@ -1,13 +1,13 @@
-package ir.m3hdi.iagahi.ui.notifications
+package ir.m3hdi.agahinet.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class UserViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = "This is user Fragment"
     }
     val text: LiveData<String> = _text
 }

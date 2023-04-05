@@ -7,19 +7,27 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="ir.m3hdi.iagahi.ui.home.HomeFragment"
+        android:name="ir.m3hdi.agahinet.ui.fragment.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="ir.m3hdi.iagahi.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_new_ad"
+        android:name="ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment"
+        android:label="@string/title_new_ad"
+        tools:layout="@layout/fragment_need_auth" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="ir.m3hdi.iagahi.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_chat"
+        android:name="ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment"
+        android:label="@string/title_chat"
+        tools:layout="@layout/fragment_need_auth" />
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_need_auth" />
+
+
 </navigation>

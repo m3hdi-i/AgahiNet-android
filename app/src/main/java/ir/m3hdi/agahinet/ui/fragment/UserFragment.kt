@@ -1,4 +1,4 @@
-package ir.m3hdi.iagahi.ui.notifications
+package ir.m3hdi.agahinet.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import ir.m3hdi.iagahi.databinding.FragmentNotificationsBinding
+import ir.m3hdi.agahinet.databinding.FragmentUserBinding
+import ir.m3hdi.agahinet.ui.viewmodel.UserViewModel
 
-class NotificationsFragment : Fragment() {
+class UserFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentUserBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -23,9 +24,9 @@ class NotificationsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+            ViewModelProvider(this).get(UserViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentUserBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textNotifications

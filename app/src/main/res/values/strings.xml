@@ -1,6 +1,15 @@
 <resources>
-    <string name="app_name">iAgahi</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">AgahiNet</string>
+    <string name="title_home">خانه</string>
+    <string name="title_new_ad">آگهی جدید</string>
+    <string name="title_chat">چت</string>
+    <string name="title_user">کاربری</string>
+    <string name="have_to_signin">برای استفاده از این بخش باید وارد حساب کاربری خود شوید</string>
+    <string name="signin">ورود</string>
+    <string name="signup">ثبت نام</string>
+    <string name="email_field">ایمیل</string>
+    <string name="password_filed">رمز عبور</string>
+    <string name="doesnt_signup_yet">هنوز ثبت نام نکرده اید؟</string>
+    <string name="goto_auth">وارد شدن به حساب کاربری</string>
+    <string name="your_name">نام شما</string>
 </resources>

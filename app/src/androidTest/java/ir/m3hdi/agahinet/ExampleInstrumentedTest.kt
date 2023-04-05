@@ -1,4 +1,4 @@
-package ir.m3hdi.iagahi
+package ir.m3hdi.agahinet
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("ir.m3hdi.iagahi", appContext.packageName)
+        assertEquals("ir.m3hdi.agahinet", appContext.packageName)
     }
 }
