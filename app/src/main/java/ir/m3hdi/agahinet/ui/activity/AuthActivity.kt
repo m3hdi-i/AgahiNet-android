@@ -1,53 +1,37 @@
 package ir.m3hdi.agahinet.ui.activity
 
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.transition.TransitionManager
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.transition.MaterialContainerTransform
+import dagger.hilt.android.AndroidEntryPoint
+import ir.m3hdi.agahinet.data.model.SigninState
+import ir.m3hdi.agahinet.data.model.SignupState
 import ir.m3hdi.agahinet.databinding.ActivityAuthBinding
+import ir.m3hdi.agahinet.ui.viewmodel.AuthViewModel
 import ir.m3hdi.agahinet.util.AppUtils
+import ir.m3hdi.agahinet.util.Resultx
 
-class AuthActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class AuthActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val viewModel: AuthViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setUpUI()
-
-        if (AppUtils.getJWT(applicationContext) != null){
-            // Go to user desired fragment
-        }
     }
 
     private fun setUpUI()
     {
-        val transform = MaterialContainerTransform().apply {
-            // Manually tell the container transform which Views to transform between.
-            startView = binding.layoutSignin
-            endView = binding.layoutSignup
-            containerColor= Color.parseColor("#FAFAFA")
-            // Ensure the container transform only runs on a single target
-            addTarget(endView as ConstraintLayout)
-
-            // Optionally add a curved path to the transform
-            //pathMotion = MaterialArcMotion()
-
-            // Since View to View transforms often are not transforming into full screens,
-            // remove the transition's scrim.
-            scrimColor = Color.parseColor("#FAFAFA")
-        }
-
-
         binding.editTextSigninPassword.doOnTextChanged{ text, _, _, _ ->
             if (text.toString().isEmpty()){
                 binding.textFieldSigninPassword.endIconMode= TextInputLayout.END_ICON_NONE
@@ -64,19 +48,97 @@ class AuthActivity : AppCompatActivity() {
         }
 
         binding.buttonGotoSignup.setOnClickListener {
-            binding.layoutSignin.visibility= View.GONE
-            binding.layoutSignup.visibility= View.VISIBLE
-            TransitionManager.beginDelayedTransition(binding.layoutSignin, transform)
-
+            AppUtils.sharedAxisXTransition(binding.materialCardView,binding.layoutSignin,binding.layoutSignup)
         }
         binding.buttonBackToSignin.setOnClickListener {
-            binding.layoutSignup.visibility= View.GONE
-            binding.layoutSignin.visibility= View.VISIBLE
+            AppUtils.sharedAxisXTransition(binding.materialCardView,binding.layoutSignup,binding.layoutSignin)
         }
 
-        binding.buttonCancel.setOnClickListener { finish() }
+        binding.buttonCancel.setOnClickListener {
+            finish()
+        }
+
+        binding.buttonSignin.setOnClickListener {
+            val email=binding.editTextSigninEmail.text.toString()
+            val password=binding.editTextSigninPassword.text.toString()
+            viewModel.performSignin(email,password)
+        }
 
 
+        binding.buttonSignup.setOnClickListener {
+            val name=binding.editTextSignupName.text.toString()
+            val email=binding.editTextSignupEmail.text.toString()
+            val password=binding.editTextSignupPassword.text.toString()
+            val phoneNumber=binding.editTextSignupPhoneNumber.text.toString()
+
+            viewModel.performSignup(name,email,password,phoneNumber)
+        }
+
+        viewModel.signinState.observe(this){
+
+            when(it){
+                is Resultx.Loading -> {
+                    Toast.makeText(applicationContext,"LOADING",Toast.LENGTH_SHORT).show()
+                }
+                is Resultx.Success -> {
+                    when(it.value){
+                        SigninState.OK -> {
+                            Toast.makeText(applicationContext,"OK",Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        SigninState.BAD_EMAIL -> {
+                            Toast.makeText(applicationContext,"BAD_EMAIL",Toast.LENGTH_SHORT).show()
+                        }
+                        SigninState.BAD_PASSWORD -> {
+                            Toast.makeText(applicationContext,"BAD_PASSWORD",Toast.LENGTH_SHORT).show()
+                        }
+                        SigninState.INCORRECT_CREDS -> {
+                            Toast.makeText(applicationContext,"INCORRECT_CREDS",Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+
+                }
+                is Resultx.Failure -> {
+                    Toast.makeText(applicationContext,"FAILED",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        viewModel.signupState.observe(this){
+
+            when(it){
+                is Resultx.Loading -> {
+                    Toast.makeText(applicationContext,"LOADING",Toast.LENGTH_SHORT).show()
+                }
+                is Resultx.Success -> {
+                    when(it.value){
+                        SignupState.OK -> {
+                            Toast.makeText(applicationContext,"OK",Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        SignupState.BAD_NAME -> {
+                            Toast.makeText(applicationContext,"BAD_NAME",Toast.LENGTH_SHORT).show()
+                        }
+                        SignupState.BAD_EMAIL -> {
+                            Toast.makeText(applicationContext,"BAD_EMAIL",Toast.LENGTH_SHORT).show()
+                        }
+                        SignupState.BAD_PASSWORD -> {
+                            Toast.makeText(applicationContext,"BAD_PASSWORD",Toast.LENGTH_SHORT).show()
+                        }
+                        SignupState.BAD_PHONE_NUMBER -> {
+                            Toast.makeText(applicationContext,"BAD_PHONE_NUMBER",Toast.LENGTH_SHORT).show()
+                        }
+                        SignupState.DUPLICATE_EMAIL -> {
+                            Toast.makeText(applicationContext,"DUPLICATE_EMAIL",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                is Resultx.Failure -> {
+                    Toast.makeText(applicationContext,"FAILED",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
 
     }

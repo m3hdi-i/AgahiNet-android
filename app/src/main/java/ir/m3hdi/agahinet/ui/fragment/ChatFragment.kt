@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import ir.m3hdi.agahinet.databinding.FragmentChatBinding
 import ir.m3hdi.agahinet.ui.viewmodel.ChatViewModel
+import ir.m3hdi.agahinet.util.AppUtils
 
 class ChatFragment : Fragment() {
 
@@ -17,24 +18,28 @@ class ChatFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private val viewModel: ChatViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(ChatViewModel::class.java)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentChatBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppUtils.manageNeedAuthFragment(childFragmentManager,binding.layoutParent,binding.layoutNeedAuth,binding.layoutContent)
+        if (AppUtils.isAuthed){
+            Toast.makeText(context,AppUtils.uid+", "+AppUtils.fullname,Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

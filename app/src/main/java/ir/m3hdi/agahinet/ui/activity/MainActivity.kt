@@ -1,7 +1,6 @@
 package ir.m3hdi.agahinet.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -10,7 +9,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.ActivityMainBinding
-import ir.m3hdi.agahinet.util.AppUtils
+import ir.m3hdi.agahinet.util.AppUtils.Companion.retrieveAuthData
 
 
 @AndroidEntryPoint
@@ -20,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -41,14 +41,10 @@ class MainActivity : AppCompatActivity() {
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val prefs= AppUtils.getSecureSharedPref(applicationContext)
-
-        prefs.edit().putString("jwt-access-token","mmm").apply()
-
-        val j= prefs.getString("jwt-access-token",null)
-
-        Log.e("jwt",j ?: "null")
+        retrieveAuthData(applicationContext)
 
     }
+
+
 
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AgahiNet</string>
+    <string name="app_name">آگهی نت</string>
     <string name="title_home">خانه</string>
     <string name="title_new_ad">آگهی جدید</string>
     <string name="title_chat">چت</string>
@@ -12,4 +12,5 @@
     <string name="doesnt_signup_yet">هنوز ثبت نام نکرده اید؟</string>
     <string name="goto_auth">وارد شدن به حساب کاربری</string>
     <string name="your_name">نام شما</string>
+    <string name="phone_number">شماره تلفن</string>
 </resources>
