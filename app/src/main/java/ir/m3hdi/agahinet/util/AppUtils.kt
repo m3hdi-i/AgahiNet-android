@@ -95,7 +95,7 @@ class AppUtils {
             return email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
 
-        private fun sharedAxisYTransition(container: ViewGroup, outView: View, inView: View)
+        fun sharedAxisYTransition(container: ViewGroup, outView: View, inView: View)
         {
             val sharedAxis = MaterialSharedAxis(MaterialSharedAxis.Y, true)
             TransitionManager.beginDelayedTransition(container, sharedAxis)

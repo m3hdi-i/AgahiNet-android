@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import es.dmoral.toasty.Toasty
+import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.model.SigninState
 import ir.m3hdi.agahinet.data.model.SignupState
 import ir.m3hdi.agahinet.databinding.ActivityAuthBinding
@@ -59,48 +61,58 @@ class AuthActivity: AppCompatActivity() {
         }
 
         binding.buttonSignin.setOnClickListener {
-            val email=binding.editTextSigninEmail.text.toString()
-            val password=binding.editTextSigninPassword.text.toString()
-            viewModel.performSignin(email,password)
+            if (AppUtils.hasInternetConnection(applicationContext)){
+                val email=binding.editTextSigninEmail.text.toString()
+                val password=binding.editTextSigninPassword.text.toString()
+                viewModel.performSignin(email,password)
+            }else{
+                Toasty.warning(applicationContext, getString(R.string.no_network), Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
         binding.buttonSignup.setOnClickListener {
-            val name=binding.editTextSignupName.text.toString()
-            val email=binding.editTextSignupEmail.text.toString()
-            val password=binding.editTextSignupPassword.text.toString()
-            val phoneNumber=binding.editTextSignupPhoneNumber.text.toString()
+            if (AppUtils.hasInternetConnection(applicationContext)){
+                val name=binding.editTextSignupName.text.toString()
+                val email=binding.editTextSignupEmail.text.toString()
+                val password=binding.editTextSignupPassword.text.toString()
+                val phoneNumber=binding.editTextSignupPhoneNumber.text.toString()
 
-            viewModel.performSignup(name,email,password,phoneNumber)
+                viewModel.performSignup(name,email,password,phoneNumber)
+            }else{
+                Toasty.warning(applicationContext, getString(R.string.no_network), Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         viewModel.signinState.observe(this){
 
             when(it){
                 is Resultx.Loading -> {
-                    Toast.makeText(applicationContext,"LOADING",Toast.LENGTH_SHORT).show()
+                    AppUtils.sharedAxisYTransition(binding.materialCardView,binding.buttonSignin,binding.progressBarSignin)
                 }
                 is Resultx.Success -> {
+                    AppUtils.sharedAxisYTransition(binding.materialCardView,binding.progressBarSignin,binding.buttonSignin)
                     when(it.value){
                         SigninState.OK -> {
-                            Toast.makeText(applicationContext,"OK",Toast.LENGTH_SHORT).show()
+                            Toasty.success(applicationContext, getString(R.string.signin_ok), Toast.LENGTH_SHORT).show()
                             finish()
                         }
                         SigninState.BAD_EMAIL -> {
-                            Toast.makeText(applicationContext,"BAD_EMAIL",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.bad_email), Toast.LENGTH_SHORT).show()
                         }
                         SigninState.BAD_PASSWORD -> {
-                            Toast.makeText(applicationContext,"BAD_PASSWORD",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.bad_password), Toast.LENGTH_SHORT).show()
                         }
                         SigninState.INCORRECT_CREDS -> {
-                            Toast.makeText(applicationContext,"INCORRECT_CREDS",Toast.LENGTH_SHORT).show()
+                            Toasty.error(applicationContext, getString(R.string.incorrect_creds), Toast.LENGTH_SHORT,).show()
                         }
-
                     }
-
                 }
                 is Resultx.Failure -> {
-                    Toast.makeText(applicationContext,"FAILED",Toast.LENGTH_SHORT).show()
+                    AppUtils.sharedAxisYTransition(binding.materialCardView,binding.progressBarSignin,binding.buttonSignin)
+                    Toasty.error(applicationContext, getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
                 }
             }
         }
@@ -109,33 +121,35 @@ class AuthActivity: AppCompatActivity() {
 
             when(it){
                 is Resultx.Loading -> {
-                    Toast.makeText(applicationContext,"LOADING",Toast.LENGTH_SHORT).show()
+                    AppUtils.sharedAxisYTransition(binding.materialCardView,binding.buttonSignup,binding.progressBarSignup)
                 }
                 is Resultx.Success -> {
+                    AppUtils.sharedAxisYTransition(binding.materialCardView,binding.progressBarSignup,binding.buttonSignup)
                     when(it.value){
                         SignupState.OK -> {
-                            Toast.makeText(applicationContext,"OK",Toast.LENGTH_SHORT).show()
+                            Toasty.success(applicationContext, getString(R.string.signup_ok), Toast.LENGTH_SHORT).show()
                             finish()
                         }
                         SignupState.BAD_NAME -> {
-                            Toast.makeText(applicationContext,"BAD_NAME",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.bad_name), Toast.LENGTH_SHORT).show()
                         }
                         SignupState.BAD_EMAIL -> {
-                            Toast.makeText(applicationContext,"BAD_EMAIL",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.bad_email), Toast.LENGTH_SHORT).show()
                         }
                         SignupState.BAD_PASSWORD -> {
-                            Toast.makeText(applicationContext,"BAD_PASSWORD",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.bad_password), Toast.LENGTH_SHORT).show()
                         }
                         SignupState.BAD_PHONE_NUMBER -> {
-                            Toast.makeText(applicationContext,"BAD_PHONE_NUMBER",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.bad_phone_number), Toast.LENGTH_SHORT).show()
                         }
                         SignupState.DUPLICATE_EMAIL -> {
-                            Toast.makeText(applicationContext,"DUPLICATE_EMAIL",Toast.LENGTH_SHORT).show()
+                            Toasty.warning(applicationContext, getString(R.string.duplicate_email), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
                 is Resultx.Failure -> {
-                    Toast.makeText(applicationContext,"FAILED",Toast.LENGTH_SHORT).show()
+                    AppUtils.sharedAxisYTransition(binding.materialCardView,binding.progressBarSignup,binding.buttonSignup)
+                    Toasty.error(applicationContext, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }

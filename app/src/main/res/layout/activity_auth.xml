@@ -79,6 +79,17 @@
                 android:text="@string/signin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textField_signin_password"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar_signin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:indeterminateTint="@color/md_theme_light_primary"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textField_signin_password" />
 
             <Button
@@ -87,15 +98,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="64dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:paddingStart="32dp"
                 android:paddingEnd="32dp"
                 android:text="@string/doesnt_signup_yet"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonSignin"
-                app:layout_constraintVertical_bias="0.9" />
+                app:layout_constraintTop_toBottomOf="@+id/textField_signin_password"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -216,6 +227,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/textField_signup_phone_number"
                 app:layout_constraintVertical_bias="0.75" />
 
+            <ProgressBar
+                android:id="@+id/progressBar_signup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:indeterminateTint="@color/md_theme_light_primary"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textField_signup_phone_number" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -223,10 +245,10 @@
 
     <ImageView
         android:id="@+id/imageView_logo"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

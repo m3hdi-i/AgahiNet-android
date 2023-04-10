@@ -16,6 +16,7 @@ import ir.m3hdi.agahinet.util.AppUtils.Companion.saveSuccessfulAuthData
 import ir.m3hdi.agahinet.util.Resultx
 import ir.m3hdi.agahinet.util.onFailure
 import ir.m3hdi.agahinet.util.onSuccess
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

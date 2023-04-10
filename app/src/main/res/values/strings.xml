@@ -13,4 +13,17 @@
     <string name="goto_auth">وارد شدن به حساب کاربری</string>
     <string name="your_name">نام شما</string>
     <string name="phone_number">شماره تلفن</string>
+
+    <string name="network_error">مشکل در اتصال به سرور آگهی نت !</string>
+    <string name="no_network">لطفا از اتصال خود به اینترنت اطمینان حاصل کنید</string>
+
+    <string name="bad_email">ایمیل نامعتبر/خالی</string>
+    <string name="bad_password">رمز عبور نمی تواند خالی باشد</string>
+    <string name="incorrect_creds">ایمیل یا رمزعبور اشتباه است</string>
+    <string name="signin_ok">ورود با موفقیت انجام شد</string>
+
+    <string name="bad_name">نام نمی تواند خالی باشد</string>
+    <string name="bad_phone_number">شماره تلفن نمی تواند خالی باشد</string>
+    <string name="duplicate_email">این ایمیل قبلا ثبت نام کرده است</string>
+    <string name="signup_ok">ثبت نام با موفقیت انجام شد</string>
 </resources>
