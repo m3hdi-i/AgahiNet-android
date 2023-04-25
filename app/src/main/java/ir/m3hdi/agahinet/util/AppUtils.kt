@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Patterns
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
@@ -22,6 +23,7 @@ class AppUtils {
 
     companion object {
 
+        const val PAGE_SIZE=10
         var isAuthed=false
         var uid:String?=null
         var fullname:String?=null
@@ -151,8 +153,6 @@ class AppUtils {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         }
-
-
 
         /**
          * Like [runCatching], but with proper coroutines cancellation handling. Also only catches [Exception] instead of [Throwable]

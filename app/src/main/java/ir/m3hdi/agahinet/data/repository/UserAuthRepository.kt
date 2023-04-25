@@ -11,15 +11,15 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
-class UserAuthRepository @Inject constructor(private val api: ANetService,private val ioDispatcher: CoroutineDispatcher)
+class UserAuthRepository @Inject constructor(private val api: ANetService,private val dispatcher: CoroutineDispatcher)
 {
-    suspend fun signUp(signUp: UserSignup):Resultx<UserAuthResponse> = withContext(ioDispatcher){
+    suspend fun signUp(signUp: UserSignup):Resultx<UserAuthResponse> = withContext(dispatcher){
         return@withContext suspendRunCatching {
             api.signup(signUp)
         }
     }
 
-    suspend fun signIn(signIn: UserSignin):Resultx<UserAuthResponse> = withContext(ioDispatcher){
+    suspend fun signIn(signIn: UserSignin):Resultx<UserAuthResponse> = withContext(dispatcher){
         return@withContext suspendRunCatching {
             api.signin(signIn)
         }

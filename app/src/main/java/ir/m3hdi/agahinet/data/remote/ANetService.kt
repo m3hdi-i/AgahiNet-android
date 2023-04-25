@@ -1,10 +1,8 @@
 package ir.m3hdi.agahinet.data.remote
 
-import ir.m3hdi.agahinet.data.model.UserSignup
-import ir.m3hdi.agahinet.data.model.UserAuthResponse
-import ir.m3hdi.agahinet.data.model.UserSignin
+import ir.m3hdi.agahinet.data.model.*
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
-import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface ANetService {
@@ -14,5 +12,10 @@ interface ANetService {
 
     @POST("api/signin")
     suspend fun signin(@Body body: UserSignin): UserAuthResponse
+
+
+    @POST("api/ad/search")
+    suspend fun searchAds(@Body filters: AdFilters): List<Ad>
+
 
 }

@@ -1,7 +1,6 @@
 package ir.m3hdi.agahinet.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +36,7 @@ class NewAdFragment : Fragment() {
         }
         return root
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

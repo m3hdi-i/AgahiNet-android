@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ir.m3hdi.agahinet.data.remote.ANetService
+import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
 import ir.m3hdi.agahinet.util.AppUtils
 import kotlinx.coroutines.CoroutineDispatcher
@@ -50,8 +51,8 @@ object ApplicationModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
-        //.baseUrl("http://127.0.0.1:8000/")
-        .baseUrl("http://10.0.3.2:8000/")
+        .baseUrl("http://127.0.0.1:8000/")
+        //.baseUrl("http://10.0.3.2:8000/")
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
@@ -68,6 +69,10 @@ object ApplicationModule {
     @Provides
     @Singleton
     fun provideUserAuthRepository(api: ANetService,dispatcher: CoroutineDispatcher): UserAuthRepository = UserAuthRepository(api,dispatcher)
+
+    @Provides
+    @Singleton
+    fun provideAdsRepository(api: ANetService,dispatcher: CoroutineDispatcher): AdRepository = AdRepository(api,dispatcher)
 
 /*
     /*

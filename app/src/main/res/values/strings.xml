@@ -26,4 +26,6 @@
     <string name="bad_phone_number">شماره تلفن نمی تواند خالی باشد</string>
     <string name="duplicate_email">این ایمیل قبلا ثبت نام کرده است</string>
     <string name="signup_ok">ثبت نام با موفقیت انجام شد</string>
+    <string name="filters">فیلترها</string>
+    <string name="search_hint">جستجو...</string>
 </resources>

@@ -34,6 +34,14 @@
     </style>
 
 
+    <style name="TextTitleMedium" parent="Theme.AgahiNet">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+    </style>
+
+    <style name="TextLabelSmall" parent="Theme.AgahiNet">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.LabelSmall</item>
+    </style>
+
     <style name="BottomNavigationStyle">
         <item name="android:lines">1</item>
         <item name="android:gravity">center</item>
@@ -41,13 +49,18 @@
         <item name="android:titleMarginTop" tools:targetApi="n">8dp</item>
     </style>
 
-    <style name="cutCornersButton" parent="ShapeAppearance.Material3.SmallComponent">
+    <style name="cutCorners8" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">cut</item>
         <item name="cornerSize">8dp</item>
     </style>
 
+    <style name="cutCorners10" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+
     <style name="bigButton" parent="Widget.Material3.Button.TonalButton">
-        <item name="shapeAppearance">@style/cutCornersButton</item>
+        <item name="shapeAppearance">@style/cutCorners8</item>
 
     </style>
 
