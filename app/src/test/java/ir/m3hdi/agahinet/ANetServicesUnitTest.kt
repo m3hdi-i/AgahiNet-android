@@ -5,12 +5,13 @@ import ir.m3hdi.agahinet.data.model.UserSignin
 import ir.m3hdi.agahinet.data.model.UserSignup
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
-import ir.m3hdi.agahinet.di.ApplicationModule.provideANetService
-import ir.m3hdi.agahinet.di.ApplicationModule.provideAdsRepository
-import ir.m3hdi.agahinet.di.ApplicationModule.provideRetrofit
-import ir.m3hdi.agahinet.di.ApplicationModule.provideMoshi
-import ir.m3hdi.agahinet.di.ApplicationModule.provideOkHttpClient
-import ir.m3hdi.agahinet.di.ApplicationModule.provideUserAuthRepository
+import ir.m3hdi.agahinet.di.NetworkModule.provideANetService
+import ir.m3hdi.agahinet.di.RepositoryModule.provideAdsRepository
+import ir.m3hdi.agahinet.di.NetworkModule.provideRetrofit
+import ir.m3hdi.agahinet.di.NetworkModule.provideMoshi
+import ir.m3hdi.agahinet.di.NetworkModule.provideOkHttpClient
+import ir.m3hdi.agahinet.di.RepositoryModule.provideUserAuthRepository
+import ir.m3hdi.agahinet.util.Resultx
 import ir.m3hdi.agahinet.util.onFailure
 import ir.m3hdi.agahinet.util.onSuccess
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +68,7 @@ class ANetServicesUnitTest {
         }
 
     }
+
 
 
 }

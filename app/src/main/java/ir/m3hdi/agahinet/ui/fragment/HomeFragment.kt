@@ -10,23 +10,23 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ir.m3hdi.agahinet.data.model.Ad
+import es.dmoral.toasty.Toasty
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.subjects.PublishSubject
+import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import ir.m3hdi.agahinet.util.AppUtils
+import ir.m3hdi.agahinet.util.AppUtils.Companion.dpToPx
+import ir.m3hdi.agahinet.util.AppUtils.Companion.ioOnUi
 import ir.m3hdi.agahinet.util.CustomDividerItemDecoration
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
+import ir.m3hdi.agahinet.util.Resultx
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -35,6 +35,14 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
+
+    private lateinit var concatAdapter:ConcatAdapter
+    private lateinit var adAdapter:AdAdapter
+    private lateinit var progressAdapter:ProgressAdapter
+
+
+    private val rvScrollPublishSubject=PublishSubject.create<Int>()
+    private val rxCompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -45,9 +53,7 @@ class HomeFragment : Fragment() {
         setupUI()
     }
 
-    private lateinit var concatAdapter:ConcatAdapter
-    private lateinit var adAdapter:AdAdapter
-    private lateinit var progressAdapter:ProgressAdapter
+
 
     private fun setupUI(){
 
@@ -70,12 +76,47 @@ class HomeFragment : Fragment() {
         setupAdRv()
 
         binding.buttonSetFilters.setOnClickListener {
-            insertData()
+            fetchNextPage()
         }
+
+        viewModel.ads.observe(viewLifecycleOwner){
+
+            when(it){
+                is Resultx.Success->{
+                    concatAdapter.removeAdapter(progressAdapter)
+                    adAdapter.insertAds(it.value)
+                }
+                is Resultx.Loading->{
+                    concatAdapter.addAdapter(1,progressAdapter)
+                }
+                is Resultx.Failure->{
+                    Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
+                    concatAdapter.removeAdapter(progressAdapter)
+                }
+            }
+
+        }
+
+
+        val earlyPixelsToFetchNewData= dpToPx(requireContext(),32)
+
+        binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+
+            val end = v.getChildAt(0).measuredHeight - v.measuredHeight
+            val isLoading =viewModel.ads.value?.isLoading ?: false
+
+            if ( (scrollY >= end-earlyPixelsToFetchNewData) && scrollY > oldScrollY && !isLoading && !viewModel.isLastPage) {
+                rvScrollPublishSubject.onNext(scrollY)
+            }
+        })
+
+        val a= rvScrollPublishSubject.ioOnUi().throttleFirst(2, TimeUnit.SECONDS).subscribe{
+            fetchNextPage()
+        }
+        rxCompositeDisposable.add(a)
 
     }
 
-    var isLoading=false
 
     private fun setupAdRv()
     {
@@ -87,70 +128,29 @@ class HomeFragment : Fragment() {
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.addItemDecoration(CustomDividerItemDecoration(requireContext(), layoutManager.orientation,isShowInLastItem = false))
 
-
         adAdapter.setOnItemClickListener {
             Toast.makeText(context,"...",Toast.LENGTH_SHORT).show()
         }
 
-        binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-
-            println(scrollY.toString() + " : "+ (v.getChildAt(0).measuredHeight - v.measuredHeight).toString())
-            val end = v.getChildAt(0).measuredHeight - v.measuredHeight
-            if ( (scrollY >= end-50) && !isLoading) {
-                isLoading=true
-                Log.e("...", "Last Item Wow !")
-                insertData()
-            }
-        })
-
-
-
-
     }
 
-    var c=0
-    private fun insertData(){
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                concatAdapter.addAdapter(1,progressAdapter)
-                delay(1000)
-                concatAdapter.removeAdapter(progressAdapter)
-
-
-                val ads= mutableListOf<Ad>()
-                for (i in 0..2){
-                    val ad = Ad(
-                        adId = 56,
-                        title = "Default Title $c",
-                        description = "Default Description",
-                        price = "Not Available",
-                        createdAt = "2022-01-01",
-                        category = 0,
-                        creator = 0,
-                        city = 0,
-                        mainImageId = null
-                    )
-                    ads.add(ad)
-                    c++
-                }
-
-                adAdapter.insertAds(ads)
-
-                isLoading=false
-            }
-
+    private fun fetchNextPage(){
+        if (AppUtils.hasInternetConnection(requireContext())){
+            viewModel.fetchNextPage()
+        }else{
+            Toasty.warning(requireContext(), getString(R.string.no_network), Toast.LENGTH_SHORT).show()
         }
-
     }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        rxCompositeDisposable.clear()
+        Log.e("000","0000000000000000000000000000000")
     }
 
     override fun onStart() {
         super.onStart()
-
     }
+
+
 }

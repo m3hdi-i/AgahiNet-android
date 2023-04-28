@@ -41,10 +41,6 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
     }
 
     fun insertAds(list:List<Ad>){
-        /*list.forEach {
-            this.items.add(it)
-            notify
-        }*/
         this.items += list
         this.notifyItemRangeInserted(this.itemCount,list.size)
     }
