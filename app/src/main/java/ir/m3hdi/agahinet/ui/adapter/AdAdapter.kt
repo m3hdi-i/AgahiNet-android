@@ -10,7 +10,7 @@ import ir.m3hdi.agahinet.databinding.RvAdBinding
 
 class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
 
-    private val items= mutableListOf<Ad>()
+    var items= mutableListOf<Ad>()
 
     private var onItemClickFunction:((ad:Ad)->Unit)? = null
 
@@ -37,12 +37,19 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
                 this.container.setOnClickListener { onItemClickFunction?.invoke(ad) }
             }
         }
-
     }
 
-    fun insertAds(list:List<Ad>){
+    fun insertItems(list:List<Ad>){
         this.items += list
         this.notifyItemRangeInserted(this.itemCount,list.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitItems(list:List<Ad>){
+        if (list.isNotEmpty()){
+            this.items=list.toMutableList()
+            notifyDataSetChanged()
+        }
     }
 
 }

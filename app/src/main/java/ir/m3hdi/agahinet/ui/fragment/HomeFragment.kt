@@ -10,6 +10,9 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +21,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
+import ir.m3hdi.agahinet.di.App
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
@@ -26,6 +30,14 @@ import ir.m3hdi.agahinet.util.AppUtils.Companion.dpToPx
 import ir.m3hdi.agahinet.util.AppUtils.Companion.ioOnUi
 import ir.m3hdi.agahinet.util.CustomDividerItemDecoration
 import ir.m3hdi.agahinet.util.Resultx
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -40,7 +52,6 @@ class HomeFragment : Fragment() {
     private lateinit var adAdapter:AdAdapter
     private lateinit var progressAdapter:ProgressAdapter
 
-
     private val rvScrollPublishSubject=PublishSubject.create<Int>()
     private val rxCompositeDisposable = CompositeDisposable()
 
@@ -52,7 +63,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
     }
-
 
 
     private fun setupUI(){
@@ -79,57 +89,71 @@ class HomeFragment : Fragment() {
             fetchNextPage()
         }
 
-        viewModel.ads.observe(viewLifecycleOwner){
-
-            when(it){
-                is Resultx.Success->{
-                    concatAdapter.removeAdapter(progressAdapter)
-                    adAdapter.insertAds(it.value)
-                }
-                is Resultx.Loading->{
-                    concatAdapter.addAdapter(1,progressAdapter)
-                }
-                is Resultx.Failure->{
-                    Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
-                    concatAdapter.removeAdapter(progressAdapter)
-                }
-            }
-
-        }
-
-
         val earlyPixelsToFetchNewData= dpToPx(requireContext(),32)
 
         binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
 
             val end = v.getChildAt(0).measuredHeight - v.measuredHeight
-            val isLoading =viewModel.ads.value?.isLoading ?: false
+            val isLoading = viewModel.nextPage.value.isLoading
 
             if ( (scrollY >= end-earlyPixelsToFetchNewData) && scrollY > oldScrollY && !isLoading && !viewModel.isLastPage) {
                 rvScrollPublishSubject.onNext(scrollY)
             }
         })
 
-        val a= rvScrollPublishSubject.ioOnUi().throttleFirst(2, TimeUnit.SECONDS).subscribe{
+        val disposable= rvScrollPublishSubject.ioOnUi().throttleFirst(1, TimeUnit.SECONDS).subscribe{
             fetchNextPage()
         }
-        rxCompositeDisposable.add(a)
-
+        rxCompositeDisposable.add(disposable)
     }
-
 
     private fun setupAdRv()
     {
         adAdapter=AdAdapter()
+        adAdapter.items=viewModel.adItems
         progressAdapter=ProgressAdapter()
         concatAdapter = ConcatAdapter(adAdapter)
         val layoutManager=LinearLayoutManager(context)
         binding.recyclerViewAds.layoutManager = layoutManager
         binding.recyclerViewAds.adapter = concatAdapter
+        //binding.recyclerViewAds.setHasFixedSize(true)
         binding.recyclerViewAds.addItemDecoration(CustomDividerItemDecoration(requireContext(), layoutManager.orientation,isShowInLastItem = false))
 
         adAdapter.setOnItemClickListener {
-            Toast.makeText(context,"...",Toast.LENGTH_SHORT).show()
+            Toasty.info(requireContext(),"...",Toast.LENGTH_SHORT,false).show()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                viewModel.nextPage.drop(1).collect {
+                    when(it){
+                        is Resultx.Loading->{
+                            concatAdapter.addAdapter(1,progressAdapter)
+                        }
+                        is Resultx.Success->{
+                            concatAdapter.removeAdapter(progressAdapter)
+                            adAdapter.insertItems(it.value)
+                        }
+                        is Resultx.Failure->{
+                            Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
+                            concatAdapter.removeAdapter(progressAdapter)
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                adAdapter.submitItems(viewModel.adItems)
+            }
+        }
+
+
+        viewModel.scrollState?.let {
+            binding.nestedScrollView.scrollY=it
+            //binding.nestedScrollView.scrollTo(0,it)
         }
 
     }
@@ -145,11 +169,11 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         rxCompositeDisposable.clear()
-        Log.e("000","0000000000000000000000000000000")
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onSaveInstanceState(outState: Bundle) {
+        viewModel.scrollState = binding.nestedScrollView.scrollY
+        super.onSaveInstanceState(outState)
     }
 
 

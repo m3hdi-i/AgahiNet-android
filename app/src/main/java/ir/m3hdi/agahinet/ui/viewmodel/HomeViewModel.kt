@@ -1,37 +1,42 @@
 package ir.m3hdi.agahinet.ui.viewmodel
 
 import android.app.Application
-import android.content.Context
+import android.os.Parcelable
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.Resultx
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val adRepository: AdRepository,application: Application) : AndroidViewModel(application)  {
 
-    private val _ads = MutableLiveData<Resultx<List<Ad>>>()
-    val ads: LiveData<Resultx<List<Ad>>>
-        get() = _ads
+    val adItems= mutableListOf<Ad>()
+
+    private val _nextPage = MutableStateFlow<Resultx<List<Ad>>>(Resultx.success(listOf()))
+    val nextPage: StateFlow<Resultx<List<Ad>>>
+        get() = _nextPage
+
+    var scrollState:Int?=null
 
     var isLastPage=false
     var currentPage=0
 
-    var c=1
+    private var c=1
     fun fetchNextPage()
     {
-        _ads.value= Resultx.loading()
+        _nextPage.value= Resultx.loading()
 
         viewModelScope.launch {
 
             val page= mutableListOf<Ad>()
-            for (i in 0..4){
+            for (i in 0..20){
                 val ad = Ad(
                     adId = 56,
                     title = "Default Title $c",
@@ -49,14 +54,20 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
             delay(2000)
 
-            val newList = (_ads.value?.getOrNull() ?: emptyList()  ) + page
-
+            //val newList = (_ads.value?.getOrNull() ?: emptyList()  ) + page
+            adItems+=page
 
             if (AppUtils.hasInternetConnection(getApplication<Application>().applicationContext)){
-                _ads.value= Resultx.success(newList)
+                _nextPage.value= Resultx.success(page)
             }else{
-                _ads.value= Resultx.failure(Exception(""))
+                _nextPage.value= Resultx.failure(Exception(""))
             }
+
+            if (c>=110){
+                isLastPage=true
+            }
+
+            currentPage++
 
 
         }
