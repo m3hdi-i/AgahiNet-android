@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user"
+    app:startDestination="@id/user_screen">
+
+
+    <fragment
+        android:id="@+id/user_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.UserFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_need_auth" />
+
+
+</navigation>

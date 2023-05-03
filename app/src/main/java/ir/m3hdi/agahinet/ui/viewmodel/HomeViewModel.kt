@@ -2,6 +2,7 @@ package ir.m3hdi.agahinet.ui.viewmodel
 
 import android.app.Application
 import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.model.Ad
@@ -23,8 +24,6 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     val nextPage: StateFlow<Resultx<List<Ad>>>
         get() = _nextPage
 
-    var scrollState:Int?=null
-
     var isLastPage=false
     var currentPage=0
 
@@ -35,10 +34,12 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
         viewModelScope.launch {
 
+            delay(1000)
+
             val page= mutableListOf<Ad>()
-            for (i in 0..20){
+            for (i in 0..9){
                 val ad = Ad(
-                    adId = 56,
+                    adId = c,
                     title = "Default Title $c",
                     description = "Default Description",
                     price = "Not Available",
@@ -52,15 +53,13 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
                 c++
             }
 
-            delay(2000)
-
             //val newList = (_ads.value?.getOrNull() ?: emptyList()  ) + page
             adItems+=page
 
             if (AppUtils.hasInternetConnection(getApplication<Application>().applicationContext)){
-                _nextPage.value= Resultx.success(page)
+                _nextPage.value=Resultx.success(page)
             }else{
-                _nextPage.value= Resultx.failure(Exception(""))
+                _nextPage.value=Resultx.failure(Exception(""))
             }
 
             if (c>=110){

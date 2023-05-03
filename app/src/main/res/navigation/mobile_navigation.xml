@@ -1,33 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/home">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="ir.m3hdi.agahinet.ui.fragment.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_new_ad"
-        android:name="ir.m3hdi.agahinet.ui.fragment.NewAdFragment"
-        android:label="@string/title_new_ad"
-        tools:layout="@layout/fragment_need_auth" />
-
-    <fragment
-        android:id="@+id/navigation_chat"
-        android:name="ir.m3hdi.agahinet.ui.fragment.ChatFragment"
-        android:label="@string/title_chat"
-        tools:layout="@layout/fragment_need_auth" />
-
-    <fragment
-        android:id="@+id/navigation_user"
-        android:name="ir.m3hdi.agahinet.ui.fragment.UserFragment"
-        android:label="@string/title_user"
-        tools:layout="@layout/fragment_need_auth" />
-
+    <include app:graph="@navigation/home"/>
+    <include app:graph="@navigation/new_ad"/>
+    <include app:graph="@navigation/chat"/>
+    <include app:graph="@navigation/user"/>
 
 </navigation>

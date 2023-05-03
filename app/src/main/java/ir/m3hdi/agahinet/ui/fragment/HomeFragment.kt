@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,30 +14,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
-import ir.m3hdi.agahinet.di.App
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.util.AppUtils.Companion.dpToPx
 import ir.m3hdi.agahinet.util.AppUtils.Companion.ioOnUi
 import ir.m3hdi.agahinet.util.CustomDividerItemDecoration
 import ir.m3hdi.agahinet.util.Resultx
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -52,7 +46,7 @@ class HomeFragment : Fragment() {
     private lateinit var adAdapter:AdAdapter
     private lateinit var progressAdapter:ProgressAdapter
 
-    private val rvScrollPublishSubject=PublishSubject.create<Int>()
+    private val rvScrollPublishSubject=PublishSubject.create<Boolean>()
     private val rxCompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -89,15 +83,18 @@ class HomeFragment : Fragment() {
             fetchNextPage()
         }
 
-        val earlyPixelsToFetchNewData= dpToPx(requireContext(),32)
+        binding.recyclerViewAds.addOnScrollListener(object : RecyclerView.OnScrollListener(){
 
-        binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-
-            val end = v.getChildAt(0).measuredHeight - v.measuredHeight
-            val isLoading = viewModel.nextPage.value.isLoading
-
-            if ( (scrollY >= end-earlyPixelsToFetchNewData) && scrollY > oldScrollY && !isLoading && !viewModel.isLastPage) {
-                rvScrollPublishSubject.onNext(scrollY)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager=recyclerView.layoutManager as LinearLayoutManager
+                if(layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount-1){
+                    // We have reached the end of the recycler view.
+                    val isLoading = viewModel.nextPage.value.isLoading
+                    if ( !isLoading && !viewModel.isLastPage) {
+                        rvScrollPublishSubject.onNext(true)
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy)
             }
         })
 
@@ -110,13 +107,12 @@ class HomeFragment : Fragment() {
     private fun setupAdRv()
     {
         adAdapter=AdAdapter()
-        adAdapter.items=viewModel.adItems
+        adAdapter.items=viewModel.adItems // Pass a refrence of ad items in my viewModel to the adapter
         progressAdapter=ProgressAdapter()
         concatAdapter = ConcatAdapter(adAdapter)
-        val layoutManager=LinearLayoutManager(context)
-        binding.recyclerViewAds.layoutManager = layoutManager
         binding.recyclerViewAds.adapter = concatAdapter
-        //binding.recyclerViewAds.setHasFixedSize(true)
+        binding.recyclerViewAds.setHasFixedSize(true)
+        val layoutManager=binding.recyclerViewAds.layoutManager as LinearLayoutManager
         binding.recyclerViewAds.addItemDecoration(CustomDividerItemDecoration(requireContext(), layoutManager.orientation,isShowInLastItem = false))
 
         adAdapter.setOnItemClickListener {
@@ -133,27 +129,15 @@ class HomeFragment : Fragment() {
                         }
                         is Resultx.Success->{
                             concatAdapter.removeAdapter(progressAdapter)
-                            adAdapter.insertItems(it.value)
+                            adAdapter.notifyPageInserted(it.value.size)
                         }
                         is Resultx.Failure->{
-                            Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
                             concatAdapter.removeAdapter(progressAdapter)
+                            Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
                         }
                     }
                 }
             }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                adAdapter.submitItems(viewModel.adItems)
-            }
-        }
-
-
-        viewModel.scrollState?.let {
-            binding.nestedScrollView.scrollY=it
-            //binding.nestedScrollView.scrollTo(0,it)
         }
 
     }
@@ -170,11 +154,5 @@ class HomeFragment : Fragment() {
         _binding = null
         rxCompositeDisposable.clear()
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        viewModel.scrollState = binding.nestedScrollView.scrollY
-        super.onSaveInstanceState(outState)
-    }
-
 
 }

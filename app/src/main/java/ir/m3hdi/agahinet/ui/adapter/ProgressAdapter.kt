@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ir.m3hdi.agahinet.databinding.RvProgressBinding
 
-class ProgressAdapter() : RecyclerView.Adapter<ProgressAdapter.ViewHolder>() {
+class ProgressAdapter : RecyclerView.Adapter<ProgressAdapter.ViewHolder>() {
 
     inner class ViewHolder(binding: RvProgressBinding) : RecyclerView.ViewHolder(binding.root)
 

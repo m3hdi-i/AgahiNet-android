@@ -1,6 +1,5 @@
 package ir.m3hdi.agahinet.ui.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,6 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
         this.onItemClickFunction=func
     }
 
-
     inner class ViewHolder(val binding: RvAdBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,25 +29,13 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
         with(holder.binding){
 
             items[position].let { ad->
-
                 this.textViewAdTitle.text=ad.title
-
                 this.container.setOnClickListener { onItemClickFunction?.invoke(ad) }
             }
         }
     }
 
-    fun insertItems(list:List<Ad>){
-        this.items += list
-        this.notifyItemRangeInserted(this.itemCount,list.size)
+    fun notifyPageInserted(pageItemsCount:Int){
+        this.notifyItemRangeInserted(this.itemCount,pageItemsCount)
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun submitItems(list:List<Ad>){
-        if (list.isNotEmpty()){
-            this.items=list.toMutableList()
-            notifyDataSetChanged()
-        }
-    }
-
 }
