@@ -12,6 +12,7 @@ import ir.m3hdi.agahinet.util.Resultx
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +22,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     val adItems= mutableListOf<Ad>()
 
     private val _nextPage = MutableStateFlow<Resultx<List<Ad>>>(Resultx.success(listOf()))
-    val nextPage: StateFlow<Resultx<List<Ad>>>
-        get() = _nextPage
+    val nextPage= _nextPage.asStateFlow()
 
     var isLastPage=false
     var currentPage=0
@@ -53,13 +53,12 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
                 c++
             }
 
-            //val newList = (_ads.value?.getOrNull() ?: emptyList()  ) + page
             adItems+=page
 
             if (AppUtils.hasInternetConnection(getApplication<Application>().applicationContext)){
                 _nextPage.value=Resultx.success(page)
             }else{
-                _nextPage.value=Resultx.failure(Exception(""))
+                _nextPage.value=Resultx.failure(Exception("No Network"))
             }
 
             if (c>=110){

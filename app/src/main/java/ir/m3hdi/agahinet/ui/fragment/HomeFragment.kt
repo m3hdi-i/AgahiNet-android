@@ -87,7 +87,7 @@ class HomeFragment : Fragment() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager=recyclerView.layoutManager as LinearLayoutManager
-                if(layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount-1){
+                if(dy > 0 && layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount-1 ){
                     // We have reached the end of the recycler view.
                     val isLoading = viewModel.nextPage.value.isLoading
                     if ( !isLoading && !viewModel.isLastPage) {
@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        val disposable= rvScrollPublishSubject.ioOnUi().throttleFirst(1, TimeUnit.SECONDS).subscribe{
+        val disposable= rvScrollPublishSubject.ioOnUi().throttleFirst(2, TimeUnit.SECONDS).subscribe{
             fetchNextPage()
         }
         rxCompositeDisposable.add(disposable)
