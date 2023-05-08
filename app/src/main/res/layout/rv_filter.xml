@@ -9,6 +9,7 @@
         android:id="@+id/chip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:singleLine="true"
         style="@style/Widget.Material3.Chip.Input.Icon"
         app:chipStrokeColor="#EEEEEE"
         app:closeIconTint="#C62828"

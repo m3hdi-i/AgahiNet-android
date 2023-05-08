@@ -9,7 +9,7 @@ import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.util.AppUtils.Companion.PAGE_SIZE
+import ir.m3hdi.agahinet.util.Constants.Companion.PAGE_SIZE
 import ir.m3hdi.agahinet.util.Resultx
 import ir.m3hdi.agahinet.util.onFailure
 import ir.m3hdi.agahinet.util.onSuccess

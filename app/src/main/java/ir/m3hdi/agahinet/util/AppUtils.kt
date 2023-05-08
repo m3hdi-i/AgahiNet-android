@@ -26,7 +26,6 @@ class AppUtils {
 
     companion object {
 
-        const val PAGE_SIZE=10
         var isAuthed=false
         var uid:String?=null
         var fullname:String?=null

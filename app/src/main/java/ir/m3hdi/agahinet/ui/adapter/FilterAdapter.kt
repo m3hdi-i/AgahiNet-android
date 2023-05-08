@@ -11,7 +11,7 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
 
     val items= mutableListOf<String>()
 
-    var onItemCloseFunction:((ad: String)->Unit)? = null
+    var onItemCloseFunction:((filter: String)->Unit)? = null
 
     inner class ViewHolder(val binding: RvFilterBinding) : RecyclerView.ViewHolder(binding.root)
 

@@ -31,4 +31,6 @@
     <string name="search_hint">جستجو...</string>
 
     <string name="no_result_for_this_search">متاسفانه برای جستجوی شما هیچ نتیجه ای وجود نداشت</string>
+
+    <string name="choose_category">دسته بندی موردنظر را انتخاب کنید :</string>
 </resources>

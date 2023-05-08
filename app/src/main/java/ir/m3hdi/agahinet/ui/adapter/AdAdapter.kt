@@ -29,11 +29,11 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
 
             items[position].let { ad->
 
-                this.textViewAdTitle.text=ad.title
-                this.container.setOnClickListener { onItemClickFunction?.invoke(ad) }
+                textViewAdTitle.text=ad.title
+                container.setOnClickListener { onItemClickFunction?.invoke(ad) }
             }
 
-            this.bottomDivider.isVisible = position != itemCount-1
+            bottomDivider.isVisible = position != itemCount-1
         }
     }
 

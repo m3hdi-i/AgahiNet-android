@@ -10,7 +10,21 @@
         android:id="@+id/home_screen"
         android:name="ir.m3hdi.agahinet.ui.fragment.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_category"
+            app:destination="@id/choose_category_screen"/>
+    </fragment>
 
+    <fragment
+        android:id="@+id/choose_category_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.CategoriesFragment"
+        android:label="انتخاب دسته بندی"
+        tools:layout="@layout/fragment_categories" >
+        <action
+            android:id="@+id/action_category_to_home"
+            app:destination="@id/home_screen"/>
+
+    </fragment>
 
 </navigation>

@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +58,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
+
+        arguments?.getInt("category_id")?.let {
+            Toasty.info(requireContext(),"cat $it",Toast.LENGTH_SHORT,false).show()
+        }
     }
 
 
@@ -79,6 +85,14 @@ class HomeFragment : Fragment() {
 
         setupAdsRv()
         setupFiltersRv()
+
+        binding.buttonSetCategories.setOnClickListener {
+            val bundle = bundleOf("origin" to "home")
+
+            findNavController().navigate(
+                R.id.action_home_to_category,
+                bundle)
+        }
 
         binding.buttonSetFilters.setOnClickListener {
             binding.appBarLayout.isLifted = false

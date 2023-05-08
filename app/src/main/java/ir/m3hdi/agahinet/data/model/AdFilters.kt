@@ -2,7 +2,7 @@ package ir.m3hdi.agahinet.data.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import ir.m3hdi.agahinet.util.AppUtils.Companion.PAGE_SIZE
+import ir.m3hdi.agahinet.util.Constants.Companion.PAGE_SIZE
 
 data class AdFilters(
     @Json(name = "keyword") val keyword: String?=null,
