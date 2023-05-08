@@ -77,6 +77,8 @@ class AppUtils {
                 remove("fullname")
             }.apply()
             isAuthed=false
+
+            // And clear all local data
         }
 
 

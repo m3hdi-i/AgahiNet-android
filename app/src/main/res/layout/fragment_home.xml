@@ -14,11 +14,12 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@android:color/transparent"
         android:overScrollMode="never"
         android:scrollbars="vertical"
         android:fadeScrollbars="true"
-        android:paddingEnd="3dp"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="RtlSymmetry"
+        tools:listitem="@layout/rv_ad"/>
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -42,39 +43,70 @@
                 tools:ignore="ContentDescription">
             </com.google.android.material.search.SearchBar>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_filters"
-                android:layout_marginTop="-8dp"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:scrollbars="none"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                >
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_set_filters"
-                    style="@style/Widget.Material3.Button.TonalButton.Icon"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="2dp"
-                    android:text="@string/filters"
-                    app:icon="@drawable/ic_filter_list"
-                    app:iconGravity="textEnd"
-                    android:paddingHorizontal="24dp"
-                    app:iconPadding="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layoutDirection="rtl">
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_set_categories"
+                        style="@style/Widget.Material3.Button.TonalButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginVertical="2dp"
+                        android:paddingHorizontal="24dp"
+                        android:text="@string/categories"
+                        app:icon="@drawable/ic_category"
+                        app:iconPadding="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_filters"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="@id/button_set_filters"
-                    app:layout_constraintEnd_toStartOf="@+id/button_set_filters"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/button_set_filters" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_set_filters"
+                        style="@style/Widget.Material3.Button.TonalButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4dp"
+                        android:layout_marginVertical="2dp"
+                        android:paddingHorizontal="24dp"
+                        android:text="@string/filters"
+                        app:icon="@drawable/ic_filter_list"
+                        app:iconPadding="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/button_set_categories"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_filters"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="4dp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/rv_filter"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="2"
+                        android:overScrollMode="never"
+                        app:layout_constraintBottom_toBottomOf="@+id/button_set_filters"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/button_set_filters"
+                        app:layout_constraintTop_toTopOf="@+id/button_set_filters" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
         </LinearLayout>
 

@@ -2,11 +2,11 @@ package ir.m3hdi.agahinet.ui.fragment
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -20,18 +20,18 @@ import es.dmoral.toasty.Toasty
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import ir.m3hdi.agahinet.R
+import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
+import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.ioOnUi
-import ir.m3hdi.agahinet.util.CustomDividerItemDecoration
 import ir.m3hdi.agahinet.util.Resultx
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import kotlin.random.Random
 
 
 @AndroidEntryPoint
@@ -77,10 +77,17 @@ class HomeFragment : Fragment() {
             binding.searchView.requestLayout()
         }*/
 
-        setupAdRv()
+        setupAdsRv()
+        setupFiltersRv()
 
         binding.buttonSetFilters.setOnClickListener {
-            fetchNextPage()
+            binding.appBarLayout.isLifted = false
+            if (viewModel.adItems.size>0){
+                adAdapter.clearItems()
+            }
+
+            val filters=AdFilters()
+            viewModel.doNewSearch(filters)
         }
 
         binding.recyclerViewAds.addOnScrollListener(object : RecyclerView.OnScrollListener(){
@@ -98,13 +105,14 @@ class HomeFragment : Fragment() {
             }
         })
 
+
         val disposable= rvScrollPublishSubject.ioOnUi().throttleFirst(2, TimeUnit.SECONDS).subscribe{
             fetchNextPage()
         }
         rxCompositeDisposable.add(disposable)
     }
 
-    private fun setupAdRv()
+    private fun setupAdsRv()
     {
         adAdapter=AdAdapter()
         adAdapter.items=viewModel.adItems // Pass a refrence of ad items in my viewModel to the adapter
@@ -112,10 +120,8 @@ class HomeFragment : Fragment() {
         concatAdapter = ConcatAdapter(adAdapter)
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.setHasFixedSize(true)
-        val layoutManager=binding.recyclerViewAds.layoutManager as LinearLayoutManager
-        binding.recyclerViewAds.addItemDecoration(CustomDividerItemDecoration(requireContext(), layoutManager.orientation,isShowInLastItem = false))
 
-        adAdapter.setOnItemClickListener {
+        adAdapter.onItemClickFunction = {
             Toasty.info(requireContext(),"...",Toast.LENGTH_SHORT,false).show()
         }
 
@@ -129,7 +135,17 @@ class HomeFragment : Fragment() {
                         }
                         is Resultx.Success->{
                             concatAdapter.removeAdapter(progressAdapter)
-                            adAdapter.notifyPageInserted(it.value.size)
+                            if (it.value.isEmpty() && viewModel.isLastPage)
+                            {
+                                // No results for this search at all
+                                Toasty.info(requireContext(), getString(R.string.no_result_for_this_search), Toast.LENGTH_SHORT,false).show()
+
+                            }else
+                            {
+                                // Update recyclerView with new results
+                                adAdapter.notifyPageInserted(it.value.size)
+                            }
+
                         }
                         is Resultx.Failure->{
                             concatAdapter.removeAdapter(progressAdapter)
@@ -139,6 +155,28 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
+    }
+
+    private fun setupFiltersRv()
+    {
+        ViewCompat.setNestedScrollingEnabled(binding.recyclerViewFilters, false)
+        // TODO : Use DiffUtil for this RV
+        val filterAdapter=FilterAdapter()
+        binding.recyclerViewFilters.adapter=filterAdapter
+        filterAdapter.onItemCloseFunction = {
+            Toasty.info(requireContext(),"closed",Toast.LENGTH_SHORT,false).show()
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                viewModel.filters.collect {
+                    filterAdapter.setFilters(it)
+                }
+            }
+        }
+
+
 
     }
 

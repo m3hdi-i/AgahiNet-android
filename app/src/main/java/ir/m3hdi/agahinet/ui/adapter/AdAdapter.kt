@@ -2,6 +2,9 @@ package ir.m3hdi.agahinet.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.databinding.RvAdBinding
@@ -11,11 +14,7 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
 
     var items= mutableListOf<Ad>()
 
-    private var onItemClickFunction:((ad:Ad)->Unit)? = null
-
-    fun setOnItemClickListener(func:(ad:Ad)->Unit){
-        this.onItemClickFunction=func
-    }
+    var onItemClickFunction:((ad:Ad)->Unit)? = null
 
     inner class ViewHolder(val binding: RvAdBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -29,13 +28,21 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
         with(holder.binding){
 
             items[position].let { ad->
+
                 this.textViewAdTitle.text=ad.title
                 this.container.setOnClickListener { onItemClickFunction?.invoke(ad) }
             }
+
+            this.bottomDivider.isVisible = position != itemCount-1
         }
     }
 
     fun notifyPageInserted(pageItemsCount:Int){
         this.notifyItemRangeInserted(this.itemCount,pageItemsCount)
+    }
+    fun clearItems() {
+        val count = itemCount
+        items.clear()
+        notifyItemRangeRemoved(0, count)
     }
 }

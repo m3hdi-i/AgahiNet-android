@@ -6,9 +6,13 @@ import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.model.Ad
+import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.util.AppUtils
+import ir.m3hdi.agahinet.util.AppUtils.Companion.PAGE_SIZE
 import ir.m3hdi.agahinet.util.Resultx
+import ir.m3hdi.agahinet.util.onFailure
+import ir.m3hdi.agahinet.util.onSuccess
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,15 +28,23 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     private val _nextPage = MutableStateFlow<Resultx<List<Ad>>>(Resultx.success(listOf()))
     val nextPage= _nextPage.asStateFlow()
 
-    var isLastPage=false
-    var currentPage=0
+    private val _filters = MutableStateFlow(AdFilters())
+    val filters= _filters.asStateFlow()
+
+    var isLastPage = false
+
+    fun doNewSearch(newFilters: AdFilters){
+        _filters.value = newFilters
+        fetchNextPage()
+    }
 
     private var c=1
     fun fetchNextPage()
     {
         _nextPage.value= Resultx.loading()
 
-        viewModelScope.launch {
+
+        /*viewModelScope.launch {
 
             delay(1000)
 
@@ -68,8 +80,22 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
             currentPage++
 
 
-        }
+        }*/
 
+        viewModelScope.launch {
+            delay(800)
+            _filters.value.offset = adItems.size
+
+            adRepository.searchAds(_filters.value).onSuccess {
+                if (it.size < PAGE_SIZE){
+                    isLastPage=true
+                }
+                adItems+=it
+                _nextPage.value= Resultx.success(it)
+            }.onFailure {
+                _nextPage.value= Resultx.failure(it)
+            }
+        }
 
     }
 

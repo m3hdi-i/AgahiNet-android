@@ -23,7 +23,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.NONE
+        interceptor.level = HttpLoggingInterceptor.Level.BASIC
         return OkHttpClient
             .Builder()
             .readTimeout(30, TimeUnit.SECONDS)
@@ -39,8 +39,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
-        .baseUrl("http://127.0.0.1:8000/")
-        //.baseUrl("http://10.0.3.2:8000/")
+        //.baseUrl("http://127.0.0.1:8000/")
+        .baseUrl("http://10.0.3.2:8000/")
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
