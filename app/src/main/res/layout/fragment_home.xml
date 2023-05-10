@@ -33,21 +33,40 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/searchBar"
-                android:layoutDirection="rtl"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField_search"
+                style="?attr/textInputOutlinedStyle"
+                app:shapeAppearance="@style/roundCorners32"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/search_hint"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
                 android:hint="@string/search_hint"
-                tools:ignore="ContentDescription">
-            </com.google.android.material.search.SearchBar>
+                app:endIconMode="clear_text"
+                app:boxBackgroundColor="@color/md_theme_light_primaryContainer"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:hintEnabled="false"
+                android:textDirection="rtl"
+                android:layoutDirection="rtl">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_search"
+                    android:maxLines="1"
+                    android:hint="@string/search_hint"
+                    android:textColorHint="#757575"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textPersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-8dp"
                 android:scrollbars="none"
+                android:layout_marginTop="4dp"
                 android:fillViewport="true"
                 android:overScrollMode="never"
                 >
@@ -113,18 +132,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.search.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_hint"
-        android:layoutDirection="rtl"
-        app:layout_anchor="@id/searchBar">
-
-        <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
 
 
-    </com.google.android.material.search.SearchView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

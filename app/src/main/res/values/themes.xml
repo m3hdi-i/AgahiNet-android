@@ -59,9 +59,14 @@
         <item name="cornerSize">10dp</item>
     </style>
 
+    <style name="roundCorners32" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">32dp</item>
+    </style>
+
+
     <style name="bigButton" parent="Widget.Material3.Button.TonalButton">
         <item name="shapeAppearance">@style/cutCorners8</item>
-
     </style>
 
 </resources>

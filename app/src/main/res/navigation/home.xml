@@ -13,7 +13,9 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_home_to_category"
-            app:destination="@id/choose_category_screen"/>
+            app:destination="@id/choose_category_screen"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 
     <fragment
@@ -23,7 +25,9 @@
         tools:layout="@layout/fragment_categories" >
         <action
             android:id="@+id/action_category_to_home"
-            app:destination="@id/home_screen"/>
+            app:destination="@id/home_screen"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
 
     </fragment>
 

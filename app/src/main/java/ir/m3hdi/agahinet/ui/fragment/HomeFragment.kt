@@ -1,10 +1,16 @@
 package ir.m3hdi.agahinet.ui.fragment
 
 
+import android.R.attr.fragment
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -51,6 +57,8 @@ class HomeFragment : Fragment() {
     private val rvScrollPublishSubject=PublishSubject.create<Boolean>()
     private val rxCompositeDisposable = CompositeDisposable()
 
+    private lateinit var inputMethodManager: InputMethodManager
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -59,6 +67,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
 
+
+        // Category selected
         arguments?.getInt("category_id")?.let {
             Toasty.info(requireContext(),"cat $it",Toast.LENGTH_SHORT,false).show()
         }
@@ -67,21 +77,7 @@ class HomeFragment : Fragment() {
 
     private fun setupUI(){
 
-        binding.searchView
-            .editText
-            .setOnEditorActionListener { v, actionId, event ->
-                binding.searchBar.text = binding.searchView.text
-                binding.searchView.hide()
-                false
-            }
-
-        /*binding.searchView.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom -> // Get the height of the SearchView's inner EditText
-            //val kha = binding.aaa.height
-
-            // Set the SearchView's height to the sum of the EditText's height and some extra padding
-            binding.searchView.layoutParams.height = binding.appBarLayout.height - binding.layoutFilters.height -binding.searchBar.baseline
-            binding.searchView.requestLayout()
-        }*/
+        inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         setupAdsRv()
         setupFiltersRv()
@@ -103,6 +99,23 @@ class HomeFragment : Fragment() {
             val filters=AdFilters()
             viewModel.doNewSearch(filters)
         }
+
+
+        binding.editTextSearch.let {
+            it.setOnEditorActionListener { v, actionId, keyEvent ->
+                it.clearFocus()
+                Log.e("...",actionId.toString())
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    // Hide the keyboard
+                    inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+
+
 
         binding.recyclerViewAds.addOnScrollListener(object : RecyclerView.OnScrollListener(){
 
@@ -165,6 +178,8 @@ class HomeFragment : Fragment() {
                             concatAdapter.removeAdapter(progressAdapter)
                             Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
                         }
+
+                        else -> {}
                     }
                 }
             }
@@ -206,5 +221,6 @@ class HomeFragment : Fragment() {
         _binding = null
         rxCompositeDisposable.clear()
     }
+
 
 }

@@ -12,6 +12,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentCategoriesBinding
