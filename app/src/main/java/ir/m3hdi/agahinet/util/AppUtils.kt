@@ -21,7 +21,6 @@ import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.cancellation.CancellationException
 
-
 class AppUtils {
 
     companion object {

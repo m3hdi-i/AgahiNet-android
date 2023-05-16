@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import ir.m3hdi.agahinet.util.Constants.Companion.PAGE_SIZE
 
 data class AdFilters(
-    @Json(name = "keyword") val keyword: String?=null,
+    @Json(name = "keyword") var keyword: String?=null,
     @Json(name = "category") val category: Int?=null,
     @Json(name = "cities") val cities: List<Int>?=null,
     @Json(name = "min_price") val minPrice: String?=null,

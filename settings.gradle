@@ -14,5 +14,15 @@ dependencyResolutionManagement {
         maven { url "https://jitpack.io" }
     }
 }
+
+
 rootProject.name = "AgahiNet"
 include ':app'
+
+buildCache {
+    local {
+        enabled = true
+        directory = new File(rootDir, 'build-cache')
+        removeUnusedEntriesAfterDays = 30
+    }
+}

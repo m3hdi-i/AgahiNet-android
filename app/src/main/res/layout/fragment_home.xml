@@ -35,12 +35,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField_search"
-                style="?attr/textInputOutlinedStyle"
+                style="?attr/textInputOutlinedDenseStyle"
                 app:shapeAppearance="@style/roundCorners32"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:hint="@string/search_hint"
                 app:endIconMode="clear_text"
                 app:boxBackgroundColor="@color/md_theme_light_primaryContainer"
@@ -50,9 +50,8 @@
                 android:textDirection="rtl"
                 android:layoutDirection="rtl">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <ir.m3hdi.agahinet.util.XTextInputEditText
                     android:id="@+id/editText_search"
-                    android:maxLines="1"
                     android:hint="@string/search_hint"
                     android:textColorHint="#757575"
                     android:imeOptions="actionSearch"

@@ -2,6 +2,9 @@ package ir.m3hdi.agahinet.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat.Type.ime
+import androidx.core.view.WindowInsetsCompat.toWindowInsetsCompat
+import androidx.core.view.isGone
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -44,6 +47,19 @@ class MainActivity : AppCompatActivity() {
 
         retrieveAuthData(applicationContext)
 
+        // Hide BottomNavigationView when keyboard appears
+        window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+            val insetsCompat = toWindowInsetsCompat(insets, view)
+            binding.navView.isGone = insetsCompat.isVisible(ime())
+            view.onApplyWindowInsets(insets)
+        }
+
+        // Hide keyborad if input view loses focus
+        /*val imm = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        window.decorView.viewTreeObserver.addOnGlobalFocusChangeListener { oldView, newView ->
+            if (newView !is TextInputEditText)
+                imm.hideSoftInputFromWindow((oldView ?: newView)?.windowToken ?: window.attributes.token, 0)
+        }*/
     }
 
     override fun onSupportNavigateUp(): Boolean {

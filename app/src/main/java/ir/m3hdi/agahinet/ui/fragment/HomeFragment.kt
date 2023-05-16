@@ -1,11 +1,8 @@
 package ir.m3hdi.agahinet.ui.fragment
 
-
-import android.R.attr.fragment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -25,19 +23,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.subjects.PublishSubject
 import ir.m3hdi.agahinet.R
-import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.util.AppUtils.Companion.ioOnUi
 import ir.m3hdi.agahinet.util.Resultx
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -53,9 +48,7 @@ class HomeFragment : Fragment() {
     private lateinit var concatAdapter:ConcatAdapter
     private lateinit var adAdapter:AdAdapter
     private lateinit var progressAdapter:ProgressAdapter
-
-    private val rvScrollPublishSubject=PublishSubject.create<Boolean>()
-    private val rxCompositeDisposable = CompositeDisposable()
+    private lateinit var filtersAdapter:FilterAdapter
 
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -67,54 +60,42 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
 
-
         // Category selected
         arguments?.getInt("category_id")?.let {
             Toasty.info(requireContext(),"cat $it",Toast.LENGTH_SHORT,false).show()
         }
     }
 
-
     private fun setupUI(){
-
-        inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         setupAdsRv()
         setupFiltersRv()
+        setupViewModelObservers()
 
         binding.buttonSetCategories.setOnClickListener {
             val bundle = bundleOf("origin" to "home")
-
             findNavController().navigate(
                 R.id.action_home_to_category,
                 bundle)
         }
 
         binding.buttonSetFilters.setOnClickListener {
-            binding.appBarLayout.isLifted = false
-            if (viewModel.adItems.size>0){
-                adAdapter.clearItems()
-            }
-
-            val filters=AdFilters()
-            viewModel.doNewSearch(filters)
+            viewModel.search("")
         }
 
+        inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        binding.editTextSearch.let {
-            it.setOnEditorActionListener { v, actionId, keyEvent ->
-                it.clearFocus()
-                Log.e("...",actionId.toString())
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    // Hide the keyboard
-                    inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
-                    true
-                } else {
-                    false
-                }
+        // When user types query and hits OK, Hide the keyborad and clear focus of editText
+        binding.editTextSearch.setOnEditorActionListener { view, actionId, _ ->
+            view.clearFocus()
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                // Hide the keyboard
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+                true
+            } else {
+                false
             }
         }
-
 
 
         binding.recyclerViewAds.addOnScrollListener(object : RecyclerView.OnScrollListener(){
@@ -123,20 +104,16 @@ class HomeFragment : Fragment() {
                 val layoutManager=recyclerView.layoutManager as LinearLayoutManager
                 if(dy > 0 && layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount-1 ){
                     // We have reached the end of the recycler view.
-                    val isLoading = viewModel.nextPage.value.isLoading
-                    if ( !isLoading && !viewModel.isLastPage) {
-                        rvScrollPublishSubject.onNext(true)
-                    }
+                    viewModel.fetchNextPage()
                 }
                 super.onScrolled(recyclerView, dx, dy)
             }
         })
 
-
-        val disposable= rvScrollPublishSubject.ioOnUi().throttleFirst(2, TimeUnit.SECONDS).subscribe{
-            fetchNextPage()
+        binding.editTextSearch.doOnTextChanged { text, start, before, count ->
+            viewModel.search(text.toString())
         }
-        rxCompositeDisposable.add(disposable)
+
     }
 
     private fun setupAdsRv()
@@ -147,39 +124,69 @@ class HomeFragment : Fragment() {
         concatAdapter = ConcatAdapter(adAdapter)
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.setHasFixedSize(true)
-
         adAdapter.onItemClickFunction = {
             Toasty.info(requireContext(),"...",Toast.LENGTH_SHORT,false).show()
         }
+    }
+
+    private fun setupFiltersRv()
+    {
+        ViewCompat.setNestedScrollingEnabled(binding.recyclerViewFilters, false)
+        // TODO : Use DiffUtil for this RV
+        filtersAdapter=FilterAdapter()
+        binding.recyclerViewFilters.adapter=filtersAdapter
+        filtersAdapter.onItemCloseFunction = {
+            Toasty.info(requireContext(),"closed",Toast.LENGTH_SHORT,false).show()
+        }
+    }
+
+    private fun setupViewModelObservers(){
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                viewModel.nextPage.drop(1).collect {
-                    when(it){
-                        is Resultx.Loading->{
-                            concatAdapter.addAdapter(1,progressAdapter)
-                        }
-                        is Resultx.Success->{
-                            concatAdapter.removeAdapter(progressAdapter)
-                            if (it.value.isEmpty() && viewModel.isLastPage)
-                            {
-                                // No results for this search at all
-                                Toasty.info(requireContext(), getString(R.string.no_result_for_this_search), Toast.LENGTH_SHORT,false).show()
-
-                            }else
-                            {
-                                // Update recyclerView with new results
-                                adAdapter.notifyPageInserted(it.value.size)
+                launch {
+                    viewModel.nextPage.drop(1).collect {
+                        when(it){
+                            is Resultx.Loading->{
+                                if (progressAdapter !in concatAdapter.adapters)
+                                    concatAdapter.addAdapter(1,progressAdapter)
                             }
+                            is Resultx.Success->{
+                                if (progressAdapter in concatAdapter.adapters)
+                                    concatAdapter.removeAdapter(progressAdapter)
 
-                        }
-                        is Resultx.Failure->{
-                            concatAdapter.removeAdapter(progressAdapter)
-                            Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
-                        }
+                                if (it.value.isEmpty() && viewModel.isLastPage)
+                                {
+                                    // No results for this search at all
+                                    Toasty.info(requireContext(), getString(R.string.no_result_for_this_search), Toast.LENGTH_SHORT,false).show()
 
-                        else -> {}
+                                }else
+                                {
+                                    // Update recyclerView with new results
+                                    adAdapter.notifyPageInserted(it.value.size)
+                                }
+
+                            }
+                            is Resultx.Failure->{
+                                if (progressAdapter in concatAdapter.adapters)
+                                    concatAdapter.removeAdapter(progressAdapter)
+                                Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT,false).show()
+                            }
+                            else -> {}
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.filters.collect {
+                        filtersAdapter.setFilters(it)
+                    }
+                }
+
+                launch {
+                    viewModel.rvClear.collect{
+                        clearAdsRv()
                     }
                 }
             }
@@ -187,39 +194,16 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun setupFiltersRv()
+    private fun clearAdsRv()
     {
-        ViewCompat.setNestedScrollingEnabled(binding.recyclerViewFilters, false)
-        // TODO : Use DiffUtil for this RV
-        val filterAdapter=FilterAdapter()
-        binding.recyclerViewFilters.adapter=filterAdapter
-        filterAdapter.onItemCloseFunction = {
-            Toasty.info(requireContext(),"closed",Toast.LENGTH_SHORT,false).show()
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                viewModel.filters.collect {
-                    filterAdapter.setFilters(it)
-                }
-            }
-        }
-
-
-
-    }
-
-    private fun fetchNextPage(){
-        if (AppUtils.hasInternetConnection(requireContext())){
-            viewModel.fetchNextPage()
-        }else{
-            Toasty.warning(requireContext(), getString(R.string.no_network), Toast.LENGTH_SHORT).show()
+        if (viewModel.adItems.size>0){
+            binding.appBarLayout.isLifted = false
+            adAdapter.clearItems()
         }
     }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        rxCompositeDisposable.clear()
     }
 
 
