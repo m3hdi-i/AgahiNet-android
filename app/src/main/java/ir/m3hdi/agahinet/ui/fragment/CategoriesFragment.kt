@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import es.dmoral.toasty.Toasty
@@ -20,6 +24,7 @@ import ir.m3hdi.agahinet.databinding.FragmentCategoriesBinding
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
 import ir.m3hdi.agahinet.ui.adapter.CategoryAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
+import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import ir.m3hdi.agahinet.util.Constants.Companion.CATEGORIES
 import kotlinx.coroutines.launch
 
@@ -27,6 +32,8 @@ class CategoriesFragment : Fragment() {
 
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
@@ -36,15 +43,15 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonCancel.setOnClickListener {
-            findNavController().navigate(R.id.action_category_to_home)
+        binding.topAppBar.setNavigationOnClickListener{
+            findNavController().navigate(R.id.action_category_to_filters)
         }
 
         val catsAdapter=CategoryAdapter(CATEGORIES)
         binding.recyclerViewCategories.adapter=catsAdapter
         catsAdapter.onItemClickFunction={
-            val bundle = bundleOf("category_id" to it.id)
-            findNavController().navigate(R.id.action_category_to_home,bundle)
+            viewModel.setCategory(it)
+            findNavController().navigate(R.id.action_category_to_filters)
         }
     }
 

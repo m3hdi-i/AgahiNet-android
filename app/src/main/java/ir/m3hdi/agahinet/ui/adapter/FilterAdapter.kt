@@ -9,7 +9,7 @@ import ir.m3hdi.agahinet.databinding.RvFilterBinding
 
 class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
 
-    val items= mutableListOf<String>()
+    private val items= mutableListOf<String>()
 
     var onItemCloseFunction:((filter: String)->Unit)? = null
 
@@ -22,10 +22,15 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.chip.text=items[position]
+        val item = items[position]
+        holder.binding.chip.apply {
+            text= item
+            setOnCloseIconClickListener {
+                onItemCloseFunction?.invoke(item)
+            }
+        }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setFilters(filters: AdFilters) {
         items.clear()
         filters.category?.let {

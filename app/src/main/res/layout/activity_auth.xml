@@ -7,6 +7,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/simpleToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="ورود / ثبت نام" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
@@ -142,6 +158,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editText_signup_name"
+                    android:inputType="textPersonName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -242,27 +259,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
-    <ImageView
-        android:id="@+id/imageView_logo"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@mipmap/ic_launcher"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button_cancel"
-        style="?attr/materialIconButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:icon="@drawable/ic_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

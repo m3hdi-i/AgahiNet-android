@@ -41,8 +41,11 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
         this.notifyItemRangeInserted(this.itemCount,pageItemsCount)
     }
     fun clearItems() {
-        val count = itemCount
-        items.clear()
-        notifyItemRangeRemoved(0, count)
+        if (itemCount>0){
+            val count = itemCount
+            items.clear()
+            notifyItemRangeRemoved(0, count)
+        }
+
     }
 }

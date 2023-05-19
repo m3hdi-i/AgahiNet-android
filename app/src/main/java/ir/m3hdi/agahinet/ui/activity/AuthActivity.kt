@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -56,7 +57,7 @@ class AuthActivity: AppCompatActivity() {
             AppUtils.sharedAxisXTransition(binding.materialCardView,binding.layoutSignup,binding.layoutSignin)
         }
 
-        binding.buttonCancel.setOnClickListener {
+        binding.topAppBar.setNavigationOnClickListener{
             finish()
         }
 

@@ -49,13 +49,19 @@
         <item name="android:titleMarginTop" tools:targetApi="n">8dp</item>
     </style>
 
-    <style name="cutCorners8" parent="ShapeAppearance.Material3.SmallComponent">
+    <style name="cutCorners" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">cut</item>
+    </style>
+
+    <style name="cutCorners4" parent="cutCorners">
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="cutCorners8" parent="cutCorners">
         <item name="cornerSize">8dp</item>
     </style>
 
-    <style name="cutCorners10" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">cut</item>
+    <style name="cutCorners10" parent="cutCorners">
         <item name="cornerSize">10dp</item>
     </style>
 
@@ -67,6 +73,42 @@
 
     <style name="bigButton" parent="Widget.Material3.Button.TonalButton">
         <item name="shapeAppearance">@style/cutCorners8</item>
+    </style>
+
+    <style name="simpleToolbarTitleAppearance" parent="TextAppearance.AppCompat.Title">
+        <item name="fontFamily">@font/vazirmatn_regular</item>
+    </style>
+
+    <style name="simpleToolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/simpleToolbarTitleAppearance</item>
+        <item name="titleTextColor">#FFFFFF</item>
+        <item name="navigationIconTint">#FFFFFF</item>
+        <item name="navigationIcon">@drawable/ic_back</item>
+        <item name="android:layoutDirection">rtl</item>
+        <item name="android:background">@color/toolbar_background</item>
+
+    </style>
+
+    <style name="TextViewWithArrow">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="drawableEndCompat">@drawable/ic_arrow_left</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="drawableTint">#616161</item>
+    </style>
+
+    <style name="TextViewSelectedItems">
+        <item name="drawableStartCompat">@drawable/ic_check</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="android:textColor">#616161</item>
+        <item name="drawableTint">#81C784</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+        <item name="android:drawablePadding">2dp</item>
     </style>
 
 </resources>

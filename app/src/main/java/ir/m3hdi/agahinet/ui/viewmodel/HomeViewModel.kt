@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.data.model.AdFilters
+import ir.m3hdi.agahinet.data.model.Category
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.util.Constants.Companion.PAGE_SIZE
 import ir.m3hdi.agahinet.util.Resultx
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
@@ -32,10 +34,11 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
     val adItems= mutableListOf<Ad>()
 
+    private val _filters = MutableLiveData(AdFilters())
+    val filters :LiveData<AdFilters> get() = _filters
+
     private val _nextPage = MutableStateFlow<Resultx<List<Ad>>>(Resultx.success(listOf()))
     val nextPage= _nextPage.asStateFlow()
-    private val _filters = MutableStateFlow(AdFilters())
-    val filters= _filters.asStateFlow()
 
     private val _rvClear= MutableSharedFlow<Unit>()
     val rvClear= _rvClear.asSharedFlow()
@@ -57,24 +60,26 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{
-                    _filters.value.offset = adItems.size
+                    _filters.value= _filters.value?.apply { offset=adItems.size }
                     fetchAdsByFilters()
             },
             // Search box control
             searchQueryPublishSubject
+                .distinctUntilChanged()
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .distinctUntilChanged()
                 .subscribe {
                     viewModelScope.launch {
                         _rvClear.emit(Unit)
                     }
-                    _filters.value.keyword=it
-                    _filters.value.offset=0
+                    _filters.value=_filters.value?.apply { keyword=it; offset=0 }
                     isLastPage=false
                     fetchAdsByFilters()
             }
         )
+
+        // Start App with showing all recent ads
+        searchQueryPublishSubject.onNext("")
     }
 
 
@@ -87,7 +92,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
             _nextPage.value= Resultx.loading()
 
-            adRepository.searchAds(_filters.value).onSuccess {
+            adRepository.searchAds(_filters.value!!).onSuccess {
                 if (isActive){
                     if (it.size < PAGE_SIZE){
                         isLastPage=true
@@ -114,6 +119,10 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     override fun onCleared() {
         super.onCleared()
         rxCompositeDisposable.dispose()
+    }
+
+    fun setCategory(category: Category?) {
+        _filters.value=_filters.value?.apply { this.category = category?.id }
     }
 
 

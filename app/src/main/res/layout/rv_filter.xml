@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -11,8 +10,12 @@
         android:layout_height="wrap_content"
         app:singleLine="true"
         style="@style/Widget.Material3.Chip.Input.Icon"
-        app:chipStrokeColor="#EEEEEE"
-        app:closeIconTint="#C62828"
+        app:shapeAppearance="@style/cutCorners4"
+        app:chipStrokeColor="@android:color/darker_gray"
+        app:chipBackgroundColor="@android:color/transparent"
+        app:chipSurfaceColor="@android:color/transparent"
+        app:checkedIconEnabled="false"
+        android:checkable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,6 +3,7 @@ package ir.m3hdi.agahinet.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.model.Category
@@ -26,9 +27,10 @@ class CategoryAdapter(private val items:List<Category>) : RecyclerView.Adapter<C
 
             items[position].let { cat->
 
-                buttonCategory.text=cat.title
-                buttonCategory.icon= ContextCompat.getDrawable(buttonCategory.context, R.drawable.ic_category)
-                buttonCategory.setOnClickListener { onItemClickFunction?.invoke(cat) }
+                textViewCategory.text=cat.title
+                textViewCategory.setCompoundDrawablesRelativeWithIntrinsicBounds(cat.drawableId, 0, 0, 0)
+                container.setOnClickListener { onItemClickFunction?.invoke(cat) }
+                divider.isGone = position == itemCount-1
             }
 
 
