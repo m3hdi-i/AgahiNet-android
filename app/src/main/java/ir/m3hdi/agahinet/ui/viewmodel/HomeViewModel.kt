@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
+import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.data.model.Category
@@ -122,7 +123,27 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     }
 
     fun setCategory(category: Category?) {
-        _filters.value=_filters.value?.apply { this.category = category?.id }
+        _filters.value=_filters.value?.apply {
+            category?.id.let {
+                if (it==0)
+                    this.category = null
+                else
+                    this.category = it
+            }
+
+        }
+    }
+
+    fun getSelectedProvince(): String {
+
+        /*
+        filters.value?.cities?.let {
+            if (it.isNotEmpty()){
+                return " "
+            }
+         */
+
+        return getApplication<Application>().getString(R.string.entire_iran)
     }
 
 

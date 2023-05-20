@@ -19,10 +19,10 @@ dependencyResolutionManagement {
 rootProject.name = "AgahiNet"
 include ':app'
 
-buildCache {
+/*buildCache {
     local {
         enabled = true
         directory = new File(rootDir, 'build-cache')
         removeUnusedEntriesAfterDays = 30
     }
-}
+}*/

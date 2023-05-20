@@ -35,7 +35,7 @@ class AppUtils {
             return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         }
 
-        // fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
+        fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
 
 
         fun retrieveAuthData(context: Context)
