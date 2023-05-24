@@ -1,12 +1,10 @@
 package ir.m3hdi.agahinet.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -16,7 +14,7 @@ import ir.m3hdi.agahinet.data.model.SignupState
 import ir.m3hdi.agahinet.databinding.ActivityAuthBinding
 import ir.m3hdi.agahinet.ui.viewmodel.AuthViewModel
 import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.util.Resultx
+import ir.m3hdi.agahinet.data.Resultx
 
 @AndroidEntryPoint
 class AuthActivity: AppCompatActivity() {

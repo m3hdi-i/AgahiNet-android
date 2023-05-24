@@ -1,11 +1,15 @@
 package ir.m3hdi.agahinet.di
 
+import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ir.m3hdi.agahinet.data.local.AppDatabase
+import ir.m3hdi.agahinet.data.local.dao.CityDao
 import javax.inject.Singleton
 
 
@@ -13,16 +17,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object PersistenceModule {
 
-    /*
-        ROOM Persistence dependencies
-    */
-    /*@Provides
+    @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java, "my-db").build()
+    fun provideAppDatabase(application: Application): AppDatabase =
+        Room.databaseBuilder(application, AppDatabase::class.java, "AgahiNet.db")
+            .createFromAsset("agahinet.db")
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
-    fun provideMediaDao(appDatabase: AppDatabase): MediaDao = appDatabase.mediaDao()*/
+    fun provideCityDao(appDatabase: AppDatabase): CityDao = appDatabase.cityDao()
 }

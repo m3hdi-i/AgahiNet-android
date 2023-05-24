@@ -7,17 +7,18 @@ import androidx.core.view.isGone
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import ir.m3hdi.agahinet.R
+import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.data.model.Category
 import ir.m3hdi.agahinet.databinding.RvCategoryBinding
 import ir.m3hdi.agahinet.databinding.RvProvinceBinding
 import ir.m3hdi.agahinet.util.AppUtils.Companion.dpToPx
 import kotlin.properties.Delegates
 
-class ProvinceAdapter(private val items:List<String>) : RecyclerView.Adapter<ProvinceAdapter.ViewHolder>() {
+class ProvinceAdapter(private val items:List<City>) : RecyclerView.Adapter<ProvinceAdapter.ViewHolder>() {
 
     var sheetPadding by Delegates.notNull<Int>()
 
-    var onItemClickFunction:((province: String)->Unit)? = null
+    var onItemClickFunction:((provinceId: City)->Unit)? = null
 
     inner class ViewHolder(val binding: RvProvinceBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -32,8 +33,8 @@ class ProvinceAdapter(private val items:List<String>) : RecyclerView.Adapter<Pro
 
         with(holder.binding){
 
-            items[position].let { p->
-                textViewProvince.text = p
+            items[position].let {p->
+                textViewProvince.text = p.title
                 divider.isGone = position == itemCount-1
                 container.setOnClickListener { onItemClickFunction?.invoke(p) }
 

@@ -24,11 +24,6 @@
         android:name="ir.m3hdi.agahinet.ui.fragment.CategoriesFragment"
         android:label="انتخاب دسته بندی"
         tools:layout="@layout/fragment_categories" >
-        <action
-            android:id="@+id/action_category_to_filters"
-            app:destination="@id/filters_screen"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
 
     </fragment>
 
@@ -37,12 +32,6 @@
         android:name="ir.m3hdi.agahinet.ui.fragment.FiltersFragment"
         android:label="انتخاب فیلترها"
         tools:layout="@layout/fragment_filters" >
-
-        <action
-            android:id="@+id/action_filters_to_home"
-            app:destination="@id/home_screen"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
 
         <action
             android:id="@+id/action_filters_to_categories"
@@ -62,12 +51,6 @@
         android:name="ir.m3hdi.agahinet.ui.fragment.CitiesFragment"
         android:label="انتخاب شهر ها"
         tools:layout="@layout/fragment_cities" >
-
-        <action
-            android:id="@+id/action_cities_to_filters"
-            app:destination="@id/filters_screen"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
 
     </fragment>
 

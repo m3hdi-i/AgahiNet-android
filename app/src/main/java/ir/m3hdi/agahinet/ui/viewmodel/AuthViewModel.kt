@@ -13,10 +13,9 @@ import ir.m3hdi.agahinet.data.model.UserSignup
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.saveSuccessfulAuthData
-import ir.m3hdi.agahinet.util.Resultx
-import ir.m3hdi.agahinet.util.onFailure
-import ir.m3hdi.agahinet.util.onSuccess
-import kotlinx.coroutines.delay
+import ir.m3hdi.agahinet.data.Resultx
+import ir.m3hdi.agahinet.data.onFailure
+import ir.m3hdi.agahinet.data.onSuccess
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,16 +49,16 @@ class AuthViewModel @Inject constructor(
             userAuthRepository.signIn(UserSignin(email, password)).onSuccess {
                 val ok=it.message=="ok"
                 if (ok){
-                    _signinState.value=Resultx.success(SigninState.OK)
+                    _signinState.value= Resultx.success(SigninState.OK)
                     saveSuccessfulAuthData(getApplication<Application>().applicationContext,it)
 
                 }else{
-                    _signinState.value=Resultx.success(SigninState.INCORRECT_CREDS)
+                    _signinState.value= Resultx.success(SigninState.INCORRECT_CREDS)
                 }
 
 
             }.onFailure {
-                _signinState.value=Resultx.failure(it)
+                _signinState.value= Resultx.failure(it)
             }
         }
     }
@@ -72,19 +71,19 @@ class AuthViewModel @Inject constructor(
         val validPhoneNumber= phoneNumber.isNotBlank()
 
         if (!validName){
-            _signupState.value=Resultx.success(SignupState.BAD_NAME)
+            _signupState.value= Resultx.success(SignupState.BAD_NAME)
             return
         }
         if (!validEmail){
-            _signupState.value=Resultx.success(SignupState.BAD_EMAIL)
+            _signupState.value= Resultx.success(SignupState.BAD_EMAIL)
             return
         }
         if (!validPassword){
-            _signupState.value=Resultx.success(SignupState.BAD_PASSWORD)
+            _signupState.value= Resultx.success(SignupState.BAD_PASSWORD)
             return
         }
         if (!validPhoneNumber){
-            _signupState.value=Resultx.success(SignupState.BAD_PHONE_NUMBER)
+            _signupState.value= Resultx.success(SignupState.BAD_PHONE_NUMBER)
             return
         }
 
@@ -94,11 +93,11 @@ class AuthViewModel @Inject constructor(
             userAuthRepository.signUp(UserSignup(fullname,email,password,phoneNumber)).onSuccess {
                 val ok=it.message=="ok"
                 if (ok){
-                    _signupState.value=Resultx.success(SignupState.OK)
+                    _signupState.value= Resultx.success(SignupState.OK)
                     saveSuccessfulAuthData(getApplication<Application>().applicationContext,it)
 
                 }else{
-                    _signupState.value=Resultx.success(SignupState.DUPLICATE_EMAIL)
+                    _signupState.value= Resultx.success(SignupState.DUPLICATE_EMAIL)
                 }
             }.onFailure {
                 _signupState.value= Resultx.failure(it)

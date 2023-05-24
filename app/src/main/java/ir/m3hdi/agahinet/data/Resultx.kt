@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.util
+package ir.m3hdi.agahinet.data
 
 /*
  * Copyright 2022 Nicolas Haan.

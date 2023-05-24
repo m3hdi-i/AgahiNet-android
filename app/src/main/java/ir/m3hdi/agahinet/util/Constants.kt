@@ -1,6 +1,8 @@
 package ir.m3hdi.agahinet.util
 
+import android.app.Application
 import ir.m3hdi.agahinet.R
+import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.data.model.Category
 
 class Constants {
@@ -23,40 +25,7 @@ class Constants {
             Category(11,"سایر", R.drawable.ic_category),
         )
 
-        val PROVINCES = listOf(
-            "آذربایجان شرقی",
-            "آذربایجان غربی",
-            "اردبیل",
-            "اصفهان",
-            "البرز",
-            "ایلام",
-            "بوشهر",
-            "تهران",
-            "چهارمحال و بختیاری",
-            "خراسان جنوبی",
-            "خراسان رضوی",
-            "خراسان شمالی",
-            "خوزستان",
-            "زنجان",
-            "سیستان و بلوچستان",
-            "سمنان",
-            "سمنگان",
-            "فارس",
-            "قزوین",
-            "قم",
-            "کردستان",
-            "کرمان",
-            "کرمانشاه",
-            "کهکیلویه و بویراحمد",
-            "گلستان",
-            "گیلان",
-            "لرستان",
-            "مازندران",
-            "مرکزی",
-            "هرمزگان",
-            "همدان",
-            "یزد"
-        )
+        val ENTIRE_IRAN_CITY= City(0,null,"کل ایران")
 
     }
 

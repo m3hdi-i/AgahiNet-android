@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:text="انتخاب همه"
+        android:text="@string/select_all"
         android:textAlignment="center"
         app:icon="@drawable/ic_select_all"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
@@ -95,7 +95,6 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:overScrollMode="never"
-        android:paddingBottom="100dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +103,20 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+        <TextView
+            android:id="@+id/textView_allCitiesOfIran"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone"
+            android:text="@string/all_cities_of_iran"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyclerView_cities" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_ok"
@@ -117,5 +129,6 @@
         style="?attr/floatingActionButtonLargeStyle"
         android:contentDescription="OK"
         tools:ignore="HardcodedText" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

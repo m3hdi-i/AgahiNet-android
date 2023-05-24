@@ -46,6 +46,6 @@ class AdAdapter : RecyclerView.Adapter<AdAdapter.ViewHolder>() {
             items.clear()
             notifyItemRangeRemoved(0, count)
         }
-
     }
+
 }

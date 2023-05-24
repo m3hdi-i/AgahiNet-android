@@ -44,14 +44,14 @@ class CategoriesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.topAppBar.setNavigationOnClickListener{
-            findNavController().navigate(R.id.action_category_to_filters)
+            findNavController().popBackStack()
         }
 
         val catsAdapter=CategoryAdapter(CATEGORIES)
         binding.recyclerViewCategories.adapter=catsAdapter
-        catsAdapter.onItemClickFunction={
-            viewModel.setCategory(it)
-            findNavController().navigate(R.id.action_category_to_filters)
+        catsAdapter.onItemClickFunction={category->
+            viewModel.tempCategory = if (category.id == 0) null else category
+            findNavController().popBackStack()
         }
     }
 

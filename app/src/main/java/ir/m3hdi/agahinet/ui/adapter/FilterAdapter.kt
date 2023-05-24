@@ -34,15 +34,15 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
     fun setFilters(filters: AdFilters) {
         items.clear()
         filters.category?.let {
-            items.add("دسته $it")
+            items.add(it.title)
         }
 
         if (filters.minPrice!=null || filters.maxPrice!=null)
             items.add("قیمت")
 
         filters.cities?.let {
-            it.forEach{cityId->
-                items.add("شهر $cityId")
+            it.forEach{c->
+                items.add(c.title)
             }
         }
         notifyDataSetChanged()

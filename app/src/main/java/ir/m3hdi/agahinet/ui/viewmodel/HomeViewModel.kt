@@ -1,7 +1,6 @@
 package ir.m3hdi.agahinet.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -13,25 +12,26 @@ import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.data.model.Category
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.util.Constants.Companion.PAGE_SIZE
-import ir.m3hdi.agahinet.util.Resultx
-import ir.m3hdi.agahinet.util.onFailure
-import ir.m3hdi.agahinet.util.onSuccess
+import ir.m3hdi.agahinet.data.Resultx
+import ir.m3hdi.agahinet.data.local.dao.CityDao
+import ir.m3hdi.agahinet.data.local.entity.City
+import ir.m3hdi.agahinet.data.onFailure
+import ir.m3hdi.agahinet.data.onSuccess
+import ir.m3hdi.agahinet.util.Constants.Companion.ENTIRE_IRAN_CITY
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val adRepository: AdRepository,application: Application) : AndroidViewModel(application)  {
+class HomeViewModel @Inject constructor(private val adRepository: AdRepository,application: Application,private val cityDao: CityDao) : AndroidViewModel(application)  {
 
     val adItems= mutableListOf<Ad>()
 
@@ -41,16 +41,23 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     private val _nextPage = MutableStateFlow<Resultx<List<Ad>>>(Resultx.success(listOf()))
     val nextPage= _nextPage.asStateFlow()
 
-    private val _rvClear= MutableSharedFlow<Unit>()
-    val rvClear= _rvClear.asSharedFlow()
+    private val _homeRvClear= MutableSharedFlow<Unit>()
+    val homeRvClear= _homeRvClear.asSharedFlow()
 
     private val fetchNextPagePublishSubject= PublishSubject.create<Unit>()
     private val searchQueryPublishSubject= PublishSubject.create<String>()
     private val rxCompositeDisposable = CompositeDisposable()
 
+    private val _currentProvince= MutableStateFlow(ENTIRE_IRAN_CITY)
+    val currentProvince=_currentProvince.asStateFlow()
+
+    var tempCategory:Category?=null
+    var tempCities:List<City>?=null
+    var tempMinPrice:String?=null
+    var tempMaxPrice:String?=null
+
     var isLastPage = false
 
-    private var c=1
 
     init {
 
@@ -71,7 +78,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     viewModelScope.launch {
-                        _rvClear.emit(Unit)
+                        _homeRvClear.emit(Unit)
                     }
                     _filters.value=_filters.value?.apply { keyword=it; offset=0 }
                     isLastPage=false
@@ -81,6 +88,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
         // Start App with showing all recent ads
         searchQueryPublishSubject.onNext("")
+
     }
 
 
@@ -117,34 +125,46 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     fun fetchNextPage() = fetchNextPagePublishSubject.onNext(Unit)
 
 
+    private var _allProvincesList:List<City>?=null
+    suspend fun getAllProvinces():List<City>{
+        return _allProvincesList ?: withContext(Dispatchers.IO){
+            val plist = mutableListOf(ENTIRE_IRAN_CITY) + cityDao.getAllProvinces()
+            _allProvincesList = plist
+            return@withContext plist
+        }
+    }
+    suspend fun getCitiesOfProvince(provinceId:Int) = withContext(Dispatchers.IO){
+        return@withContext cityDao.getCitiesOfProvince(provinceId)
+    }
+
+
+    fun fillTempFilters(){
+        _filters.value?.let {
+            tempCategory=it.category
+            tempCities=it.cities
+            tempMinPrice=it.minPrice
+            tempMaxPrice=it.maxPrice
+        }
+    }
+
+    fun applyTempFilters(){
+         _filters.value= _filters.value?.apply {
+             category=tempCategory
+             cities=tempCities
+             minPrice=tempMinPrice
+             maxPrice=tempMaxPrice
+         }
+    }
+
+    fun setCurrentProvince(city:City){
+        // Provinces must have a null parent
+        if (city.parentProvinceId==null){
+            _currentProvince.value=city
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         rxCompositeDisposable.dispose()
     }
-
-    fun setCategory(category: Category?) {
-        _filters.value=_filters.value?.apply {
-            category?.id.let {
-                if (it==0)
-                    this.category = null
-                else
-                    this.category = it
-            }
-
-        }
-    }
-
-    fun getSelectedProvince(): String {
-
-        /*
-        filters.value?.cities?.let {
-            if (it.isNotEmpty()){
-                return " "
-            }
-         */
-
-        return getApplication<Application>().getString(R.string.entire_iran)
-    }
-
-
 }

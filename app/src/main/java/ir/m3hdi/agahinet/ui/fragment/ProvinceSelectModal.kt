@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ir.m3hdi.agahinet.R
+import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.ui.adapter.ProvinceAdapter
-import ir.m3hdi.agahinet.util.Constants.Companion.PROVINCES
-
 
 class ProvinceSelectModal : BottomSheetDialogFragment() {
 
-    var onProvinceSelectedListener:((String)->Unit)?=null
+    var onProvinceSelectedListener:((City)->Unit)?=null
+    lateinit var provinces:List<City>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     = inflater.inflate(R.layout.modal_bottom_sheet_province, container, false)
@@ -23,7 +23,7 @@ class ProvinceSelectModal : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val provincesRv=view.findViewById<RecyclerView>(R.id.recyclerView_provinces)
-        val adapter=ProvinceAdapter(PROVINCES)
+        val adapter=ProvinceAdapter(provinces)
         provincesRv.adapter=adapter
         adapter.onItemClickFunction={
             onProvinceSelectedListener?.invoke(it)

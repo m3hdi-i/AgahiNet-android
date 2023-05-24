@@ -4,7 +4,7 @@ import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.data.remote.ANetService
 import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.util.Resultx
+import ir.m3hdi.agahinet.data.Resultx
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

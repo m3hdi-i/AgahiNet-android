@@ -2,25 +2,21 @@ package ir.m3hdi.agahinet.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +27,7 @@ import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import ir.m3hdi.agahinet.util.Resultx
+import ir.m3hdi.agahinet.data.Resultx
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 
@@ -67,6 +63,7 @@ class HomeFragment : Fragment() {
         setupViewModelObservers()
 
         binding.buttonSetFilters.setOnClickListener {
+            viewModel.fillTempFilters()
             findNavController().navigate(
                 R.id.action_home_to_filters)
         }
@@ -84,7 +81,6 @@ class HomeFragment : Fragment() {
                 false
             }
         }
-
 
         val adsRvLayoutManager=binding.recyclerViewAds.layoutManager as LinearLayoutManager
 
@@ -126,7 +122,7 @@ class HomeFragment : Fragment() {
         binding.recyclerViewFilters.adapter=filtersAdapter
         filtersAdapter.onItemCloseFunction = {
             Toasty.info(requireContext(),"closed",Toast.LENGTH_SHORT,false).show()
-            viewModel.setCategory(null)
+            //viewModel.setCategory(null)
         }
     }
 
@@ -169,7 +165,7 @@ class HomeFragment : Fragment() {
                 }
 
                 launch {
-                    viewModel.rvClear.collect{
+                    viewModel.homeRvClear.collect{
                         adAdapter.clearItems()
                     }
                 }

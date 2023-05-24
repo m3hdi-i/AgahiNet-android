@@ -111,5 +111,12 @@
         <item name="android:drawablePadding">2dp</item>
     </style>
 
+    <style name="PriceRangeEditText">
+        <item name="android:digits">0123456789</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:maxLength">18</item>
+        <item name="android:textAlignment">center</item>
+    </style>
 
 </resources>

@@ -11,9 +11,8 @@ import ir.m3hdi.agahinet.di.NetworkModule.provideRetrofit
 import ir.m3hdi.agahinet.di.NetworkModule.provideMoshi
 import ir.m3hdi.agahinet.di.NetworkModule.provideOkHttpClient
 import ir.m3hdi.agahinet.di.RepositoryModule.provideUserAuthRepository
-import ir.m3hdi.agahinet.util.Resultx
-import ir.m3hdi.agahinet.util.onFailure
-import ir.m3hdi.agahinet.util.onSuccess
+import ir.m3hdi.agahinet.data.onFailure
+import ir.m3hdi.agahinet.data.onSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

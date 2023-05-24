@@ -35,5 +35,11 @@
     <string name="choose_category">دسته بندی موردنظر را انتخاب کنید :</string>
     <string name="choose_cities">شهر های موردنظر را انتخاب کنید :</string>
     <string name="entire_iran">کل ایران</string>
+    <string name="all_cities_of_iran">تمام شهر های ایران</string>
+    <string name="all_categories">تمام دسته ها</string>
+    <string name="select_all">انتخاب همه</string>
+    <string name="deselect_all">حذف همه</string>
+    <string name="select_at_least_one_city">حداقل یک شهر را باید انتخاب کنید!</string>
+    <string name="min_greater_than_max_warning">مقدار شروع قیمت نمی تواند از مقدار بایانی بیشتر باشد!</string>
 
 </resources>

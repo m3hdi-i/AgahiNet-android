@@ -16,9 +16,11 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import ir.m3hdi.agahinet.data.Resultx
 import ir.m3hdi.agahinet.data.model.UserAuthResponse
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 
 class AppUtils {
@@ -37,6 +39,19 @@ class AppUtils {
 
         fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
 
+        private var iranCities:List<String>?=null
+
+        suspend fun getIranCities():List<String> {
+            return withContext(Dispatchers.IO){
+                if (iranCities!=null){
+                     iranCities!!
+                }else{
+                    listOf()
+                }
+            }
+
+
+        }
 
         fun retrieveAuthData(context: Context)
         {
@@ -187,3 +202,9 @@ class AppUtils {
         }
     }
 }
+
+/**
+ * The mutable version of kotlin's [Pair]
+ */
+class MutablePair<A, B>(var first: A, var second: B)
+

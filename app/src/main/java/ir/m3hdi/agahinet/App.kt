@@ -1,10 +1,9 @@
-package ir.m3hdi.agahinet.di
+package ir.m3hdi.agahinet
 
 import android.app.Application
 import androidx.core.content.res.ResourcesCompat
 import dagger.hilt.android.HiltAndroidApp
 import es.dmoral.toasty.Toasty
-import ir.m3hdi.agahinet.R
 
 @HiltAndroidApp
 class App : Application(){

@@ -13,9 +13,7 @@ interface ANetService {
     @POST("api/signin")
     suspend fun signin(@Body body: UserSignin): UserAuthResponse
 
-
     @POST("api/ad/search")
     suspend fun searchAds(@Body filters: AdFilters): List<Ad>
-
 
 }
