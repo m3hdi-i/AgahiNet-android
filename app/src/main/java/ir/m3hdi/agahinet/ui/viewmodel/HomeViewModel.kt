@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.model.Ad
 import ir.m3hdi.agahinet.data.model.AdFilters
 import ir.m3hdi.agahinet.data.model.Category
@@ -48,8 +47,10 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
     private val searchQueryPublishSubject= PublishSubject.create<String>()
     private val rxCompositeDisposable = CompositeDisposable()
 
-    private val _currentProvince= MutableStateFlow(ENTIRE_IRAN_CITY)
-    val currentProvince=_currentProvince.asStateFlow()
+    var currentProvince:City = ENTIRE_IRAN_CITY
+
+    private val _tempCurrentProvince= MutableStateFlow(ENTIRE_IRAN_CITY)
+    val tempCurrentProvince=_tempCurrentProvince.asStateFlow()
 
     var tempCategory:Category?=null
     var tempCities:List<City>?=null
@@ -58,6 +59,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
     var isLastPage = false
 
+    lateinit var allProvincesList:List<City>
 
     init {
 
@@ -88,6 +90,11 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
         // Start App with showing all recent ads
         searchQueryPublishSubject.onNext("")
+
+        // Get list of all provinces from prePopulated ROOM database
+        viewModelScope.launch(Dispatchers.IO) {
+            allProvincesList=  mutableListOf(ENTIRE_IRAN_CITY) + cityDao.getAllProvinces()
+        }
 
     }
 
@@ -124,20 +131,13 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
 
     fun fetchNextPage() = fetchNextPagePublishSubject.onNext(Unit)
 
-
-    private var _allProvincesList:List<City>?=null
-    suspend fun getAllProvinces():List<City>{
-        return _allProvincesList ?: withContext(Dispatchers.IO){
-            val plist = mutableListOf(ENTIRE_IRAN_CITY) + cityDao.getAllProvinces()
-            _allProvincesList = plist
-            return@withContext plist
-        }
-    }
     suspend fun getCitiesOfProvince(provinceId:Int) = withContext(Dispatchers.IO){
         return@withContext cityDao.getCitiesOfProvince(provinceId)
     }
 
-
+    fun setTempCurrentProvince(province:City){
+        _tempCurrentProvince.value=province
+    }
     fun fillTempFilters(){
         _filters.value?.let {
             tempCategory=it.category
@@ -145,6 +145,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
             tempMinPrice=it.minPrice
             tempMaxPrice=it.maxPrice
         }
+        _tempCurrentProvince.value = currentProvince
     }
 
     fun applyTempFilters(){
@@ -154,6 +155,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,a
              minPrice=tempMinPrice
              maxPrice=tempMaxPrice
          }
+        currentProvince=tempCurrentProvince.value
     }
 
     fun setCurrentProvince(city:City){

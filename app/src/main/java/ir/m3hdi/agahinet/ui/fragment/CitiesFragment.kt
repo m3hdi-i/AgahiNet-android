@@ -32,8 +32,6 @@ class CitiesFragment : Fragment() {
     private var _citiesAdapter:CitiesAdapter?=null
     private val citiesAdapter get() = _citiesAdapter!!
 
-    lateinit var provincesToSelect:List<City>
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCitiesBinding.inflate(inflater, container, false)
         return binding.root
@@ -48,7 +46,7 @@ class CitiesFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    viewModel.currentProvince.collect{
+                    viewModel.tempCurrentProvince.collect{
                         binding.textViewSelectedProvince.text=it.title
 
                         if (it.cityId==0){
@@ -75,9 +73,6 @@ class CitiesFragment : Fragment() {
                         setupSelectAllButton(it)
                     }
                 }
-
-                provincesToSelect=viewModel.getAllProvinces()
-
             }
         }
     }
@@ -93,7 +88,7 @@ class CitiesFragment : Fragment() {
         }
         binding.fabOk.setOnClickListener {
             val selectedCities= citiesAdapter.getSelectedCities()
-            if (viewModel.currentProvince.value.cityId!=0 && selectedCities.isEmpty()){
+            if (viewModel.tempCurrentProvince.value.cityId!=0 && selectedCities.isEmpty()){
                 Toasty.warning(requireContext(), getString(R.string.select_at_least_one_city), Toast.LENGTH_SHORT).show()
             }else
             {
@@ -132,9 +127,9 @@ class CitiesFragment : Fragment() {
 
         binding.buttonSelectProvince.setOnClickListener {
             val modalBottomSheet = ProvinceSelectModal().apply {
-                provinces=provincesToSelect
+                provinces=viewModel.allProvincesList
                 onProvinceSelectedListener={
-                    viewModel.setCurrentProvince(it)
+                    viewModel.setTempCurrentProvince(it)
                 }
             }
             modalBottomSheet.show(childFragmentManager, ProvinceSelectModal.TAG)
