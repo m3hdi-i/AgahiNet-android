@@ -14,9 +14,7 @@
 
         <action
             android:id="@+id/action_home_to_filters"
-            app:destination="@id/filters_screen"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/filters_screen" />
     </fragment>
 
     <fragment
@@ -35,15 +33,11 @@
 
         <action
             android:id="@+id/action_filters_to_categories"
-            app:destination="@id/categories_screen"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/categories_screen" />
 
         <action
             android:id="@+id/action_filters_to_cities"
-            app:destination="@id/cities_screen"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/cities_screen" />
     </fragment>
 
     <fragment

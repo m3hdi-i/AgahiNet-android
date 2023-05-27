@@ -9,12 +9,12 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
-import ir.m3hdi.agahinet.data.model.SigninState
-import ir.m3hdi.agahinet.data.model.SignupState
+import ir.m3hdi.agahinet.domain.model.SigninState
+import ir.m3hdi.agahinet.domain.model.SignupState
 import ir.m3hdi.agahinet.databinding.ActivityAuthBinding
 import ir.m3hdi.agahinet.ui.viewmodel.AuthViewModel
 import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.data.Resultx
+import ir.m3hdi.agahinet.domain.model.Resultx
 
 @AndroidEntryPoint
 class AuthActivity: AppCompatActivity() {

@@ -9,10 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Transition
+import com.google.android.material.transition.MaterialSharedAxis
+
 import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentFiltersBinding
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
+import ir.m3hdi.agahinet.util.AppUtils.Companion.getMaterialSharedAxisZTransition
 
 class FiltersFragment : Fragment() {
 
@@ -21,9 +25,12 @@ class FiltersFragment : Fragment() {
 
     private val viewModel: HomeViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         return binding.root
     }
 

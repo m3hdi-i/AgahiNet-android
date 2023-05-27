@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
             if (newView !is TextInputEditText)
                 imm.hideSoftInputFromWindow((oldView ?: newView)?.windowToken ?: window.attributes.token, 0)
         }*/
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

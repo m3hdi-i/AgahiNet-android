@@ -17,10 +17,10 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
-    fun provideUserAuthRepository(api: ANetService, dispatcher: CoroutineDispatcher): UserAuthRepository = UserAuthRepository(api,dispatcher)
+    fun provideUserAuthRepository(api: ANetService): UserAuthRepository = UserAuthRepository(api)
 
     @Provides
     @ViewModelScoped
-    fun provideAdsRepository(api: ANetService, dispatcher: CoroutineDispatcher): AdRepository = AdRepository(api,dispatcher)
+    fun provideAdsRepository(api: ANetService): AdRepository = AdRepository(api)
 
 }

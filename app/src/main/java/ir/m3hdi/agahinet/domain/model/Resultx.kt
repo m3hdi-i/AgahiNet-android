@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.data
+package ir.m3hdi.agahinet.domain.model
 
 /*
  * Copyright 2022 Nicolas Haan.

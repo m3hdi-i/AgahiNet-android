@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.data.model
+package ir.m3hdi.agahinet.domain.model
 
 import com.squareup.moshi.Json
 

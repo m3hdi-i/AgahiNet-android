@@ -6,16 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.m3hdi.agahinet.data.model.SigninState
-import ir.m3hdi.agahinet.data.model.SignupState
-import ir.m3hdi.agahinet.data.model.UserSignin
-import ir.m3hdi.agahinet.data.model.UserSignup
+import ir.m3hdi.agahinet.domain.model.SigninState
+import ir.m3hdi.agahinet.domain.model.SignupState
+import ir.m3hdi.agahinet.domain.model.UserSignin
+import ir.m3hdi.agahinet.domain.model.UserSignup
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.saveSuccessfulAuthData
-import ir.m3hdi.agahinet.data.Resultx
-import ir.m3hdi.agahinet.data.onFailure
-import ir.m3hdi.agahinet.data.onSuccess
+import ir.m3hdi.agahinet.domain.model.Resultx
+import ir.m3hdi.agahinet.domain.model.onFailure
+import ir.m3hdi.agahinet.domain.model.onSuccess
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

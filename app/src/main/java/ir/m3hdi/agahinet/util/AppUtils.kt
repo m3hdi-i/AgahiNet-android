@@ -16,8 +16,8 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import ir.m3hdi.agahinet.data.Resultx
-import ir.m3hdi.agahinet.data.model.UserAuthResponse
+import ir.m3hdi.agahinet.domain.model.Resultx
+import ir.m3hdi.agahinet.domain.model.UserAuthResponse
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -200,6 +200,15 @@ class AppUtils {
         } catch (exception: Exception) {
             Resultx.failure(exception)
         }
+
+        fun getMaterialSharedAxisZTransition(forward:Boolean,excludeViewId:Int?=null): MaterialSharedAxis {
+            return MaterialSharedAxis(MaterialSharedAxis.Z, forward).apply {
+                excludeViewId?.let {
+                    excludeTarget(excludeViewId,true)
+                }
+            }
+        }
+
     }
 }
 

@@ -8,7 +8,7 @@ import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
-import ir.m3hdi.agahinet.data.model.Category
+import ir.m3hdi.agahinet.domain.model.Category
 import ir.m3hdi.agahinet.databinding.RvCategoryBinding
 import ir.m3hdi.agahinet.databinding.RvProvinceBinding
 import ir.m3hdi.agahinet.util.AppUtils.Companion.dpToPx

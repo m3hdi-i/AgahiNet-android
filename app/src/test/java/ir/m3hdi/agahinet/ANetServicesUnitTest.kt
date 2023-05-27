@@ -1,8 +1,8 @@
 package ir.m3hdi.agahinet
 
-import ir.m3hdi.agahinet.data.model.AdFilters
-import ir.m3hdi.agahinet.data.model.UserSignin
-import ir.m3hdi.agahinet.data.model.UserSignup
+import ir.m3hdi.agahinet.domain.model.SearchFilters
+import ir.m3hdi.agahinet.domain.model.UserSignin
+import ir.m3hdi.agahinet.domain.model.UserSignup
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
 import ir.m3hdi.agahinet.di.NetworkModule.provideANetService
@@ -11,8 +11,8 @@ import ir.m3hdi.agahinet.di.NetworkModule.provideRetrofit
 import ir.m3hdi.agahinet.di.NetworkModule.provideMoshi
 import ir.m3hdi.agahinet.di.NetworkModule.provideOkHttpClient
 import ir.m3hdi.agahinet.di.RepositoryModule.provideUserAuthRepository
-import ir.m3hdi.agahinet.data.onFailure
-import ir.m3hdi.agahinet.data.onSuccess
+import ir.m3hdi.agahinet.domain.model.onFailure
+import ir.m3hdi.agahinet.domain.model.onSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -55,7 +55,7 @@ class ANetServicesUnitTest {
 
     @Test
     fun testSearchAds(): Unit = runBlocking {
-        val filters= AdFilters(null,null,null,null,null,10,0 )
+        val filters= SearchFilters(null,null,null,null,null,10,0 )
         adsRepo.searchAds(filters).onFailure {
             println(it.stackTraceToString())
             assert(false)

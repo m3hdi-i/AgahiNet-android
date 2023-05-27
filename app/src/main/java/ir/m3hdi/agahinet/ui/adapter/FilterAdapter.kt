@@ -1,10 +1,9 @@
 package ir.m3hdi.agahinet.ui.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ir.m3hdi.agahinet.data.model.AdFilters
+import ir.m3hdi.agahinet.domain.model.SearchFilters
 import ir.m3hdi.agahinet.databinding.RvFilterBinding
 
 class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
@@ -31,7 +30,7 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.ViewHolder>() {
         }
     }
 
-    fun setFilters(filters: AdFilters) {
+    fun setFilters(filters: SearchFilters) {
         items.clear()
         filters.category?.let {
             items.add(it.title)

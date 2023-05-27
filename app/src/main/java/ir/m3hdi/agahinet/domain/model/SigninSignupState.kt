@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.data.model
+package ir.m3hdi.agahinet.domain.model
 
 enum class SigninState {
     BAD_EMAIL,BAD_PASSWORD,INCORRECT_CREDS,OK

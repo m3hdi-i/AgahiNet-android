@@ -23,7 +23,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BASIC
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient
             .Builder()
             .readTimeout(30, TimeUnit.SECONDS)

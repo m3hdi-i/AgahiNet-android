@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_container"
+    android:clipChildren="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,6 +21,9 @@
         app:navGraph="@navigation/mobile_navigation"
         tools:layout="@layout/fragment_home" />
 
+
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
@@ -27,9 +31,9 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="@drawable/round_corners_top"
+        app:elevation="12dp"
+        android:elevation="12dp"
         app:backgroundTint="#F3E5F5"
-        app:elevation="5dp"
-        android:elevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -38,7 +42,6 @@
         android:textAlignment="center"
         app:labelVisibilityMode="labeled"/>
         <!-- android:theme="@style/BottomNavigationStyle" -->
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

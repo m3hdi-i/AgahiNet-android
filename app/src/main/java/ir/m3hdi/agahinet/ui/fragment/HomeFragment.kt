@@ -17,8 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
@@ -27,40 +25,54 @@ import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import ir.m3hdi.agahinet.data.Resultx
-import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
+    private val adAdapter:AdAdapter by lazy { AdAdapter() }
+
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+
     private val viewModel: HomeViewModel by activityViewModels()
 
+
     private lateinit var concatAdapter:ConcatAdapter
-    private lateinit var adAdapter:AdAdapter
     private lateinit var progressAdapter:ProgressAdapter
+
     private lateinit var filtersAdapter:FilterAdapter
 
     private lateinit var inputMethodManager: InputMethodManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Set enter/exit transitions
+        /*exitTransition = AppUtils.getMaterialSharedAxisZTransition(true)
+        reenterTransition = AppUtils.getMaterialSharedAxisZTransition(false)*/
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupUI()
+        setupViewModelObservers()
+
+        // Start app with showing all recent ads
+        viewModel.doNewSearch("")
     }
 
     private fun setupUI(){
 
         setupAdsRv()
         setupFiltersRv()
-        setupViewModelObservers()
 
         binding.buttonSetFilters.setOnClickListener {
             viewModel.fillTempFilters()
@@ -82,29 +94,16 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val adsRvLayoutManager=binding.recyclerViewAds.layoutManager as LinearLayoutManager
-
-        binding.recyclerViewAds.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
-                if(dy > 0 && adsRvLayoutManager.findLastVisibleItemPosition() == adsRvLayoutManager.itemCount-1 ){
-                    // We have reached the end of the recycler view.
-                    viewModel.fetchNextPage()
-                }
-                super.onScrolled(recyclerView, dx, dy)
-            }
-        })
-
         binding.editTextSearch.doOnTextChanged { text, start, before, count ->
-            viewModel.search(text.toString())
+            viewModel.doNewSearch(text.toString())
+            //binding.recyclerViewAds.smoothScrollToPosition(0)
+
         }
 
     }
 
     private fun setupAdsRv()
     {
-        adAdapter=AdAdapter()
-        adAdapter.items=viewModel.adItems // Pass a refrence of ad items in my viewModel to the adapter
         progressAdapter=ProgressAdapter()
         concatAdapter = ConcatAdapter(adAdapter)
         binding.recyclerViewAds.adapter = concatAdapter
@@ -112,6 +111,7 @@ class HomeFragment : Fragment() {
         adAdapter.onItemClickFunction = {
             Toasty.info(requireContext(),"...",Toast.LENGTH_SHORT,false).show()
         }
+
     }
 
     private fun setupFiltersRv()
@@ -131,7 +131,8 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                launch {
+                /*launch {
+
                     viewModel.nextPage.drop(1).collect {
                         when(it){
                             is Resultx.Loading->{
@@ -162,13 +163,15 @@ class HomeFragment : Fragment() {
                             else -> {}
                         }
                     }
-                }
+                }*/
 
                 launch {
-                    viewModel.homeRvClear.collect{
-                        adAdapter.clearItems()
+                    viewModel.pagingDataFlow.collectLatest{
+                        adAdapter.submitData(it)
                     }
                 }
+
+
             }
         }
 
@@ -180,6 +183,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.recyclerViewAds.adapter=null
         _binding = null
     }
 

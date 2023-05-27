@@ -24,9 +24,6 @@ object UtilityModule {
 */
 
     @Provides
-    fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @Provides
     fun provideSecureSharedPreferences(@ApplicationContext context: Context)= AppUtils.getSecureSharedPref(context)
 
 }

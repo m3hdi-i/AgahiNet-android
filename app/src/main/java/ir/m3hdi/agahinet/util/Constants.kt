@@ -3,12 +3,10 @@ package ir.m3hdi.agahinet.util
 import android.app.Application
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
-import ir.m3hdi.agahinet.data.model.Category
+import ir.m3hdi.agahinet.domain.model.Category
 
 class Constants {
     companion object{
-
-        const val PAGE_SIZE=10
 
         val CATEGORIES = listOf(
             Category(0,"کل دسته ها", R.drawable.ic_category),
