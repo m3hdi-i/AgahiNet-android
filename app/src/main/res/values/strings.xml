@@ -15,7 +15,7 @@
     <string name="phone_number">شماره تلفن</string>
 
     <string name="network_error">مشکل در اتصال به سرور آگهی نت !</string>
-    <string name="no_network">لطفا از اتصال خود به اینترنت اطمینان حاصل کنید</string>
+    <string name="no_network_error">لطفا از اتصال خود به اینترنت اطمینان حاصل کنید</string>
 
     <string name="bad_email">ایمیل نامعتبر/خالی</string>
     <string name="bad_password">رمز عبور نمی تواند خالی باشد</string>
@@ -41,5 +41,6 @@
     <string name="deselect_all">حذف همه</string>
     <string name="select_at_least_one_city">حداقل یک شهر را باید انتخاب کنید!</string>
     <string name="min_greater_than_max_warning">مقدار شروع قیمت نمی تواند از مقدار بایانی بیشتر باشد!</string>
+    <string name="retry">تلاش دوباره</string>
 
 </resources>

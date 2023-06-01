@@ -61,6 +61,9 @@ dependencies {
     // Paging
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
 
+    // Swipe Refresh
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
     // ROOM Database
     def room_version = "2.5.1"
     implementation "androidx.room:room-runtime:$room_version"
@@ -89,7 +92,7 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.2'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

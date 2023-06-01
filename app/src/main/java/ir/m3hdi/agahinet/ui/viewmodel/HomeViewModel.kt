@@ -28,7 +28,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
+const val DEBOUNCE_TIMEOUT_MS=500L
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val adRepository: AdRepository,private val cityRepository: CityRepository,application: Application) : AndroidViewModel(application)  {
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
             // Search box control
             searchQueryPublishSubject
                 .distinctUntilChanged()
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(DEBOUNCE_TIMEOUT_MS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
 

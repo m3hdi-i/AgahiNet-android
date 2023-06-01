@@ -95,7 +95,7 @@ class AppUtils {
         }
 
 
-        fun manageNeedAuthFragment(fragmentManager: FragmentManager, layoutParent: ViewGroup, layoutNeedAuth: View, layoutContent: View){
+        fun handleNeedAuthFragment(fragmentManager: FragmentManager, layoutParent: ViewGroup, layoutNeedAuth: View, layoutContent: View){
 
             val tag="need_auth_${layoutParent.id}"
             if (isAuthed){
@@ -121,6 +121,21 @@ class AppUtils {
 
         fun isValidEmail(email: String): Boolean {
             return email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
+
+        fun showWithsharedAxisYTransition(container: ViewGroup, inView: View)
+        {
+            val sharedAxis = MaterialSharedAxis(MaterialSharedAxis.Y, true)
+            TransitionManager.beginDelayedTransition(container, sharedAxis)
+
+            inView.visibility= View.VISIBLE
+        }
+        fun hideWithsharedAxisYTransition(container: ViewGroup, outView: View)
+        {
+            val sharedAxis = MaterialSharedAxis(MaterialSharedAxis.Y, true)
+            TransitionManager.beginDelayedTransition(container, sharedAxis)
+
+            outView.visibility= View.GONE
         }
 
         fun sharedAxisYTransition(container: ViewGroup, outView: View, inView: View)

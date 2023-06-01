@@ -65,7 +65,7 @@ class AuthActivity: AppCompatActivity() {
                 val password=binding.editTextSigninPassword.text.toString()
                 viewModel.performSignin(email,password)
             }else{
-                Toasty.warning(applicationContext, getString(R.string.no_network), Toast.LENGTH_SHORT).show()
+                Toasty.warning(applicationContext, getString(R.string.no_network_error), Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -80,7 +80,7 @@ class AuthActivity: AppCompatActivity() {
 
                 viewModel.performSignup(name,email,password,phoneNumber)
             }else{
-                Toasty.warning(applicationContext, getString(R.string.no_network), Toast.LENGTH_SHORT).show()
+                Toasty.warning(applicationContext, getString(R.string.no_network_error), Toast.LENGTH_SHORT).show()
             }
 
         }

@@ -1,8 +1,10 @@
 package ir.m3hdi.agahinet.data.repository
 
+import android.content.Context
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ir.m3hdi.agahinet.domain.model.Ad
 import ir.m3hdi.agahinet.data.remote.ANetService
 import ir.m3hdi.agahinet.data.paging.AdsPagingSource
@@ -11,7 +13,7 @@ import ir.m3hdi.agahinet.domain.model.SearchFilters
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class AdRepository @Inject constructor(private val api: ANetService)
+class AdRepository @Inject constructor(private val api: ANetService, @ApplicationContext private val context: Context)
 {
     /*suspend fun searchAds(filters: SearchFiltersRequest): Resultx<List<Ad>> = withContext(Dispatchers.IO){
         return@withContext AppUtils.suspendRunCatching {
@@ -28,7 +30,7 @@ class AdRepository @Inject constructor(private val api: ANetService)
                 enablePlaceholders = true
             ),
             pagingSourceFactory = {
-                AdsPagingSource(api,filters)
+                AdsPagingSource(api,filters, context)
             }
         ).flow
     }
