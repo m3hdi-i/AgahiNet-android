@@ -22,13 +22,11 @@ class AdsPagingSource(private val service:ANetService,private val searchFilters:
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Ad> {
         // Start refresh at position 1 if undefined.
         val position = params.key ?: INITIAL_PAGE
-        println("--------------------------------------------------------------- $position")
         val offset = if (params.key != null) ((position - 1) * NETWORK_PAGE_SIZE) else 0
 
         return try {
             if (AppUtils.hasInternetConnection(context)){
                 withContext(Dispatchers.IO){
-                    delay(2000)
                     val ads = service.searchAds(searchFilters.toSearchFiltersRequest(limit = params.loadSize,offset=offset))
                     val nextKey = if (ads.size < NETWORK_PAGE_SIZE) null else (position + (params.loadSize / NETWORK_PAGE_SIZE))
 

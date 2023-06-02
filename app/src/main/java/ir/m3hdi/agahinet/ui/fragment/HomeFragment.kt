@@ -2,7 +2,6 @@ package ir.m3hdi.agahinet.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -32,12 +29,11 @@ import ir.m3hdi.agahinet.domain.model.NetworkException
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
-import ir.m3hdi.agahinet.ui.viewmodel.DEBOUNCE_TIMEOUT_MS
+import ir.m3hdi.agahinet.ui.adapter.RetryAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
@@ -53,7 +49,10 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by activityViewModels()
 
     private lateinit var concatAdapter:ConcatAdapter
-    private lateinit var progressAdapter:ProgressAdapter
+    private lateinit var pagingProgressBarAdapter:ProgressAdapter
+    private lateinit var headerAdapter:RetryAdapter
+    private lateinit var footerAdapter:RetryAdapter
+
     private lateinit var filtersAdapter:FilterAdapter
 
     private lateinit var inputMethodManager: InputMethodManager
@@ -112,25 +111,27 @@ class HomeFragment : Fragment() {
 
     }
 
+
+
     private fun setupAdsRv()
     {
-        progressAdapter=ProgressAdapter()
-        concatAdapter = ConcatAdapter(adAdapter)
+        pagingProgressBarAdapter=ProgressAdapter()
+        headerAdapter= RetryAdapter()
+        footerAdapter = RetryAdapter()
+        concatAdapter = ConcatAdapter(headerAdapter,adAdapter,pagingProgressBarAdapter,footerAdapter)
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.setHasFixedSize(true)
         adAdapter.onItemClickFunction = {
             Toasty.info(requireContext(),"...",Toast.LENGTH_SHORT,false).show()
         }
-        //adAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        binding.recyclerViewAds.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val scrollPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                binding.swipeRefreshLayout.isEnabled = scrollPosition == 0
-            }
-        })
+        adAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             adAdapter.refresh()
         }
+        val retry = { adAdapter.retry() }
+        headerAdapter.onClickListener = retry
+        footerAdapter.onClickListener = retry
     }
 
 
@@ -151,12 +152,14 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
+                // observe paging data
                 launch {
                     viewModel.pagingDataFlow.collectLatest{
                         adAdapter.submitData(viewLifecycleOwner.lifecycle,it)
                     }
                 }
 
+                // Handle paging events
                 launch {
                     adAdapter.loadStateFlow.collect{loadState->
 
@@ -165,25 +168,12 @@ class HomeFragment : Fragment() {
                         binding.textViewNoResults.isVisible=isListEmpty
 
                         // Show loading spinner during initial load or refresh.
-                        handleLoading(loadState.source.refresh is LoadState.Loading)
+                        binding.swipeRefreshLayout.isRefreshing = loadState.refresh is LoadState.Loading
 
-                         if (loadState.append is LoadState.Loading){
-                             if (progressAdapter !in concatAdapter.adapters)
-                                 concatAdapter.addAdapter(1,progressAdapter)
-                         }else{
-                             if (progressAdapter in concatAdapter.adapters)
-                                 concatAdapter.removeAdapter(progressAdapter)
-                         }
+                        // Show progressBar in bottom while fetching next pages
+                        pagingProgressBarAdapter.showView(loadState.append is LoadState.Loading)
 
-                        // Only show the list if refresh succeeds.
-                        //binding.recyclerViewAds.isVisible = loadState.source.refresh is LoadState.NotLoading
-
-                        /**
-                         * loadState.refresh - represents the load state for loading the PagingData for the first time.
-                         * loadState.prepend - represents the load state for loading data at the start of the list.
-                         * loadState.append - represents the load state for loading data at the end of the list.
-                         * */
-                        // If we have an error, show a toast
+                        // Show a toast when we have a error
                         val errorState = when {
                             loadState.append is LoadState.Error -> loadState.append as LoadState.Error
                             loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
@@ -196,6 +186,18 @@ class HomeFragment : Fragment() {
                                 else { R.string.network_error }
                             Toasty.error(requireContext(), getString(messageResId), Toast.LENGTH_SHORT, false).show()
                         }
+
+                        // Show retry button on top or bottom, if we have a error
+                        val showHeaderRetryButton= loadState.refresh is LoadState.Error
+                        headerAdapter.showView(showHeaderRetryButton)
+                        if (showHeaderRetryButton)
+                            binding.recyclerViewAds.smoothScrollToPosition(0)
+
+                        val showFooterRetryButton=loadState.append is LoadState.Error
+                        footerAdapter.showView(showFooterRetryButton)
+                        if (showFooterRetryButton)
+                            binding.recyclerViewAds.smoothScrollToPosition(concatAdapter.itemCount-1)
+
                     }
                 }
 
@@ -206,14 +208,12 @@ class HomeFragment : Fragment() {
                             old.prepend.endOfPaginationReached ==
                                     new.prepend.endOfPaginationReached }
                         .filter { it.refresh is LoadState.NotLoading && it.prepend.endOfPaginationReached}
+                        .drop(1)
                         .collect {
                             //binding.appBarLayout.isLifted=false
                             binding.recyclerViewAds.scrollToPosition(0)
                         }
                 }
-
-
-
             }
         }
 
@@ -223,9 +223,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun handleLoading(loading: Boolean) {
-        binding.swipeRefreshLayout.isRefreshing = loading == true
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
