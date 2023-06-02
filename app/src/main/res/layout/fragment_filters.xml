@@ -151,23 +151,24 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/outlinedTextField"
+                android:id="@+id/field_minPrice"
                 android:layout_width="245dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="32dp"
                 android:textDirection="ltr"
                 app:hintEnabled="false"
+                app:helperTextEnabled="true"
+                app:helperText=""
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.25"
-                app:layout_constraintStart_toEndOf="@+id/textView_set_price"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_set_price"
                 app:suffixText="تومان">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_min_price"
+                    style="@style/PriceRangeEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/PriceRangeEditText"/>
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -178,9 +179,9 @@
                 android:layout_marginEnd="8dp"
                 android:text="از"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="@+id/outlinedTextField"
-                app:layout_constraintEnd_toStartOf="@+id/outlinedTextField"
-                app:layout_constraintTop_toTopOf="@+id/outlinedTextField" />
+                app:layout_constraintBottom_toBottomOf="@+id/field_minPrice"
+                app:layout_constraintEnd_toStartOf="@+id/field_minPrice"
+                app:layout_constraintTop_toTopOf="@+id/field_minPrice" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -189,22 +190,24 @@
                 android:layout_marginEnd="8dp"
                 android:text="تا"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="@+id/outlinedTextField2"
-                app:layout_constraintEnd_toStartOf="@+id/outlinedTextField2"
-                app:layout_constraintTop_toTopOf="@+id/outlinedTextField2" />
+                app:layout_constraintBottom_toBottomOf="@+id/field_maxPrice"
+                app:layout_constraintEnd_toStartOf="@+id/field_maxPrice"
+                app:layout_constraintTop_toTopOf="@+id/field_maxPrice" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/outlinedTextField2"
+                android:id="@+id/field_maxPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
                 app:hintEnabled="false"
+                app:helperTextEnabled="true"
+                app:helperText=""
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/outlinedTextField"
+                app:layout_constraintEnd_toEndOf="@+id/field_minPrice"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/outlinedTextField"
-                app:layout_constraintTop_toBottomOf="@+id/outlinedTextField"
+                app:layout_constraintStart_toStartOf="@+id/field_minPrice"
+                app:layout_constraintTop_toBottomOf="@+id/field_minPrice"
                 app:layout_constraintVertical_bias="0.0"
                 android:textDirection="ltr"
                 app:suffixText="تومان">

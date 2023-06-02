@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Transition
+import com.github.yamin8000.ppn.PersianHelpers.spellToPersian
 import com.google.android.material.transition.MaterialSharedAxis
 
 import es.dmoral.toasty.Toasty
@@ -17,6 +19,7 @@ import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentFiltersBinding
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import ir.m3hdi.agahinet.util.AppUtils.Companion.getMaterialSharedAxisZTransition
+import ir.m3hdi.agahinet.util.AppUtils.Companion.numberToPersianFormattedCurrency
 
 class FiltersFragment : Fragment() {
 
@@ -57,9 +60,19 @@ class FiltersFragment : Fragment() {
 
         viewModel.tempMinPrice?.let {min->
             binding.inputMinPrice.setText(min)
+            binding.fieldMinPrice.helperText = numberToPersianFormattedCurrency(min)
         }
         viewModel.tempMaxPrice?.let {max->
             binding.inputMaxPrice.setText(max)
+            binding.fieldMaxPrice.helperText = numberToPersianFormattedCurrency(max)
+        }
+
+
+        binding.inputMinPrice.doOnTextChanged { text, _, _, _ ->
+            binding.fieldMinPrice.helperText = numberToPersianFormattedCurrency(text.toString())
+        }
+        binding.inputMaxPrice.doOnTextChanged { text, _, _, _ ->
+            binding.fieldMaxPrice.helperText = numberToPersianFormattedCurrency(text.toString())
         }
 
         binding.fabOk.setOnClickListener {
@@ -78,6 +91,7 @@ class FiltersFragment : Fragment() {
 
         }
     }
+
 
 
     override fun onDestroyView() {

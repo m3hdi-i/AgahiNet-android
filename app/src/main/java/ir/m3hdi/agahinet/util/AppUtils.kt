@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.transition.TransitionManager
+import com.github.yamin8000.ppn.PersianHelpers.spellToPersian
 import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -223,6 +224,9 @@ class AppUtils {
                 }
             }
         }
+
+        private const val currencySuffix=" تومان"
+        fun numberToPersianFormattedCurrency(text:String?) = if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
 
     }
 }

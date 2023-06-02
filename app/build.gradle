@@ -91,6 +91,9 @@ dependencies {
     // Custom Toast
     implementation 'com.github.GrenderG:Toasty:1.5.2'
 
+    // Persian numbers formatter
+    implementation 'com.github.yamin8000:PrettyPersianNumbers:2.0.0'
+
     // LeakCanary
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
