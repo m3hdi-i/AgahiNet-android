@@ -14,8 +14,6 @@ import kotlin.random.Random
 
 class AdAdapter : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) {
 
-    //var items= mutableListOf<Ad>()
-
     var onItemClickFunction:((ad: Ad)->Unit)? = null
 
     inner class ViewHolder(val binding: RvAdBinding) : RecyclerView.ViewHolder(binding.root)

@@ -138,7 +138,6 @@ class HomeFragment : Fragment() {
     private fun setupFiltersRv()
     {
         ViewCompat.setNestedScrollingEnabled(binding.recyclerViewFilters, false)
-        // TODO : Use DiffUtil for this RV
         filtersAdapter=FilterAdapter()
         binding.recyclerViewFilters.adapter=filtersAdapter
         filtersAdapter.onItemCloseFunction = {
