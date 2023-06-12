@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
         setupViewModelObservers()
 
         // Start app with showing all recent ads
-        viewModel.doNewSearch("")
+        viewModel.setSearchQuery("")
     }
 
     private fun setupUI(){
@@ -95,7 +95,6 @@ class HomeFragment : Fragment() {
         binding.editTextSearch.setOnEditorActionListener { view, actionId, _ ->
             view.clearFocus()
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                // Hide the keyboard
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
             } else {
@@ -104,14 +103,11 @@ class HomeFragment : Fragment() {
         }
 
         binding.editTextSearch.doOnTextChanged { text, start, before, count ->
-            viewModel.doNewSearch(text.toString())
+            viewModel.setSearchQuery(text.toString())
         }
 
         binding.swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.seed))
-
     }
-
-
 
     private fun setupAdsRv()
     {
@@ -129,9 +125,9 @@ class HomeFragment : Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             adAdapter.refresh()
         }
-        val retry = { adAdapter.retry() }
-        headerAdapter.onClickListener = retry
-        footerAdapter.onClickListener = retry
+        val retryFunc = { adAdapter.retry() }
+        headerAdapter.onClickListener = retryFunc
+        footerAdapter.onClickListener = retryFunc
     }
 
 
@@ -141,8 +137,7 @@ class HomeFragment : Fragment() {
         filtersAdapter=FilterAdapter()
         binding.recyclerViewFilters.adapter=filtersAdapter
         filtersAdapter.onItemCloseFunction = {
-            Toasty.info(requireContext(),"closed",Toast.LENGTH_SHORT,false).show()
-            //viewModel.setCategory(null)
+            viewModel.clearFilterTag(it)
         }
     }
 
@@ -213,22 +208,26 @@ class HomeFragment : Fragment() {
                             binding.recyclerViewAds.scrollToPosition(0)
                         }
                 }
+
+                // Observe filters (ignere when just query text changes)
+                launch {
+                    viewModel.filters
+                        .distinctUntilChanged { old, new -> old.category == new.category &&
+                        old.cities == new.cities && old.minPrice==new.minPrice && old.maxPrice==new.maxPrice }
+                        .collect{
+                            filtersAdapter.setFilters(it)
+                            viewModel.search()
+                    }
+                }
             }
         }
 
-        viewModel.filters.observe(viewLifecycleOwner) {
-            filtersAdapter.setFilters(it)
-        }
-
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding.recyclerViewAds.adapter=null
         _binding = null
     }
-
 
 }

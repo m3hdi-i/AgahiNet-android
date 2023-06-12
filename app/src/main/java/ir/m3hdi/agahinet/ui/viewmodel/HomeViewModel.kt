@@ -1,6 +1,7 @@
 package ir.m3hdi.agahinet.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -8,15 +9,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.domain.model.SearchFilters
-import ir.m3hdi.agahinet.domain.model.Category
-import ir.m3hdi.agahinet.data.repository.AdRepository
-import ir.m3hdi.agahinet.data.local.dao.CityDao
 import ir.m3hdi.agahinet.data.local.entity.City
+import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.CityRepository
+import ir.m3hdi.agahinet.domain.model.Ad
+import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.FilterTag
+import ir.m3hdi.agahinet.domain.model.SearchFilters
 import ir.m3hdi.agahinet.util.Constants.Companion.ENTIRE_IRAN_CITY
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -35,13 +34,13 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
 
     private val initialSearchFilters=SearchFilters()
 
-    private val _filters = MutableLiveData(initialSearchFilters)
-    val filters :LiveData<SearchFilters> get() = _filters
+    private val _filters= MutableStateFlow(initialSearchFilters)
+    val filters=_filters.asStateFlow()
 
     private val searchQueryPublishSubject= PublishSubject.create<String>()
     private val rxCompositeDisposable = CompositeDisposable()
 
-    var currentProvince:City = ENTIRE_IRAN_CITY
+    private var currentProvince:City = ENTIRE_IRAN_CITY
     lateinit var allProvincesList:List<City>
 
     private val _tempCurrentProvince= MutableStateFlow(ENTIRE_IRAN_CITY)
@@ -55,10 +54,9 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
     private val search = MutableSharedFlow<SearchFilters>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingDataFlow = search.flatMapLatest { searchAds() }.cachedIn(viewModelScope)
+    val pagingDataFlow = search.flatMapLatest { getNewSearchFlow() }.cachedIn(viewModelScope)
 
     init {
-
         rxCompositeDisposable.addAll(
             // Search box control
             searchQueryPublishSubject
@@ -66,30 +64,39 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
                 .debounce(DEBOUNCE_TIMEOUT_MS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-
-                    val newFilters=(filters.value?: initialSearchFilters).apply {
-                        keyword=it
-                    }
-                    _filters.value=newFilters
-                    viewModelScope.launch {
-                        search.emit(newFilters)
-                    }
+                    _filters.value = filters.value.copy(keyword=it)
+                    search()
             }
         )
 
         viewModelScope.launch {
-
             // Get list of all provinces from prePopulated ROOM database
             allProvincesList=  mutableListOf(ENTIRE_IRAN_CITY) + cityRepository.getAllProvinces()
         }
     }
 
-    fun doNewSearch(query: String) = searchQueryPublishSubject.onNext(query)
+    fun setSearchQuery(query: String) = searchQueryPublishSubject.onNext(query)
 
-    private fun searchAds(): Flow<PagingData<Ad>> {
-        return adRepository.searchAds(filters.value ?: SearchFilters())
+    fun search()
+    {
+        viewModelScope.launch {
+            search.emit(filters.value)
+        }
+    }
+    private fun getNewSearchFlow(): Flow<PagingData<Ad>> {
+        return adRepository.searchAds(filters.value)
     }
 
+    /*
+     * Function to call from filters chips close buttons in home screen
+     */
+    fun clearFilterTag(filterTag: FilterTag){
+        _filters.value = when (filterTag) {
+            is FilterTag.CATEGORY -> filters.value.copy(category = null)
+            is FilterTag.PRICE -> filters.value.copy(minPrice = null, maxPrice = null)
+            is FilterTag.CITY -> filters.value.copy(cities = filters.value.cities?.minus(filterTag.city))
+        }
+    }
 
     /***
      *
@@ -100,7 +107,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
 
 
     fun fillTempFilters(){
-        _filters.value?.let {
+        _filters.value.let {
             tempCategory=it.category
             tempCities=it.cities
             tempMinPrice=it.minPrice
@@ -110,12 +117,12 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
     }
 
     fun applyTempFilters(){
-         _filters.value= _filters.value?.apply {
-             category=tempCategory
-             cities=tempCities
-             minPrice=tempMinPrice
+         _filters.value= _filters.value.copy(
+             category=tempCategory,
+             cities=tempCities,
+             minPrice=tempMinPrice,
              maxPrice=tempMaxPrice
-         }
+         )
         currentProvince=tempCurrentProvince.value
     }
 
@@ -123,10 +130,10 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
         _tempCurrentProvince.value=province
     }
 
+
+
     override fun onCleared() {
         super.onCleared()
         rxCompositeDisposable.dispose()
     }
-
-
 }
