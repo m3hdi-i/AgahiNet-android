@@ -51,6 +51,7 @@ class CitiesAdapter : RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
             clear()
         items = allCities.map { MutablePair(it, (it in selectedCities) ) }.toMutableList()
         notifyItemRangeInserted(0,itemCount)
+        selectAllButtonBehavior.value = isThereAnyUnselectedItem()
     }
 
     fun getSelectedCities():List<City> = items.filter { it.second }.map { it.first }

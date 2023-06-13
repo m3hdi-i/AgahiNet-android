@@ -20,13 +20,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.domain.model.UserAuthResponse
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 
 class AppUtils {
 
     companion object {
+
+        const val BASE_URL="http://10.0.3.2:8000/"
 
         var isAuthed=false
         var uid:String?=null
@@ -40,19 +40,6 @@ class AppUtils {
 
         fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
 
-        private var iranCities:List<String>?=null
-
-        suspend fun getIranCities():List<String> {
-            return withContext(Dispatchers.IO){
-                if (iranCities!=null){
-                     iranCities!!
-                }else{
-                    listOf()
-                }
-            }
-
-
-        }
 
         fun retrieveAuthData(context: Context)
         {
@@ -226,8 +213,12 @@ class AppUtils {
         }
 
         private const val currencySuffix=" تومان"
-        fun numberToPersianFormattedCurrency(text:String?) = if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
+        fun priceToPersianCurrencyLetters(text:String?) = if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
 
+        fun String.formatPriceAndAddCurrencySuffix() = String.format("%,d",this.toLongOrNull() ?: 0L) + currencySuffix
+
+
+        fun getImageUrlByImageId(imageId:Int) = "${BASE_URL}api/image?image_id=${imageId}"
     }
 }
 

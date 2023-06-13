@@ -22,10 +22,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.random.Random
 
 const val DEBOUNCE_TIMEOUT_MS=500L
 
@@ -54,9 +58,13 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
     private val search = MutableSharedFlow<SearchFilters>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingDataFlow = search.flatMapLatest { getNewSearchFlow() }.cachedIn(viewModelScope)
+    val pagingDataFlow = search
+        .onStart { emit(filters.value) }
+        .flatMapLatest { getNewSearchFlow(it) }
+        .cachedIn(viewModelScope)
 
     init {
+
         rxCompositeDisposable.addAll(
             // Search box control
             searchQueryPublishSubject
@@ -64,27 +72,32 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
                 .debounce(DEBOUNCE_TIMEOUT_MS, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    _filters.value = filters.value.copy(keyword=it)
-                    search()
-            }
+                    _filters.value = filters.value.copy(keyword=it.ifBlank { null })
+                }
         )
 
         viewModelScope.launch {
+
+            // Observe filters and do search when they change
+            launch {
+                filters.collect{
+                    search.emit(it)
+                }
+            }
+
             // Get list of all provinces from prePopulated ROOM database
-            allProvincesList=  mutableListOf(ENTIRE_IRAN_CITY) + cityRepository.getAllProvinces()
+            launch {
+                allProvincesList=  mutableListOf(ENTIRE_IRAN_CITY) + cityRepository.getAllProvinces()
+            }
         }
+
     }
 
     fun setSearchQuery(query: String) = searchQueryPublishSubject.onNext(query)
 
-    fun search()
-    {
-        viewModelScope.launch {
-            search.emit(filters.value)
-        }
-    }
-    private fun getNewSearchFlow(): Flow<PagingData<Ad>> {
-        return adRepository.searchAds(filters.value)
+
+    private fun getNewSearchFlow(filters: SearchFilters): Flow<PagingData<Ad>> {
+        return adRepository.searchAds(filters)
     }
 
     /*
@@ -94,7 +107,10 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
         _filters.value = when (filterTag) {
             is FilterTag.CATEGORY -> filters.value.copy(category = null)
             is FilterTag.PRICE -> filters.value.copy(minPrice = null, maxPrice = null)
-            is FilterTag.CITY -> filters.value.copy(cities = filters.value.cities?.minus(filterTag.city))
+            is FilterTag.CITY -> {
+                val newCities=filters.value.cities?.minus(filterTag.city).takeIf { !it.isNullOrEmpty() }
+                filters.value.copy(cities = newCities)
+            }
         }
     }
 
@@ -104,7 +120,6 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
      *
      */
     suspend fun getCitiesOfProvince(provinceId:Int) = cityRepository.getCitiesOfProvince(provinceId)
-
 
     fun fillTempFilters(){
         _filters.value.let {

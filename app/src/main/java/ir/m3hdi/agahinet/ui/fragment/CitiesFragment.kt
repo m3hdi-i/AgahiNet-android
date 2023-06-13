@@ -15,11 +15,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
-import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.databinding.FragmentCitiesBinding
 import ir.m3hdi.agahinet.ui.adapter.CitiesAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CitiesFragment : Fragment() {
@@ -70,7 +68,7 @@ class CitiesFragment : Fragment() {
 
                 launch {
                     citiesAdapter.selectAllButtonBehavior.collect{
-                        setupSelectAllButton(it)
+                        updateSelectAllButton(it)
                     }
                 }
             }
@@ -101,7 +99,7 @@ class CitiesFragment : Fragment() {
         setupSelectProvinceModal()
     }
 
-    private fun setupSelectAllButton(selectAllBehavior:Boolean)
+    private fun updateSelectAllButton(selectAllBehavior:Boolean)
     {
 
         with(binding.buttonSelectAll){

@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 
 @AndroidEntryPoint
@@ -74,8 +75,6 @@ class HomeFragment : Fragment() {
         setupUI()
         setupViewModelObservers()
 
-        // Start app with showing all recent ads
-        viewModel.setSearchQuery("")
     }
 
     private fun setupUI(){
@@ -148,7 +147,7 @@ class HomeFragment : Fragment() {
 
                 // observe paging data
                 launch {
-                    viewModel.pagingDataFlow.collectLatest{
+                    viewModel.pagingDataFlow.collect{
                         adAdapter.submitData(viewLifecycleOwner.lifecycle,it)
                     }
                 }
@@ -209,14 +208,10 @@ class HomeFragment : Fragment() {
                         }
                 }
 
-                // Observe filters (ignere when just query text changes)
+                // Observe filters to show in filters RV
                 launch {
-                    viewModel.filters
-                        .distinctUntilChanged { old, new -> old.category == new.category &&
-                        old.cities == new.cities && old.minPrice==new.minPrice && old.maxPrice==new.maxPrice }
-                        .collect{
-                            filtersAdapter.setFilters(it)
-                            viewModel.search()
+                    viewModel.filters.collect{
+                        filtersAdapter.setFilters(it)
                     }
                 }
             }

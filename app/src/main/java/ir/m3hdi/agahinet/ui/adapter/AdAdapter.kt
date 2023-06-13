@@ -7,8 +7,14 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.load
 import ir.m3hdi.agahinet.domain.model.Ad
 import ir.m3hdi.agahinet.databinding.RvAdBinding
+import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPriceAndAddCurrencySuffix
+import ir.m3hdi.agahinet.util.AppUtils.Companion.getImageUrlByImageId
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import kotlin.random.Random
 
 
@@ -23,30 +29,28 @@ class AdAdapter : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder.binding){
 
-            /*items[position].let { ad->
+        getItem(position)?.let {ad->
+            with(holder.binding){
+
 
                 textViewAdTitle.text=ad.title
+
+                textViewPrice.text = ad.price?.takeIf { it.isNotBlank() }?.formatPriceAndAddCurrencySuffix() ?: "توافقی"
+
+                bottomDivider.isVisible = position != itemCount-1
                 container.setOnClickListener { onItemClickFunction?.invoke(ad) }
-            }*/
+                ad.mainImageId?.let {
+                    val imageUrl=getImageUrlByImageId(it)
+                    imageView.load(imageUrl){
+                        crossfade(true)
+                    }
+                }
 
-            textViewAdTitle.text=getItem(position)?.title
-            //bottomDivider.isVisible = position != itemCount-1
+            }
         }
-    }
 
-    /*fun notifyPageInserted(pageItemsCount:Int){
-        this.notifyItemRangeInserted(this.itemCount,pageItemsCount)
     }
-    fun clear() {
-        if (itemCount>0){
-            val count = itemCount
-            items.clear()
-            notifyItemRangeRemoved(0, count)
-        }
-    }*/
-
 
     object DiffUtilCallBack : DiffUtil.ItemCallback<Ad>() {
         override fun areItemsTheSame(oldItem: Ad, newItem: Ad): Boolean {
