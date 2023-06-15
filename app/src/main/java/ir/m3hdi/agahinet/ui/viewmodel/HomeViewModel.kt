@@ -1,7 +1,6 @@
 package ir.m3hdi.agahinet.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -22,14 +21,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.random.Random
+
 
 const val DEBOUNCE_TIMEOUT_MS=500L
 
@@ -46,6 +43,7 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
 
     private var currentProvince:City = ENTIRE_IRAN_CITY
     lateinit var allProvincesList:List<City>
+    lateinit var allCities : HashMap<Int, String>
 
     private val _tempCurrentProvince= MutableStateFlow(ENTIRE_IRAN_CITY)
     val tempCurrentProvince=_tempCurrentProvince.asStateFlow()
@@ -85,8 +83,11 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
                 }
             }
 
-            // Get list of all provinces from prePopulated ROOM database
+            // Fetch lists of all provinces and all cities from prePopulated ROOM database
             launch {
+                allCities = HashMap()
+                allCities.putAll(cityRepository.getAllCities().associateBy({ it.cityId }, { it.title }))
+
                 allProvincesList=  mutableListOf(ENTIRE_IRAN_CITY) + cityRepository.getAllProvinces()
             }
         }

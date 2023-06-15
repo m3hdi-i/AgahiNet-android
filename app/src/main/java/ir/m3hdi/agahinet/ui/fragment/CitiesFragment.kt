@@ -1,5 +1,6 @@
 package ir.m3hdi.agahinet.ui.fragment
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -99,21 +100,26 @@ class CitiesFragment : Fragment() {
         setupSelectProvinceModal()
     }
 
+    private val selectAllIcon by lazy { ContextCompat.getDrawable(requireContext(), R.drawable.ic_select_all) }
+    private val selectAllText by lazy { resources.getString(R.string.select_all) }
+    private val deSelectAllIcon by lazy {  ContextCompat.getDrawable(requireContext(), R.drawable.ic_clear) }
+    private val deSelectAllText by lazy { resources.getString(R.string.deselect_all) }
+
     private fun updateSelectAllButton(selectAllBehavior:Boolean)
     {
 
         with(binding.buttonSelectAll){
             setOnClickListener(null)
             if (selectAllBehavior){
-                icon= ContextCompat.getDrawable(context, R.drawable.ic_select_all)
-                text=resources.getString(R.string.select_all)
+                icon= selectAllIcon
+                text= selectAllText
                 setOnClickListener {
                     citiesAdapter.setCheckedAll(true)
                 }
             }
             else {
-                icon= ContextCompat.getDrawable(context, R.drawable.ic_clear)
-                text=resources.getString(R.string.deselect_all)
+                icon= deSelectAllIcon
+                text= deSelectAllText
                 setOnClickListener {
                     citiesAdapter.setCheckedAll(false)
                 }

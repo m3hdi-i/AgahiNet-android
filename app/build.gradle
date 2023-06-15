@@ -19,6 +19,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -34,6 +35,9 @@ android {
         }
     }
     compileOptions {
+        // to use Java 8 features
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -99,6 +103,9 @@ dependencies {
 
     // LeakCanary
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
+    // to use Java 8 features
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

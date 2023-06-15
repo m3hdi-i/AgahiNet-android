@@ -7,6 +7,9 @@ import ir.m3hdi.agahinet.data.local.entity.City
 @Dao
 interface CityDao {
 
+    @Query("SELECT * FROM city WHERE parent_province_id IS NOT NULL")
+    suspend fun getAllCities(): List<City>
+
     @Query("SELECT * FROM city WHERE parent_province_id IS NULL")
     suspend fun getAllProvinces(): List<City>
 

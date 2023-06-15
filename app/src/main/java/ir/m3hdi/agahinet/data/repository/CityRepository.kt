@@ -20,5 +20,11 @@ class CityRepository @Inject constructor(private val cityDao: CityDao) {
         }
     }
 
+    suspend fun getAllCities(): List<City> {
+        return withContext(Dispatchers.IO){
+            cityDao.getAllCities()
+        }
+    }
+
 
 }

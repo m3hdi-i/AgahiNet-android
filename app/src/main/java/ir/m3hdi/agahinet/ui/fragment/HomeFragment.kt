@@ -31,23 +31,22 @@ import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.adapter.RetryAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val adAdapter:AdAdapter by lazy { AdAdapter() }
+    private val viewModel: HomeViewModel by activityViewModels()
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val adAdapter:AdAdapter by lazy { AdAdapter() }
+
 
     private lateinit var concatAdapter:ConcatAdapter
     private lateinit var pagingProgressBarAdapter:ProgressAdapter
@@ -113,6 +112,7 @@ class HomeFragment : Fragment() {
         pagingProgressBarAdapter=ProgressAdapter()
         headerAdapter= RetryAdapter()
         footerAdapter = RetryAdapter()
+        adAdapter.allCities=viewModel.allCities
         concatAdapter = ConcatAdapter(headerAdapter,adAdapter,pagingProgressBarAdapter,footerAdapter)
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.setHasFixedSize(true)

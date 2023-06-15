@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/entire_iran"
                 android:ellipsize="end"
-                android:maxLines="5"/>
+                android:maxLines="2"/>
 
         </LinearLayout>
 
