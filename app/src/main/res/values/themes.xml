@@ -93,6 +93,16 @@
 
     </style>
 
+    <style name="adFragmentToolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/simpleToolbarTitleAppearance</item>
+
+        <item name="animateNavigationIcon">true</item>
+        <item name="android:layoutDirection">rtl</item>
+        <item name="titleTextEllipsize">end</item>
+        <item name="titleTextColor">#FFFFFF</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="TextViewWithArrow">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:paddingStart">32dp</item>
