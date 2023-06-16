@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -117,7 +118,8 @@ class HomeFragment : Fragment() {
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.setHasFixedSize(true)
         adAdapter.onItemClickFunction = {
-            Toasty.info(requireContext(),"...",Toast.LENGTH_SHORT,false).show()
+            val action = HomeFragmentDirections.actionHomeToAd(it)
+            findNavController().navigate(action)
         }
         adAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 

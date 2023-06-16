@@ -15,6 +15,10 @@
         <action
             android:id="@+id/action_home_to_filters"
             app:destination="@id/filters_screen" />
+
+        <action
+            android:id="@+id/action_home_to_ad"
+            app:destination="@id/ad_screen" />
     </fragment>
 
     <fragment
@@ -46,6 +50,16 @@
         android:label="انتخاب شهر ها"
         tools:layout="@layout/fragment_cities" >
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/ad_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.AdFragment"
+        android:label="نمایش آگهی"
+        tools:layout="@layout/fragment_ad" >
+
+        <argument android:name="ad"
+            app:argType="ir.m3hdi.agahinet.domain.model.Ad"/>
     </fragment>
 
 </navigation>

@@ -1,7 +1,10 @@
 package ir.m3hdi.agahinet.domain.model
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Ad(
     @Json(name = "ad_id")
     val adId: Int,
@@ -21,4 +24,4 @@ data class Ad(
     val city: Int,
     @Json(name = "main_image_id")
     val mainImageId: Int?
-)
+) : Parcelable
