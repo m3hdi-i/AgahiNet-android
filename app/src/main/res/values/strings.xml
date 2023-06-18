@@ -46,5 +46,6 @@
     <string name="price">قیمت</string>
     <string name="contact_info">اطلاعات تماس</string>
     <string name="chat">چت</string>
+    <string name="cats_and_filters_button_text">دسته بندی ها و فیلترها</string>
 
 </resources>

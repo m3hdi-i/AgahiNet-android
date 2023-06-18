@@ -1,5 +1,6 @@
 package ir.m3hdi.agahinet.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.imageLoader
 import coil.load
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.databinding.RvAdBinding
@@ -47,9 +49,7 @@ class AdAdapter : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) 
                 container.setOnClickListener { onItemClickFunction?.invoke(ad) }
                 ad.mainImageId?.let {
                     val imageUrl=getImageUrlByImageId(it)
-                    imageView.load(imageUrl){
-                        crossfade(true)
-                    }
+                    imageView.load(imageUrl)
                 }
 
             }

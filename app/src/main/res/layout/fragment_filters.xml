@@ -6,10 +6,10 @@
     android:layoutDirection="rtl"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layoutDirection="rtl"
         tools:context=".ui.fragment.FiltersFragment">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -29,198 +29,220 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
-            android:id="@+id/lay_cat"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_effect"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:scrollbars="vertical"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout_filters"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout_filters">
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/textView_choose_category"
-                style="@style/TextViewWithArrow"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="دسته بندی"
-                app:drawableStartCompat="@drawable/ic_category" />
-
-            <TextView
-                android:id="@+id/selected_category"
-                style="@style/TextViewSelectedItems"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_categories" />
-
-        </LinearLayout>
+                android:orientation="vertical">
 
 
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="16dp"
-            app:dividerInsetEnd="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lay_cat"/>
-
-
-        <LinearLayout
-            android:id="@+id/lay_city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_effect"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/divider1">
-
-
-            <TextView
-                android:id="@+id/textView_choose_cities"
-                style="@style/TextViewWithArrow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="شهر ها"
-                app:drawableStartCompat="@drawable/ic_location">
-
-            </TextView>
-
-
-            <TextView
-                android:id="@+id/selected_cities"
-                style="@style/TextViewSelectedItems"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/entire_iran"
-                android:ellipsize="end"
-                android:maxLines="2"/>
-
-        </LinearLayout>
-
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="16dp"
-            app:dividerInsetEnd="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lay_city"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            app:layout_constraintTop_toBottomOf="@+id/divider2">
-
-            <TextView
-                android:id="@+id/textView_set_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:paddingStart="32dp"
-                android:paddingTop="24dp"
-                android:paddingEnd="32dp"
-                android:paddingBottom="16dp"
-                android:text="محدوده قیمت"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:tint="#616161"
-                app:drawableStartCompat="@drawable/ic_money"
-                app:drawableTint="#616161"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </TextView>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/field_minPrice"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="32dp"
-                android:textDirection="ltr"
-                app:hintEnabled="false"
-                app:helperTextEnabled="true"
-                app:helperText=""
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_set_price"
-                app:suffixText="تومان">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_min_price"
-                    style="@style/PriceRangeEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="از"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="@+id/field_minPrice"
-                app:layout_constraintEnd_toStartOf="@+id/field_minPrice"
-                app:layout_constraintTop_toTopOf="@+id/field_minPrice" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="تا"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="@+id/field_maxPrice"
-                app:layout_constraintEnd_toStartOf="@+id/field_maxPrice"
-                app:layout_constraintTop_toTopOf="@+id/field_maxPrice" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/field_maxPrice"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
-                app:hintEnabled="false"
-                app:helperTextEnabled="true"
-                app:helperText=""
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/field_minPrice"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/field_minPrice"
-                app:layout_constraintTop_toBottomOf="@+id/field_minPrice"
-                app:layout_constraintVertical_bias="0.0"
-                android:textDirection="ltr"
-                app:suffixText="تومان">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_max_price"
+                <LinearLayout
+                    android:id="@+id/lay_cat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/PriceRangeEditText" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/ripple_effect"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/appBarLayout_filters">
+
+                    <TextView
+                        android:id="@+id/textView_choose_category"
+                        style="@style/TextViewWithArrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="دسته بندی"
+                        app:drawableStartCompat="@drawable/ic_category" />
+
+                    <TextView
+                        android:id="@+id/selected_category"
+                        style="@style/TextViewSelectedItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/all_categories" />
+
+                </LinearLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dividerInsetStart="16dp"
+                    app:dividerInsetEnd="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lay_cat"/>
+
+
+                <LinearLayout
+                    android:id="@+id/lay_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/ripple_effect"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/divider1">
+
+
+                    <TextView
+                        android:id="@+id/textView_choose_cities"
+                        style="@style/TextViewWithArrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="شهر ها"
+                        app:drawableStartCompat="@drawable/ic_location">
+
+                    </TextView>
+
+
+                    <TextView
+                        android:id="@+id/selected_cities"
+                        style="@style/TextViewSelectedItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/entire_iran"
+                        android:ellipsize="end"
+                        android:maxLines="2"/>
+
+                </LinearLayout>
+
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dividerInsetStart="16dp"
+                    app:dividerInsetEnd="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lay_city"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:paddingBottom="100dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    app:layout_constraintTop_toBottomOf="@+id/divider2">
+
+                    <TextView
+                        android:id="@+id/textView_set_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="8dp"
+                        android:paddingStart="32dp"
+                        android:paddingTop="24dp"
+                        android:paddingEnd="32dp"
+                        android:paddingBottom="16dp"
+                        android:text="محدوده قیمت"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:tint="#616161"
+                        app:drawableStartCompat="@drawable/ic_money"
+                        app:drawableTint="#616161"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </TextView>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/field_minPrice"
+                        android:layout_width="245dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="32dp"
+                        android:textDirection="ltr"
+                        app:hintEnabled="false"
+                        app:helperTextEnabled="true"
+                        app:helperText=""
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_set_price"
+                        app:suffixText="تومان">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_min_price"
+                            style="@style/PriceRangeEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="از"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:layout_constraintBottom_toBottomOf="@+id/field_minPrice"
+                        app:layout_constraintEnd_toStartOf="@+id/field_minPrice"
+                        app:layout_constraintTop_toTopOf="@+id/field_minPrice" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="تا"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:layout_constraintBottom_toBottomOf="@+id/field_maxPrice"
+                        app:layout_constraintEnd_toStartOf="@+id/field_maxPrice"
+                        app:layout_constraintTop_toTopOf="@+id/field_maxPrice" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/field_maxPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="16dp"
+                        app:hintEnabled="false"
+                        app:helperTextEnabled="true"
+                        app:helperText=""
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/field_minPrice"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/field_minPrice"
+                        app:layout_constraintTop_toBottomOf="@+id/field_minPrice"
+                        app:layout_constraintVertical_bias="0.0"
+                        android:textDirection="ltr"
+                        app:suffixText="تومان">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_max_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/PriceRangeEditText" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

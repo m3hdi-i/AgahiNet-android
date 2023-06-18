@@ -28,6 +28,7 @@ import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentHomeBinding
 import ir.m3hdi.agahinet.domain.model.NetworkException
 import ir.m3hdi.agahinet.ui.adapter.AdAdapter
+import ir.m3hdi.agahinet.ui.adapter.BtnSetFiltersAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.adapter.RetryAdapter
@@ -82,12 +83,6 @@ class HomeFragment : Fragment() {
         setupAdsRv()
         setupFiltersRv()
 
-        binding.buttonSetFilters.setOnClickListener {
-            viewModel.fillTempFilters()
-            findNavController().navigate(
-                R.id.action_home_to_filters)
-        }
-
         inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         // When user types query and hits OK, Hide the keyborad and clear focus of editText
@@ -134,11 +129,18 @@ class HomeFragment : Fragment() {
 
     private fun setupFiltersRv()
     {
-        ViewCompat.setNestedScrollingEnabled(binding.recyclerViewFilters, false)
+
         filtersAdapter=FilterAdapter()
-        binding.recyclerViewFilters.adapter=filtersAdapter
+        val btnSetFiltersAdapter=BtnSetFiltersAdapter()
+        binding.recyclerViewFilters.adapter=ConcatAdapter(btnSetFiltersAdapter,filtersAdapter)
         filtersAdapter.onItemCloseFunction = {
             viewModel.clearFilterTag(it)
+        }
+        btnSetFiltersAdapter.showView(true)
+        btnSetFiltersAdapter.onClickListener = {
+            viewModel.fillTempFilters()
+            findNavController().navigate(
+                R.id.action_home_to_filters)
         }
     }
 
