@@ -18,11 +18,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:scaleType="centerCrop"
+        android:background="@drawable/ad_background_gradient"
+        app:srcCompat="@drawable/ad_placeholder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/cutCorners10"
-        app:srcCompat="@color/md_theme_light_primaryContainer" />
+        app:shapeAppearance="@style/cutCorners10" />
+
 
     <TextView
         android:id="@+id/textView_adTitle"
@@ -64,13 +66,13 @@
         app:layout_constraintEnd_toEndOf="@+id/textView_adTitle" />
 
 
-    <View
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/bottom_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

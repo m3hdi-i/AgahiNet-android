@@ -133,16 +133,19 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="TextViewContactInfo">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+    <style name="TextViewContactInfo" parent="@style/Widget.Material3.Button.TextButton.Icon">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:background">@drawable/ripple_effect</item>
         <item name="drawableTint">?attr/colorPrimary</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+
     </style>
 
 </resources>

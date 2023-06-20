@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layoutDirection="rtl"
+        android:paddingBottom="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,9 +21,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#757575"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:text="اطلاعات تماس">
@@ -32,13 +33,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/textView_call"
             style="@style/TextViewContactInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="تماس تلفنی با ..."
-            app:drawableStartCompat="@drawable/ic_call"/>
+            app:icon="@drawable/ic_call"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -46,13 +45,11 @@
             app:dividerInsetStart="32dp"
             app:dividerInsetEnd="32dp" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/textView_sms"
             style="@style/TextViewContactInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ارسال بیامک به ..."
-            app:drawableStartCompat="@drawable/ic_message"/>
+            android:text="ارسال پیامک به ..."
+            app:icon="@drawable/ic_message"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -60,18 +57,18 @@
             app:dividerInsetStart="32dp"
             app:dividerInsetEnd="32dp" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/textView_bookmark"
             style="@style/TextViewContactInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="نشان کن تا بعدا تماس بگیرم"
-            app:drawableStartCompat="@drawable/ic_bookmark_outline"/>
+            app:icon="@drawable/ic_bookmark_outline_24"
+            android:text="نشان کن تا بعدا تماس بگیرم" />
+
 
     </LinearLayout>
 
 
     <ProgressBar
+        android:id="@+id/progressBar"
         android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

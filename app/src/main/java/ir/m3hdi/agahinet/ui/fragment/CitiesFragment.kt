@@ -18,6 +18,7 @@ import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentCitiesBinding
 import ir.m3hdi.agahinet.ui.adapter.CitiesAdapter
+import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ class CitiesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by activityViewModels()
+    private val citiesViewModel: CitiesViewModel by activityViewModels()
 
     private var _citiesAdapter:CitiesAdapter?=null
     private val citiesAdapter get() = _citiesAdapter!!
@@ -131,7 +133,7 @@ class CitiesFragment : Fragment() {
 
         binding.buttonSelectProvince.setOnClickListener {
             val modalBottomSheet = ProvinceSelectModal().apply {
-                provinces=viewModel.allProvincesList
+                provinces=citiesViewModel.allProvinces
                 onProvinceSelectedListener={
                     viewModel.setTempCurrentProvince(it)
                 }

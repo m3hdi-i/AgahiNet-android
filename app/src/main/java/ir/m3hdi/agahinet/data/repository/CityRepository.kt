@@ -26,5 +26,4 @@ class CityRepository @Inject constructor(private val cityDao: CityDao) {
         }
     }
 
-
 }

@@ -17,6 +17,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import ir.m3hdi.agahinet.domain.model.Ad
 import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.domain.model.UserAuthResponse
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
@@ -215,10 +216,15 @@ class AppUtils {
         private const val currencySuffix=" تومان"
         fun priceToPersianCurrencyLetters(text:String?) = if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
 
-        fun String.formatPriceAndAddCurrencySuffix() = String.format("%,d",this.toLongOrNull() ?: 0L) + currencySuffix
-
+        fun formatPrice(price:String?):String{
+            if (!price.isNullOrBlank()){
+                return String.format("%,d",price.toLongOrNull() ?: 0L) + currencySuffix
+            }
+            return "توافقی"
+        }
 
         fun getImageUrlByImageId(imageId:Int) = "${BASE_URL}api/image?image_id=${imageId}"
+
     }
 }
 

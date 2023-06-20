@@ -1,29 +1,27 @@
 package ir.m3hdi.agahinet.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModel
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.imageLoader
 import coil.load
-import ir.m3hdi.agahinet.data.local.entity.City
+import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.RvAdBinding
 import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
-import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPriceAndAddCurrencySuffix
+import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
+import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPrice
 import ir.m3hdi.agahinet.util.AppUtils.Companion.getImageUrlByImageId
-import ir.m3hdi.agahinet.util.PersianTimeAgo.Companion.dateTimeStringToTimeAgo
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 
-class AdAdapter : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) {
+class AdAdapter(private val citiesViewModel: CitiesViewModel) : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) {
 
     var onItemClickFunction:((ad: Ad)->Unit)? = null
-
-    lateinit var allCities: HashMap<Int,String>
 
     inner class ViewHolder(val binding: RvAdBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -38,19 +36,19 @@ class AdAdapter : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) 
 
                 textViewAdTitle.text=ad.title
 
-                textViewPrice.text = ad.price?.takeIf { it.isNotBlank() }?.formatPriceAndAddCurrencySuffix() ?: "توافقی"
+                textViewPrice.text = formatPrice(ad.price)
 
-                val cityName = allCities[ad.city]
-                val timeAgoText = dateTimeStringToTimeAgo(ad.createdAt)
-                val timeAndLocation = cityName?.let { "$timeAgoText در $it" } ?: timeAgoText
-
-                textViewTimeAndLoc.text= timeAndLocation
+                textViewTimeAndLoc.text= citiesViewModel.getTimeAndLocText(ad)
                 bottomDivider.isVisible = position != itemCount-1
                 container.setOnClickListener { onItemClickFunction?.invoke(ad) }
-                ad.mainImageId?.let {
-                    val imageUrl=getImageUrlByImageId(it)
+
+                if (ad.mainImageId!=null){
+                    val imageUrl=getImageUrlByImageId(ad.mainImageId)
                     imageView.load(imageUrl)
+                }else{
+                    imageView.load(R.drawable.ad_placeholder)
                 }
+
 
             }
         }

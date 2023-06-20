@@ -42,8 +42,6 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
     private val rxCompositeDisposable = CompositeDisposable()
 
     private var currentProvince:City = ENTIRE_IRAN_CITY
-    lateinit var allProvincesList:List<City>
-    lateinit var allCities : HashMap<Int, String>
 
     private val _tempCurrentProvince= MutableStateFlow(ENTIRE_IRAN_CITY)
     val tempCurrentProvince=_tempCurrentProvince.asStateFlow()
@@ -75,20 +73,11 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
         )
 
         viewModelScope.launch {
-
             // Observe filters and do search when they change
             launch {
                 filters.collect{
                     search.emit(it)
                 }
-            }
-
-            // Fetch lists of all provinces and all cities from prePopulated ROOM database
-            launch {
-                allCities = HashMap()
-                allCities.putAll(cityRepository.getAllCities().associateBy({ it.cityId }, { it.title }))
-
-                allProvincesList=  mutableListOf(ENTIRE_IRAN_CITY) + cityRepository.getAllProvinces()
             }
         }
 

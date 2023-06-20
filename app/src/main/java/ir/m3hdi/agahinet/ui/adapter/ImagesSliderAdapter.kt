@@ -6,10 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.VpImageBinding
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ImagesSliderAdapter(private val images:List<String>) : RecyclerView.Adapter<ImagesSliderAdapter.ViewHolder>() {
 
@@ -23,16 +27,13 @@ class ImagesSliderAdapter(private val images:List<String>) : RecyclerView.Adapte
 
         with (holder.binding){
             imageView.load(images[position]){
-                error(R.drawable.error_placeholder)
                 target(onStart = {
-                    progressBar.isGone=false
+                    progressBar.isVisible = true
                 }, onSuccess = {
                     progressBar.isGone=true
                     imageView.setImageDrawable(it)
                 }, onError = {
-                    progressBar.isGone =true
-                    imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    it?.let {  imageView.setImageDrawable(it) }
+                    progressBar.isGone = true
                 })
 
             }

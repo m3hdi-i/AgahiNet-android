@@ -9,8 +9,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -32,6 +30,7 @@ import ir.m3hdi.agahinet.ui.adapter.BtnSetFiltersAdapter
 import ir.m3hdi.agahinet.ui.adapter.FilterAdapter
 import ir.m3hdi.agahinet.ui.adapter.ProgressAdapter
 import ir.m3hdi.agahinet.ui.adapter.RetryAdapter
+import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.HomeViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -43,12 +42,12 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by activityViewModels()
+    private val citiesViewModel: CitiesViewModel by activityViewModels()
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val adAdapter:AdAdapter by lazy { AdAdapter() }
-
+    private val adAdapter:AdAdapter by lazy { AdAdapter(citiesViewModel) }
 
     private lateinit var concatAdapter:ConcatAdapter
     private lateinit var pagingProgressBarAdapter:ProgressAdapter
@@ -108,7 +107,6 @@ class HomeFragment : Fragment() {
         pagingProgressBarAdapter=ProgressAdapter()
         headerAdapter= RetryAdapter()
         footerAdapter = RetryAdapter()
-        adAdapter.allCities=viewModel.allCities
         concatAdapter = ConcatAdapter(headerAdapter,adAdapter,pagingProgressBarAdapter,footerAdapter)
         binding.recyclerViewAds.adapter = concatAdapter
         binding.recyclerViewAds.setHasFixedSize(true)
