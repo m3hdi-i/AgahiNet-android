@@ -1,11 +1,9 @@
 package ir.m3hdi.agahinet.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,15 +15,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentAdBinding
-import ir.m3hdi.agahinet.domain.model.onFailure
-import ir.m3hdi.agahinet.domain.model.onLoading
-import ir.m3hdi.agahinet.domain.model.onSuccess
 import ir.m3hdi.agahinet.ui.adapter.ImagesSliderAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
-import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPrice
 import kotlinx.coroutines.launch
 
@@ -68,6 +61,7 @@ class AdFragment : Fragment() {
             textViewDescription.text = ad.description
             textViewTimeAndLoc.text = citiesViewModel.getTimeAndLocText(ad)
             textViewPrice.text = formatPrice(ad.price)
+            textViewCategory.text= viewModel.getCategoryTitle()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

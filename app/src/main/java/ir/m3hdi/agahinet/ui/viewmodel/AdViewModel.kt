@@ -5,14 +5,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.domain.model.onFailure
 import ir.m3hdi.agahinet.domain.model.onSuccess
 import ir.m3hdi.agahinet.util.AppUtils
+import ir.m3hdi.agahinet.util.Constants.Companion.CATEGORIES
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,4 +36,7 @@ class AdViewModel @Inject constructor(private val adRepository: AdRepository): V
         }
 
     }
+
+    fun getCategoryTitle() = CATEGORIES.find { it.id==ad.category }?.title ?: CATEGORIES[0].title
+
 }
