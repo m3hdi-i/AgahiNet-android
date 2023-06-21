@@ -34,19 +34,8 @@
     </style>
 
 
-    <style name="TextTitleMedium" parent="Theme.AgahiNet">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
-    </style>
-
     <style name="TextLabelSmall" parent="Theme.AgahiNet">
         <item name="android:textAppearance">@style/TextAppearance.Material3.LabelSmall</item>
-    </style>
-
-    <style name="BottomNavigationStyle">
-        <item name="android:lines">1</item>
-        <item name="android:gravity">center</item>
-        <item name="itemSpacing">16dp</item>
-        <item name="android:titleMarginTop" tools:targetApi="n">8dp</item>
     </style>
 
     <style name="cutCorners" parent="ShapeAppearance.Material3.SmallComponent">

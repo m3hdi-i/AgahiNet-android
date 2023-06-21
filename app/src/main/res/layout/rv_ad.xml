@@ -27,7 +27,7 @@
 
     <TextView
         android:id="@+id/textView_adTitle"
-        style="@style/TextTitleMedium"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         android:textAlignment="viewEnd"
         android:layout_width="0dp"
         android:layout_height="0dp"

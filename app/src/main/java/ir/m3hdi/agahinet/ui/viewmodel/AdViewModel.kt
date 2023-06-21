@@ -18,6 +18,7 @@ import javax.inject.Inject
 class AdViewModel @Inject constructor(private val adRepository: AdRepository): ViewModel() {
 
     lateinit var ad: Ad
+    var selectedImagePosition = 0
 
     private val _images = MutableSharedFlow<List<String>>(replay = 1)
     val images=_images.asSharedFlow()

@@ -1,5 +1,7 @@
 package ir.m3hdi.agahinet.ui.fragment
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import ir.m3hdi.agahinet.databinding.FragmentAdBinding
+import ir.m3hdi.agahinet.ui.activity.ImageViewerActivity
 import ir.m3hdi.agahinet.ui.adapter.ImagesSliderAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
@@ -33,14 +38,14 @@ class AdFragment : Fragment() {
 
     private val args: AdFragmentArgs by navArgs()
 
+    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if(savedInstanceState == null){
             viewModel.ad=args.ad
             viewModel.getImages()
         }
-
-
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdBinding.inflate(inflater, container, false)
@@ -73,9 +78,26 @@ class AdFragment : Fragment() {
                         binding.dotsIndicator.isVisible=true
                         binding.noimagePlaceholder.isGone=true
 
-                        binding.viewPagerImages.adapter=ImagesSliderAdapter(it)
+                        val imagesAdapter=ImagesSliderAdapter(it)
+                        binding.viewPagerImages.adapter=imagesAdapter
+                        binding.viewPagerImages.currentItem = viewModel.selectedImagePosition
                         binding.dotsIndicator.attachTo(binding.viewPagerImages)
-                    }else{
+                        imagesAdapter.onClickListener = {
+                            val intent = Intent(activity,ImageViewerActivity::class.java)
+                            intent.putStringArrayListExtra("images", ArrayList(it))
+                            startActivity(intent)
+                        }
+
+                        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+                            override fun onPageSelected(position: Int) {
+                                viewModel.selectedImagePosition = position
+                            }
+                        }
+
+                        binding.viewPagerImages.registerOnPageChangeCallback(pageChangeCallback)
+
+                    }
+                    else{
                         binding.dotsIndicator.isGone=true
                         binding.noimagePlaceholder.isVisible=true
                     }
@@ -112,6 +134,9 @@ class AdFragment : Fragment() {
         // set bookmark state of ad
     }
     override fun onDestroyView() {
+        if (::pageChangeCallback.isInitialized){
+            binding.viewPagerImages.unregisterOnPageChangeCallback(pageChangeCallback)
+        }
         super.onDestroyView()
         _binding = null
     }

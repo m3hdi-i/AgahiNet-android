@@ -17,10 +17,13 @@ import kotlinx.coroutines.launch
 
 class ImagesSliderAdapter(private val images:List<String>) : RecyclerView.Adapter<ImagesSliderAdapter.ViewHolder>() {
 
+    var onClickListener:(()->Unit)?=null
+
     inner class ViewHolder(val binding: VpImageBinding) : RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(VpImageBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
+
     override fun getItemCount() = images.size
 
     override fun onBindViewHolder(holder: ImagesSliderAdapter.ViewHolder, position: Int) {
@@ -35,7 +38,9 @@ class ImagesSliderAdapter(private val images:List<String>) : RecyclerView.Adapte
                 }, onError = {
                     progressBar.isGone = true
                 })
-
+            }
+            imageView.setOnClickListener {
+                onClickListener?.invoke()
             }
         }
     }

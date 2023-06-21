@@ -15,7 +15,6 @@ import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.ActivityMainBinding
 import ir.m3hdi.agahinet.util.AppUtils.Companion.retrieveAuthData
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

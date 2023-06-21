@@ -105,6 +105,9 @@ dependencies {
     // Persian numbers formatter
     implementation 'com.github.yamin8000:PrettyPersianNumbers:2.0.0'
 
+    // Zoomable ImageView
+    implementation 'com.github.MikeOrtiz:TouchImageView:3.3'
+
     // LeakCanary
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 

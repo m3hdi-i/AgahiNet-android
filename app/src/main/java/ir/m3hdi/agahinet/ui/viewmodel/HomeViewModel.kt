@@ -28,12 +28,11 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-const val DEBOUNCE_TIMEOUT_MS=500L
+private const val DEBOUNCE_TIMEOUT_MS=500L
+private val initialSearchFilters=SearchFilters()
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val adRepository: AdRepository,private val cityRepository: CityRepository,application: Application) : AndroidViewModel(application)  {
-
-    private val initialSearchFilters=SearchFilters()
 
     private val _filters= MutableStateFlow(initialSearchFilters)
     val filters=_filters.asStateFlow()

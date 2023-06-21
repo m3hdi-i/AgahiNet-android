@@ -33,6 +33,13 @@
 
         </activity>
 
+        <activity
+            android:name="ir.m3hdi.agahinet.ui.activity.ImageViewerActivity"
+            android:exported="true"
+            />
+
     </application>
 
 </manifest>
+
+
