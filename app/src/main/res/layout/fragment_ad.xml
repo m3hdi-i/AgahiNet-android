@@ -80,7 +80,6 @@
                         app:icon="@drawable/ic_back"
                         app:iconSize="28dp"
                         app:iconTint="@android:color/white"
-
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -174,12 +173,7 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_marginVertical="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:dividerInsetStart="16dp"
-                app:dividerInsetEnd="16dp" />
-
-
+                style="@style/divier16"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -215,10 +209,7 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_marginVertical="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:dividerInsetStart="16dp"
-                app:dividerInsetEnd="16dp" />
+                style="@style/divier16" />
 
             <TextView
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"

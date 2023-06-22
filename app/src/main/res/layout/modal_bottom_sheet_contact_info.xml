@@ -60,7 +60,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/textView_bookmark"
             style="@style/TextViewContactInfo"
-            app:icon="@drawable/ic_bookmark_outline_24"
+            app:icon="@drawable/ic_bookmark_outline"
             android:text="نشان کن تا بعدا تماس بگیرم" />
 
 

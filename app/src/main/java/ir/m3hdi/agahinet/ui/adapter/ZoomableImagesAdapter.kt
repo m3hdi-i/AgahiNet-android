@@ -2,17 +2,13 @@ package ir.m3hdi.agahinet.ui.adapter
 
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
-import coil.request.Disposable
 import coil.request.ImageRequest
 import com.ortiz.touchview.TouchImageView
-import kotlinx.coroutines.launch
 
 /**
  *
@@ -66,23 +62,17 @@ class ZoomableImagesAdapter(private val images: List<String>) : RecyclerView.Ada
         return i.toLong()
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
-        val context= holder.itemView.context
-        var disposable:Disposable?=null
-
+        val context = holder.itemView.context
         val request = ImageRequest.Builder(context)
             .data(images[position])
             .target { drawable ->
-                // Handle the result.
                 holder.imagePlace.setImageDrawable(drawable)
-                disposable?.dispose()
             }
             .build()
 
-        disposable = context.imageLoader.enqueue(request)
-
+        context.imageLoader.enqueue(request)
     }
 
 

@@ -5,7 +5,7 @@
         android:state_checked="false"
         />
     <item
-        android:drawable="@drawable/ic_bookmark_filled"
+        android:drawable="@drawable/ic_bookmark_filled_32"
         android:state_checked="true"
         />
     <item android:drawable="@drawable/ic_bookmark_outline_32" />

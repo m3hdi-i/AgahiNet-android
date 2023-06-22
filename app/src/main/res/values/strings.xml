@@ -47,5 +47,9 @@
     <string name="contact_info">اطلاعات تماس</string>
     <string name="chat">چت</string>
     <string name="cats_and_filters_button_text">دسته بندی ها و فیلترها</string>
+    <string name="my_ads">آگهی های من</string>
+    <string name="bookmarkeds">نشان شده ها</string>
+    <string name="signout">خروج از حساب کاربری</string>
+    <string name="about">آگهی نت نسخه 1.0</string>
 
 </resources>
