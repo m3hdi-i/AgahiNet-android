@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.domain.model
+package ir.m3hdi.agahinet.data.remote.model
 
 import com.squareup.moshi.Json
 
@@ -17,7 +17,9 @@ data class UserSignin (
 
 data class User(
     @Json(name = "uid") val uid: String,
-    @Json(name = "fullname") val fullname: String
+    @Json(name = "fullname") val fullname: String,
+    @Json(name = "email") val email: String,
+    @Json(name = "phone_number") val phoneNumber: String
 )
 
 data class UserAuthResponse(

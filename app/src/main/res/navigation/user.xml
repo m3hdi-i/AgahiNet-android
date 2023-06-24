@@ -10,7 +10,49 @@
         android:id="@+id/user_screen"
         android:name="ir.m3hdi.agahinet.ui.fragment.UserFragment"
         android:label="@string/title_user"
-        tools:layout="@layout/fragment_need_auth" />
+        tools:layout="@layout/fragment_user" >
 
+        <action
+            android:id="@+id/action_user_to_my_ads"
+            app:destination="@id/myads_screen" />
+        <action
+            android:id="@+id/action_user_to_bookmarks"
+            app:destination="@id/bookmarks_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/myads_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.MyAdsFragment"
+        android:label="@string/my_ads"
+        tools:layout="@layout/fragment_my_ads" >
+
+        <action
+            android:id="@+id/action_myads_to_ad"
+            app:destination="@id/ad_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookmarks_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.BookmarksFragment"
+        android:label="@string/bookmarkeds"
+        tools:layout="@layout/fragment_bookmarks" >
+
+        <action
+            android:id="@+id/action_bookmarks_to_ad"
+            app:destination="@id/ad_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ad_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.AdFragment"
+        android:label="نمایش آگهی"
+        tools:layout="@layout/fragment_ad" >
+
+        <argument android:name="ad"
+            app:argType="ir.m3hdi.agahinet.domain.model.Ad"/>
+    </fragment>
 
 </navigation>

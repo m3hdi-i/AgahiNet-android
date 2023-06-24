@@ -41,7 +41,6 @@
         android:layoutDirection="rtl"
         android:textAlignment="center"
         app:labelVisibilityMode="labeled"/>
-        <!-- android:theme="@style/BottomNavigationStyle" -->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

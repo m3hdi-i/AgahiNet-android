@@ -10,7 +10,9 @@ import ir.m3hdi.agahinet.domain.model.onSuccess
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.Constants.Companion.CATEGORIES
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +20,33 @@ import javax.inject.Inject
 class AdViewModel @Inject constructor(private val adRepository: AdRepository): ViewModel() {
 
     lateinit var ad: Ad
-    var selectedImagePosition = 0
 
     private val _images = MutableSharedFlow<List<String>>(replay = 1)
     val images=_images.asSharedFlow()
 
-    fun getImages(){
+    var selectedImagePosition = 0
+
+    private val _bookmarkState = MutableStateFlow(false)
+    val bookmarkState = _bookmarkState.asStateFlow()
+
+    private val _uiActionsFlow = MutableSharedFlow<UiAction>()
+    val uiActionsFlow=_uiActionsFlow.asSharedFlow()
+
+    fun initAd(ad: Ad){
+        this.ad = ad
+        getImages()
+        checkIfBookmarked()
+    }
+
+    private fun checkIfBookmarked(){
+        viewModelScope.launch {
+            adRepository.hasBookmark(ad.adId).onSuccess {
+                _bookmarkState.value = it.has
+            }
+        }
+    }
+
+    private fun getImages(){
         viewModelScope.launch {
             if (ad.mainImageId!=null){
                 adRepository.getImagesOfAd(ad.adId).onSuccess {
@@ -35,9 +58,35 @@ class AdViewModel @Inject constructor(private val adRepository: AdRepository): V
                 _images.emit(listOf())
             }
         }
-
     }
 
     fun getCategoryTitle() = CATEGORIES.find { it.id==ad.category }?.title ?: CATEGORIES[0].title
 
+    fun setBookmarked(bookmark: Boolean) {
+        viewModelScope.launch {
+            if (bookmark){
+                adRepository.addBookmark(ad.adId).onSuccess {
+                    _bookmarkState.value = true
+                    _uiActionsFlow.emit(UiAction.BookmarkSetOK(true))
+
+                }.onFailure {
+                    _uiActionsFlow.emit(UiAction.FailedToSetBookmark)
+                }
+            }else{
+                adRepository.deleteBookmark(ad.adId).onSuccess {
+                    _bookmarkState.value = false
+                    _uiActionsFlow.emit(UiAction.BookmarkSetOK(false))
+                }.onFailure {
+                    _uiActionsFlow.emit(UiAction.FailedToSetBookmark)
+                }
+            }
+        }
+    }
+
+    sealed class UiAction {
+        data class BookmarkSetOK(val bookmark: Boolean) : UiAction()
+        object FailedToSetBookmark : UiAction()
+    }
+
 }
+

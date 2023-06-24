@@ -50,6 +50,16 @@
     <string name="my_ads">آگهی های من</string>
     <string name="bookmarkeds">نشان شده ها</string>
     <string name="signout">خروج از حساب کاربری</string>
+    <string name="signout_confirm">آیا مطمپنید که میخواهید از حساب کاربری خود خارج شوید؟</string>
+    <string name="delete_confirm">آیا مطمپنید که میخواهید این مورد را حذف کنید؟</string>
+    <string name="delete_ad">حذف آگهی</string>
+    <string name="bookmarked_message">نشان شد.</string>
+    <string name="unbookmarked_message">نشان حذف شد.</string>
+    <string name="yes">آره</string>
+    <string name="no">نه</string>
     <string name="about">آگهی نت نسخه 1.0</string>
+    <string name="no_items_to_show">هیچ موردی برای نمایش وجود ندارد.</string>
+    <string name="edit">ویرایش</string>
+    <string name="delete">حذف</string>
 
 </resources>

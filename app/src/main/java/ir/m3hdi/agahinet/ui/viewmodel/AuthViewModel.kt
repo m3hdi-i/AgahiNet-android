@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.domain.model.SigninState
 import ir.m3hdi.agahinet.domain.model.SignupState
-import ir.m3hdi.agahinet.domain.model.UserSignin
-import ir.m3hdi.agahinet.domain.model.UserSignup
+import ir.m3hdi.agahinet.data.remote.model.UserSignin
+import ir.m3hdi.agahinet.data.remote.model.UserSignup
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.saveSuccessfulAuthData

@@ -1,8 +1,8 @@
 package ir.m3hdi.agahinet.data.repository
 
-import ir.m3hdi.agahinet.domain.model.UserAuthResponse
-import ir.m3hdi.agahinet.domain.model.UserSignin
-import ir.m3hdi.agahinet.domain.model.UserSignup
+import ir.m3hdi.agahinet.data.remote.model.UserAuthResponse
+import ir.m3hdi.agahinet.data.remote.model.UserSignin
+import ir.m3hdi.agahinet.data.remote.model.UserSignup
 import ir.m3hdi.agahinet.data.remote.ANetService
 import ir.m3hdi.agahinet.util.AppUtils.Companion.suspendRunCatching
 import ir.m3hdi.agahinet.domain.model.Resultx

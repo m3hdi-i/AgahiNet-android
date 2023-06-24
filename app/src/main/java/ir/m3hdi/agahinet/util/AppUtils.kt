@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +18,14 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import ir.m3hdi.agahinet.domain.model.Ad
 import ir.m3hdi.agahinet.domain.model.Resultx
-import ir.m3hdi.agahinet.domain.model.UserAuthResponse
+import ir.m3hdi.agahinet.data.remote.model.User
+import ir.m3hdi.agahinet.data.remote.model.UserAuthResponse
+import ir.m3hdi.agahinet.domain.model.AuthedUser
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.coroutines.cancellation.CancellationException
+
 
 class AppUtils {
 
@@ -29,65 +33,65 @@ class AppUtils {
 
         const val BASE_URL="http://10.0.3.2:8000/"
 
-        var isAuthed=false
-        var uid:String?=null
-        var fullname:String?=null
-        var jwt:String?=null
-
-
-        fun <T:Any> Observable<T>.ioOnUi():Observable<T>{
-            return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        }
-
-        fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
-
-
-        fun retrieveAuthData(context: Context)
-        {
-            val secureSharedP=getSecureSharedPref(context)
-            val haveJwt=secureSharedP.contains("jwt")
-            if (haveJwt){
-                isAuthed=true
-                jwt=secureSharedP.getString("jwt",null)
-                uid= secureSharedP.getString("uid",null)
-                fullname=secureSharedP.getString("fullname",null)
-            }
-
-        }
+        val currentUser= MutableStateFlow<AuthedUser?>(null)
 
         fun saveSuccessfulAuthData(context: Context,auth: UserAuthResponse)
         {
-            val uid=auth.user!!.uid
-            val fullname=auth.user.fullname
-            getSecureSharedPref(context).edit().apply{
-                putString("uid",uid)
-                putString("fullname",fullname)
-                putString("jwt",auth.accessToken)
+            if (auth.user!=null && auth.accessToken!=null){
 
-            }.apply()
-            AppUtils.isAuthed=true
-            AppUtils.uid=uid
-            AppUtils.fullname=fullname
+                currentUser.value = AuthedUser(auth.accessToken, auth.user)
+
+                auth.user.let {
+                    getSecureSharedPref(context).edit().apply{
+                        putString("uid",it.uid)
+                        putString("fullname",it.fullname)
+                        putString("email",it.email)
+                        putString("phone_number",it.phoneNumber)
+                        putString("jwt",auth.accessToken)
+
+                    }.apply()
+                }
+
+            }
+        }
+
+        fun retrieveAuthData(context: Context)
+        {
+            val ssp = getSecureSharedPref(context)
+            val savedJwt = ssp.getString("jwt",null)
+            savedJwt?.let {jwt->
+                val user =  User(
+                    uid = ssp.getString("uid",null) ?: "",
+                    fullname =  ssp.getString("fullname",null) ?: "",
+                    email = ssp.getString("email",null) ?: "",
+                    phoneNumber =  ssp.getString("phone_number",null) ?: "",
+                )
+
+                currentUser.value = AuthedUser(jwt,user)
+            }
         }
 
 
-        fun signOutUser(context: Context){
+        fun signOutUser(context: Context) {
+
+            currentUser.value = null
+
             val secureSharedP=getSecureSharedPref(context)
             secureSharedP.edit().apply{
                 remove("jwt")
                 remove("uid")
                 remove("fullname")
+                remove("email")
+                remove("phone_number")
             }.apply()
-            isAuthed=false
 
-            // And clear all local data
         }
 
 
-        fun handleNeedAuthFragment(fragmentManager: FragmentManager, layoutParent: ViewGroup, layoutNeedAuth: View, layoutContent: View){
+        fun handleNeedAuthFragment(authed:Boolean,fragmentManager: FragmentManager, layoutParent: ViewGroup, layoutNeedAuth: View, layoutContent: View){
 
             val tag="need_auth_${layoutParent.id}"
-            if (isAuthed){
+            if (authed){
                 val fragment = fragmentManager.findFragmentByTag(tag)
                 fragment?.let {
                     val transaction= fragmentManager.beginTransaction()
@@ -188,15 +192,6 @@ class AppUtils {
          * Like [runCatching], but with proper coroutines cancellation handling. Also only catches [Exception] instead of [Throwable]
          * Cancellation exceptions need to be rethrown. See https://github.com/Kotlin/kotlinx.coroutines/issues/1814
          */
-
-        /*suspend fun <T> suspendRunCatching(block: suspend () -> T): Result<T> = try {
-            Result.success(block())
-        } catch (cancellationException: CancellationException) {
-            throw cancellationException
-        } catch (exception: Exception) {
-            Result.failure(exception)
-        }*/
-
         suspend fun <T> suspendRunCatching(block: suspend () -> T): Resultx<T> = try {
             Resultx.success(block())
         } catch (cancellationException: CancellationException) {
@@ -224,6 +219,13 @@ class AppUtils {
         }
 
         fun getImageUrlByImageId(imageId:Int) = "${BASE_URL}api/image?image_id=${imageId}"
+
+
+        fun <T:Any> Observable<T>.ioOnUi():Observable<T>{
+            return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }
+
+        fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
 
     }
 }

@@ -43,8 +43,4 @@ class NewAdFragment : Fragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        AppUtils.handleNeedAuthFragment(childFragmentManager,binding.layoutParent,binding.layoutNeedAuth,binding.layoutContent)
-    }
 }

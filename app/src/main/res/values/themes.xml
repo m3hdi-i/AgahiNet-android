@@ -118,6 +118,7 @@
         <item name="android:focusable">true</item>
         <item name="android:background">@drawable/ripple_effect</item>
     </style>
+
     <style name="TextViewSelectedItems">
         <item name="drawableStartCompat">@drawable/ic_check</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2</item>
@@ -149,7 +150,13 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">10dp</item>
+    </style>
 
+
+
+    <style name="materialDialogStyle" parent="MaterialAlertDialog.Material3">
+        <item name="android:layoutDirection">rtl</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
 </resources>

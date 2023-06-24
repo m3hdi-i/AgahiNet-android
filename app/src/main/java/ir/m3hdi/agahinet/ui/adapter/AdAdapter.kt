@@ -55,6 +55,7 @@ class AdAdapter(private val citiesViewModel: CitiesViewModel) : PagingDataAdapte
 
     }
 
+
     object DiffUtilCallBack : DiffUtil.ItemCallback<Ad>() {
         override fun areItemsTheSame(oldItem: Ad, newItem: Ad): Boolean {
             return oldItem.adId == newItem.adId
@@ -64,6 +65,5 @@ class AdAdapter(private val citiesViewModel: CitiesViewModel) : PagingDataAdapte
             return oldItem == newItem
         }
     }
-
 
 }

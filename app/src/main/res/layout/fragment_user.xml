@@ -9,10 +9,10 @@
     tools:context=".ui.fragment.UserFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
                 app:tint="#EF9A9A" />
 
             <TextView
-                android:id="@+id/textView_username"
+                android:id="@+id/textView_fullname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -51,14 +51,15 @@
             </TextView>
 
             <TextView
+                android:id="@+id/textView_phoneNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="09129999999"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView_account"
-                app:layout_constraintStart_toStartOf="@+id/textView_username"
-                app:layout_constraintTop_toBottomOf="@+id/textView_username">
+                app:layout_constraintStart_toStartOf="@+id/textView_fullname"
+                app:layout_constraintTop_toBottomOf="@+id/textView_fullname">
 
             </TextView>
 

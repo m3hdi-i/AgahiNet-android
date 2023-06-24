@@ -31,15 +31,6 @@ class ChatFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        AppUtils.handleNeedAuthFragment(childFragmentManager,binding.layoutParent,binding.layoutNeedAuth,binding.layoutContent)
-        if (AppUtils.isAuthed){
-            Toast.makeText(context,AppUtils.uid+", "+AppUtils.fullname,Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

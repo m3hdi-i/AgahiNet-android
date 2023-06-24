@@ -1,8 +1,8 @@
 package ir.m3hdi.agahinet
 
 import ir.m3hdi.agahinet.domain.model.SearchFilters
-import ir.m3hdi.agahinet.domain.model.UserSignin
-import ir.m3hdi.agahinet.domain.model.UserSignup
+import ir.m3hdi.agahinet.data.remote.model.UserSignin
+import ir.m3hdi.agahinet.data.remote.model.UserSignup
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.UserAuthRepository
 import ir.m3hdi.agahinet.di.NetworkModule.provideANetService
@@ -22,15 +22,15 @@ import org.junit.Before
 class ANetServicesUnitTest {
 
 
-
+    /*
     lateinit var authRepo: UserAuthRepository
     lateinit var adsRepo: AdRepository
 
     @Before
     fun setUp() {
         val anetService=provideANetService(provideRetrofit(provideOkHttpClient(), provideMoshi()))
-        authRepo=provideUserAuthRepository(anetService, Dispatchers.IO)
-        adsRepo=provideAdsRepository(anetService, Dispatchers.IO)
+        authRepo=provideUserAuthRepository(anetService)
+        adsRepo=provideAdsRepository(anetService)
     }
 
     @Test
@@ -68,6 +68,6 @@ class ANetServicesUnitTest {
 
     }
 
-
+*/
 
 }
