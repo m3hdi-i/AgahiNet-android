@@ -29,8 +29,8 @@ class AdViewModel @Inject constructor(private val adRepository: AdRepository): V
     private val _bookmarkState = MutableStateFlow(false)
     val bookmarkState = _bookmarkState.asStateFlow()
 
-    private val _uiActionsFlow = MutableSharedFlow<UiAction>()
-    val uiActionsFlow=_uiActionsFlow.asSharedFlow()
+    private val _uiEventFlow = MutableSharedFlow<UiEvent>()
+    val uiEventFlow=_uiEventFlow.asSharedFlow()
 
     fun initAd(ad: Ad){
         this.ad = ad
@@ -39,9 +39,11 @@ class AdViewModel @Inject constructor(private val adRepository: AdRepository): V
     }
 
     private fun checkIfBookmarked(){
-        viewModelScope.launch {
-            adRepository.hasBookmark(ad.adId).onSuccess {
-                _bookmarkState.value = it.has
+        if (AppUtils.currentUser.value != null){
+            viewModelScope.launch {
+                adRepository.hasBookmark(ad.adId).onSuccess {
+                    _bookmarkState.value = it.has
+                }
             }
         }
     }
@@ -64,28 +66,35 @@ class AdViewModel @Inject constructor(private val adRepository: AdRepository): V
 
     fun setBookmarked(bookmark: Boolean) {
         viewModelScope.launch {
-            if (bookmark){
-                adRepository.addBookmark(ad.adId).onSuccess {
-                    _bookmarkState.value = true
-                    _uiActionsFlow.emit(UiAction.BookmarkSetOK(true))
+            if (AppUtils.currentUser.value!=null){
+                if (bookmark){
+                    adRepository.addBookmark(ad.adId).onSuccess {
+                        _bookmarkState.value = true
+                        _uiEventFlow.emit(UiEvent.BookmarkSetOK(true))
 
-                }.onFailure {
-                    _uiActionsFlow.emit(UiAction.FailedToSetBookmark)
+                    }.onFailure {
+                        _uiEventFlow.emit(UiEvent.FailedToSetBookmark())
+                    }
+                }else{
+                    adRepository.deleteBookmark(ad.adId).onSuccess {
+                        _bookmarkState.value = false
+                        _uiEventFlow.emit(UiEvent.BookmarkSetOK(false))
+                    }.onFailure {
+                        _uiEventFlow.emit(UiEvent.FailedToSetBookmark())
+                    }
                 }
             }else{
-                adRepository.deleteBookmark(ad.adId).onSuccess {
-                    _bookmarkState.value = false
-                    _uiActionsFlow.emit(UiAction.BookmarkSetOK(false))
-                }.onFailure {
-                    _uiActionsFlow.emit(UiAction.FailedToSetBookmark)
-                }
+                _uiEventFlow.emit(UiEvent.AuthenticationRequired)
+                _uiEventFlow.emit(UiEvent.FailedToSetBookmark(showToast = false))
             }
+
         }
     }
 
-    sealed class UiAction {
-        data class BookmarkSetOK(val bookmark: Boolean) : UiAction()
-        object FailedToSetBookmark : UiAction()
+    sealed class UiEvent {
+        data class BookmarkSetOK(val bookmark: Boolean) : UiEvent()
+        data class FailedToSetBookmark(val showToast:Boolean=true) : UiEvent()
+        object AuthenticationRequired : UiEvent()
     }
 
 }

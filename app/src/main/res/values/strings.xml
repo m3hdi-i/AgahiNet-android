@@ -62,4 +62,6 @@
     <string name="edit">ویرایش</string>
     <string name="delete">حذف</string>
 
+    <string name="authentication_required">برای استفاده از این قابلیت باید وارد حساب کاربری خود شوید.</string>
+
 </resources>

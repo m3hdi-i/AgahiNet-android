@@ -24,11 +24,13 @@ import ir.m3hdi.agahinet.databinding.FragmentAdBinding
 import ir.m3hdi.agahinet.ui.activity.ImageViewerActivity
 import ir.m3hdi.agahinet.ui.adapter.ImagesSliderAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel
+import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel.UiEvent.BookmarkSetOK
+import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel.UiEvent.FailedToSetBookmark
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
+import ir.m3hdi.agahinet.ui.viewmodel.NavigationViewModel
 import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPrice
 import kotlinx.coroutines.launch
-import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel.UiAction.FailedToSetBookmark
-import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel.UiAction.BookmarkSetOK
+
 
 @AndroidEntryPoint
 class AdFragment : Fragment() {
@@ -38,6 +40,7 @@ class AdFragment : Fragment() {
 
     private val viewModel:AdViewModel by viewModels()
     private val citiesViewModel:CitiesViewModel by activityViewModels()
+    private val navigationViewModel:NavigationViewModel by activityViewModels()
 
     private val args: AdFragmentArgs by navArgs()
 
@@ -139,7 +142,7 @@ class AdFragment : Fragment() {
                 }
 
                 launch {
-                    viewModel.uiActionsFlow.collect{
+                    viewModel.uiEventFlow.collect{
                         when(it){
                             is BookmarkSetOK -> {
                                 val messageResId = if (it.bookmark) R.string.bookmarked_message else R.string.unbookmarked_message
@@ -147,7 +150,12 @@ class AdFragment : Fragment() {
                             }
                             is FailedToSetBookmark -> {
                                 binding.checkboxBookmark.isChecked = !binding.checkboxBookmark.isChecked
-                                Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT, false).show()
+                                if (it.showToast)
+                                    Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT, false).show()
+                            }
+                            is AdViewModel.UiEvent.AuthenticationRequired -> {
+                                navigationViewModel.goToAuthenicateScreen()
+                                Toasty.warning(requireContext(), getString(R.string.authentication_required), Toast.LENGTH_SHORT, false).show()
                             }
                         }
                     }

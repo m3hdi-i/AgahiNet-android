@@ -1,10 +1,14 @@
 package ir.m3hdi.agahinet.ui.activity
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsCompat.Type.ime
 import androidx.core.view.WindowInsetsCompat.toWindowInsetsCompat
 import androidx.core.view.isGone
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,7 +17,9 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.ActivityMainBinding
+import ir.m3hdi.agahinet.ui.viewmodel.NavigationViewModel
 import ir.m3hdi.agahinet.util.AppUtils.Companion.retrieveAuthData
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -22,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration:AppBarConfiguration
+
+    private val navigationViewModel:NavigationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -53,12 +61,22 @@ class MainActivity : AppCompatActivity() {
             view.onApplyWindowInsets(insets)
         }
 
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                navigationViewModel.goToAuthScreenEvent.collect{
+                    binding.navView.selectedItemId = R.id.user
+                }
+            }
+        }
+
         // Hide keyborad if input view loses focus
         /*val imm = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         window.decorView.viewTreeObserver.addOnGlobalFocusChangeListener { oldView, newView ->
             if (newView !is TextInputEditText)
                 imm.hideSoftInputFromWindow((oldView ?: newView)?.windowToken ?: window.attributes.token, 0)
         }*/
+
 
     }
 
