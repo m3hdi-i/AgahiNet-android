@@ -32,9 +32,6 @@ class CategoryAdapter(private val items:List<Category>) : RecyclerView.Adapter<C
                 container.setOnClickListener { onItemClickFunction?.invoke(cat) }
                 divider.isGone = position == itemCount-1
             }
-
-
-
         }
     }
 

@@ -153,10 +153,14 @@
     </style>
 
 
-
     <style name="materialDialogStyle" parent="MaterialAlertDialog.Material3">
         <item name="android:layoutDirection">rtl</item>
         <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="CircularImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

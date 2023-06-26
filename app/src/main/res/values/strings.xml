@@ -63,5 +63,44 @@
     <string name="delete">حذف</string>
 
     <string name="authentication_required">برای استفاده از این قابلیت باید وارد حساب کاربری خود شوید.</string>
+    <string name="new_ad_title">عنوان آگهی...</string>
+    <string name="new_ad_description">توضیحات...</string>
+    <string name="currency_suffix">تومان</string>
+    <string name="new_ad_price">قیمت :</string>
+    <string name="new_ad_province">استان...</string>
+    <string name="new_ad_city">شهر...</string>
+    <string name="new_ad_category_label">دسته بندی :</string>
+    <string name="new_ad_category">دسته...</string>
+    <string name="new_ad_images">عکس ها :</string>
+    <string name="ok">تایید</string>
+    <string name="main_image">عکس اصلی</string>
+
+    <array name="my_array">
+        <!-- Add items to the array here -->
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
+    </array>
 
 </resources>

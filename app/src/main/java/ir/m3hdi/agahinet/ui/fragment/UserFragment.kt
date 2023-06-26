@@ -13,7 +13,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentUserBinding
 import ir.m3hdi.agahinet.util.AppUtils
-import ir.m3hdi.agahinet.util.AppUtils.Companion.currentUser
 import kotlinx.coroutines.launch
 
 
@@ -37,7 +36,7 @@ class UserFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                currentUser.collect{
+                AppUtils.currentUser.collect{
                     AppUtils.handleNeedAuthFragment(it!=null ,childFragmentManager,binding.layoutParent,binding.layoutNeedAuth,binding.layoutContent)
 
                     it?.let {
