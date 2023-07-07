@@ -20,6 +20,8 @@ import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
+const val AD_MAX_IMAGES_NUMBER = 5
+
 class AdRepository @Inject constructor(private val api: ANetService, @ApplicationContext private val context: Context)
 {
 

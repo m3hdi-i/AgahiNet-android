@@ -13,8 +13,8 @@ import androidx.room.PrimaryKey
             ,onDelete = ForeignKey.CASCADE
             ,onUpdate = ForeignKey.CASCADE) ])
 data class City(
-    @ColumnInfo(name = "city_id") @PrimaryKey val cityId: Int,
-    @ColumnInfo(name = "parent_province_id") val parentProvinceId: Int?,
+    @ColumnInfo(name = "city_id", index = true) @PrimaryKey val cityId: Int,
+    @ColumnInfo(name = "parent_province_id", index = true) val parentProvinceId: Int?,
     val title: String
 ){
     override fun toString(): String {

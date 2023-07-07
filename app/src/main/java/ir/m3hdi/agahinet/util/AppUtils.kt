@@ -5,10 +5,13 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.fragment.app.FragmentManager
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -18,10 +21,10 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.data.remote.model.User
 import ir.m3hdi.agahinet.data.remote.model.UserAuthResponse
 import ir.m3hdi.agahinet.domain.model.AuthedUser
+import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.coroutines.cancellation.CancellationException
@@ -227,7 +230,11 @@ class AppUtils {
 
         fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
 
+        /*fun calculateNoOfColumns(totalAvailableWidth:Int ,columnWidthDp: Int): Int {
+            return (totalAvailableWidth / columnWidthDp)
+        }*/
     }
+
 }
 
 /**

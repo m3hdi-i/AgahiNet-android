@@ -66,6 +66,7 @@
     <string name="new_ad_title">عنوان آگهی...</string>
     <string name="new_ad_description">توضیحات...</string>
     <string name="currency_suffix">تومان</string>
+    <string name="no_price">توافقی</string>
     <string name="new_ad_price">قیمت :</string>
     <string name="new_ad_province">استان...</string>
     <string name="new_ad_city">شهر...</string>
@@ -77,27 +78,6 @@
 
     <array name="my_array">
         <!-- Add items to the array here -->
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
-        <item>Item fgdf dfhdfhfghf fhfghfgh</item>
         <item>Item fgdf dfhdfhfghf fhfghfgh</item>
         <item>Item fgdf dfhdfhfghf fhfghfgh</item>
         <item>Item fgdf dfhdfhfghf fhfghfgh</item>
