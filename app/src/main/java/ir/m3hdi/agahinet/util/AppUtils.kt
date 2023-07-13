@@ -8,10 +8,6 @@ import android.os.Build
 import android.util.Patterns
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.fragment.app.FragmentManager
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -212,7 +208,9 @@ class AppUtils {
         }
 
         private const val currencySuffix=" تومان"
-        fun priceToPersianCurrencyLetters(text:String?) = if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
+        fun priceToPersianCurrencyLetters(text:String?): String {
+            return if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
+        }
 
         fun formatPrice(price:String?):String{
             if (!price.isNullOrBlank()){

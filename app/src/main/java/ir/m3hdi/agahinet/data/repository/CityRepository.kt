@@ -8,9 +8,12 @@ import javax.inject.Inject
 
 class CityRepository @Inject constructor(private val cityDao: CityDao) {
 
+    private var allCities:HashMap<Int,String>? = null
+    private var allProvinces:List<City>? = null
+
     suspend fun getAllProvinces():List<City> {
-        return withContext(Dispatchers.IO){
-            cityDao.getAllProvinces()
+        return allProvinces ?: withContext(Dispatchers.IO) {
+            cityDao.getAllProvinces().also { allProvinces = it }
         }
     }
 
@@ -20,9 +23,11 @@ class CityRepository @Inject constructor(private val cityDao: CityDao) {
         }
     }
 
-    suspend fun getAllCities(): List<City> {
-        return withContext(Dispatchers.IO){
-            cityDao.getAllCities()
+    suspend fun getAllCities(): HashMap<Int, String> {
+        return allCities ?: withContext(Dispatchers.IO) {
+            val hm = HashMap<Int,String>()
+            hm.putAll(cityDao.getAllCities().associateBy({ it.cityId }, { it.title }))
+            hm.also { allCities=it }
         }
     }
 

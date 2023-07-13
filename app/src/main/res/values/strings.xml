@@ -70,8 +70,8 @@
     <string name="new_ad_price">قیمت :</string>
     <string name="new_ad_province">استان...</string>
     <string name="new_ad_city">شهر...</string>
-    <string name="new_ad_category_label">دسته بندی :</string>
-    <string name="new_ad_category">دسته...</string>
+    <string name="new_ad_category">دسته بندی :</string>
+    <string name="new_ad_category_label">دسته...</string>
     <string name="new_ad_images">عکس ها :</string>
     <string name="ok">تایید</string>
     <string name="main_image">عکس اصلی</string>

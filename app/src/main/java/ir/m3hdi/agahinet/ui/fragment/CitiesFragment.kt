@@ -59,7 +59,7 @@ class CitiesFragment : Fragment() {
                             binding.textViewAllCitiesOfIran.isGone=true
                             binding.buttonSelectAll.isEnabled=true
 
-                            val cities = viewModel.getCitiesOfProvince(it.cityId)
+                            val cities = citiesViewModel.getCitiesOfProvince(it.cityId)
 
                             viewModel.tempCities?.let { selecteds ->
                                 citiesAdapter.setCities(cities, selecteds)
@@ -132,8 +132,9 @@ class CitiesFragment : Fragment() {
     private fun setupSelectProvinceModal(){
 
         binding.buttonSelectProvince.setOnClickListener {
+
             val modalBottomSheet = ProvinceSelectModal().apply {
-                provinces=citiesViewModel.allProvinces
+                provinces=citiesViewModel.allProvinces.value
                 onProvinceSelectedListener={
                     viewModel.setTempCurrentProvince(it)
                 }

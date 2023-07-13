@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
@@ -21,31 +20,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,33 +46,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
 import ir.m3hdi.agahinet.R
+import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.databinding.FragmentNewAdBinding
-import ir.m3hdi.agahinet.ui.adapter.NewAdImagesAdapter
+import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.ui.components.DropDownData
+import ir.m3hdi.agahinet.ui.components.MyDropDownMenu
+import ir.m3hdi.agahinet.ui.components.MyOutlinedTextField
+import ir.m3hdi.agahinet.ui.components.PriceField
+import ir.m3hdi.agahinet.ui.components.SpacerV
+import ir.m3hdi.agahinet.ui.components.recomposeHighlighter
 import ir.m3hdi.agahinet.ui.theme.AppTheme
-import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
-import ir.m3hdi.agahinet.ui.viewmodel.NewAd
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdViewModel
+import ir.m3hdi.agahinet.ui.viewmodel.UiState
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.Constants
 import ir.m3hdi.agahinet.util.RtlLayout
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class NewAdFragment : Fragment() {
 
     private var _binding: FragmentNewAdBinding? = null
     private val binding get() = _binding!!
 
-    private val newAdViewModel: NewAdViewModel by viewModels()
-    private val citiesViewModel: CitiesViewModel by activityViewModels()
-
-    private val imagesAdapter: NewAdImagesAdapter by lazy { NewAdImagesAdapter() }
+    private val viewModel: NewAdViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNewAdBinding.inflate(inflater, container, false)
@@ -98,26 +95,6 @@ class NewAdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupUI()
-
-        setupViewModelObservers()
-
-    }
-    private fun setupUI()
-    {
-
-        /*binding.recyclerViewImages.layoutManager= GridLayoutManager(context,3).apply {
-            orientation = GridLayoutManager.VERTICAL
-        }
-        binding.recyclerViewImages.adapter = imagesAdapter
-
-        val items = arrayOf("Item 1", "Item 2", "Item 3", "Item 4")
-        (binding.textFieldCategory.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
-        (binding.textFieldProvince.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)
-        (binding.textFieldCity.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(items)*/
-    }
-
-    private fun setupViewModelObservers(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -126,136 +103,183 @@ class NewAdFragment : Fragment() {
                 }
             }
         }
+
     }
 
-    @Composable
-    fun NewAdScreen(){
-        AppTheme{
-            val ad = newAdViewModel.newAd.collectAsStateWithLifecycle()
-            NewAdForm(ad.value)
-        }
-    }
+
+
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun NewAdForm(ad: NewAd){
+    fun NewAdForm(state:UiState){
+
+
         RtlLayout{
             CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
 
-                val scrollState = rememberLazyListState()
+                //val scrollState = rememberLazyListState()
 
-                val modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-                LazyColumn(state= scrollState,
-                    modifier = Modifier.fillMaxSize()
+                val modifier:Modifier = remember {
+                    Modifier
+                        .recomposeHighlighter()
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                }
+
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                 ) {
 
-                    item {
-                        Spacer(Modifier.height(16.dp))
-                        Text(modifier=modifier,text =stringResource(id = R.string.title_new_ad),
-                            style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(8.dp))
-                        Divider()
-                        Spacer(Modifier.height(16.dp))
-                        Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween){
-                            Text(text = stringResource(id = R.string.new_ad_category_label),
-                                modifier = Modifier.align(Alignment.CenterVertically),
-                                style = MaterialTheme.typography.titleMedium)
-                            Spacer(modifier = Modifier.width(32.dp))
-                            MyDropDownMenu(
-                                Modifier.align(Alignment.CenterVertically),
-                                Constants.CATEGORIES.map { it.title }, ad.category) {
-                                newAdViewModel.setCategory(it)
-                            }
-                        }
-                        Spacer(Modifier.height(8.dp))
-                    }
+                    // header
+                    HeaderSection(modifier)
 
-                    item{
-                        MyOutlinedTextField(modifier = modifier, maxLines = 1,
-                            label = stringResource(id = R.string.new_ad_title), value = ad.title) {
-                            newAdViewModel.setTitle(it)
-                        }
-                        Spacer(Modifier.height(8.dp))
-                        MyOutlinedTextField(modifier = modifier, minLines = 4, maxLines = 4,
-                            label = stringResource(id = R.string.new_ad_description), value = ad.description) {
-                            newAdViewModel.setDescription(it)
-                        }
-                        Spacer(Modifier.height(16.dp))
-                    }
+                    // category
+                    val onCategoryChanged:(Category)->Unit = remember { { viewModel.setCategory(it) } }
+                    CategorySection(modifier = modifier,category = state.category, onCategoryChanged = onCategoryChanged)
 
-                    item {
-                        Text(modifier=modifier, text =stringResource(id = R.string.new_ad_images),
-                            style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(4.dp))
-                        GridList(modifier = modifier) {
+                    // title and description
+                    val onTitleChanged:(String)->Unit = remember { { viewModel.setTitle(it) } }
+                    val onDescriptionChanged:(String)->Unit = remember { { viewModel.setDescription(it) } }
 
-                        }
-                        Spacer(Modifier.height(16.dp))
-                    }
-                    item {
+                    MyOutlinedTextField(modifier = modifier,
+                        label = stringResource(id = R.string.new_ad_title), value = state.title, maxLength = 50
+                    , onValueChange = onTitleChanged)
+                    SpacerV(modifier = modifier,8.dp)
+                    MyOutlinedTextField(modifier = modifier, multiLine = true,
+                        label = stringResource(id = R.string.new_ad_description), value = state.description, onValueChange = onDescriptionChanged)
+                    SpacerV(modifier = modifier,16.dp)
 
-                        Text(modifier=modifier, text =stringResource(id = R.string.new_ad_price),
-                            style = MaterialTheme.typography.titleMedium)
 
-                        Row(modifier = modifier,verticalAlignment = Alignment.CenterVertically){
-
-                            Row(modifier = Modifier
-                                .weight(0.35f)
-                                .align(Alignment.CenterVertically),verticalAlignment = Alignment.CenterVertically) {
-                                Text(text = stringResource(id = R.string.no_price),
-                                modifier = Modifier.padding(end = 8.dp))
-                                Switch(checked = ad.price==null,
-                                    onCheckedChange = {
-                                        newAdViewModel.setPrice(if (it) null else "")
-                                    })
-                            }
-                            Spacer(Modifier.weight(0.05f))
-                            MyOutlinedTextField(modifier = Modifier
-                                .weight(0.55f)
-                                .align(Alignment.CenterVertically)
-                                .padding(bottom = 8.dp),maxLines = 1, label = stringResource(id = R.string.price),
-                                value = ad.price.toString(), onValueChange = {
-                                    newAdViewModel.setPrice(it)
-                                })
-
-                        }
-                    }
-
-                    item {
-                        Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-                            MyDropDownMenu(
-                                modifier = Modifier.weight(0.45f),
-                                items = listOf("", ""),
-                                selectedItemPosition = 0,
-                                onItemSelected = {}
-                            )
-
-                            Spacer(modifier = Modifier.weight(0.1f))
-
-                            MyDropDownMenu(
-                                modifier = Modifier.weight(0.45f),
-                                items = listOf("", ""),
-                                selectedItemPosition = 0,
-                                onItemSelected = {}
-                            )
-                        }
-                    }
-                    item{
-                        Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = {}, content = {
-                                Text(text = stringResource(id = R.string.ok) )
-                            })
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
+                    // images
+                    Text(modifier=modifier, text =stringResource(id = R.string.new_ad_images),
+                        style = MaterialTheme.typography.titleMedium)
+                    SpacerV(modifier = modifier, height = 4.dp)
+                    GridList(modifier = modifier) {
 
                     }
+                    Spacer(Modifier.height(16.dp))
+
+                    // price
+                    val onPriceChanged:(String?)->Unit = remember{ { viewModel.setPrice(it) } }
+                    PriceSection(modifier = modifier,price=state.price, onPriceChanged = onPriceChanged)
+
+
+                    // province and city
+                    val onProvinceChanged:(City)->Unit = remember { { viewModel.setProvince(it) } }
+                    val onCityChanged:(City)->Unit = remember { { viewModel.setCity(it) } }
+
+                    LocationSection(modifier = modifier, city = state.city,
+                        allProvinces = state.allProvinces ,onCityChanged = onCityChanged, province = state.province,
+                        onProvinceChanged = onProvinceChanged, citiesToSelect = state.citiesToSelect)
+
+
+                    // OK button
+                    OkButton(modifier=modifier, onOK = {
+                        println("ok")
+                    })
 
                 }
 
             }
+
+        }
+    }
+
+    @Composable
+    fun LocationSection(
+        modifier: Modifier,
+        allProvinces:ImmutableList<City>,
+        province:City?,onProvinceChanged:(City)->Unit,
+        city:City?,onCityChanged:(City)->Unit,
+        citiesToSelect:ImmutableList<City>
+    ){
+
+        Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+
+
+            // Provinces dropdown list
+            val selectedProvince = province?.let { DropDownData.CityItem(it) }
+
+            MyDropDownMenu(
+                modifier = Modifier.weight(0.45f),
+                label = stringResource(id = R.string.new_ad_province),
+                items = allProvinces.map { DropDownData.CityItem(it) },
+                selectedItem = selectedProvince,
+                onItemSelected = { onProvinceChanged((it as DropDownData.CityItem).cityItem) }
+            )
+
+            Spacer(modifier = Modifier.weight(0.1f))
+
+            // Cities dropdown list
+            val cities =  citiesToSelect.map { DropDownData.CityItem(it) }
+            val selectedCity = city?.let { DropDownData.CityItem(it) }
+
+            MyDropDownMenu(
+                modifier = Modifier.weight(0.45f),
+                label = stringResource(id = R.string.new_ad_city),
+                items = cities,
+                selectedItem= selectedCity,
+                onItemSelected = { onCityChanged((it as DropDownData.CityItem).cityItem) }
+            )
+        }
+    }
+
+    @Composable
+    fun HeaderSection(modifier:Modifier) {
+        Spacer(Modifier.height(16.dp))
+        Text(modifier=modifier,text =stringResource(id = R.string.title_new_ad),
+            style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Divider()
+    }
+
+    @Composable
+    private fun CategorySection(modifier: Modifier,category: Category?,onCategoryChanged:(Category)->Unit) {
+        Spacer(Modifier.height(16.dp))
+
+        Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween){
+            Text(text = stringResource(id = R.string.new_ad_category),
+                modifier = Modifier.align(Alignment.CenterVertically),
+                style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.width(32.dp))
+
+            val selectedCategory = category?.let { DropDownData.CategoryItem(it) }
+            MyDropDownMenu(
+                modifier= Modifier.align(Alignment.CenterVertically),
+                label = stringResource(id = R.string.new_ad_category_label),
+                items = Constants.CATEGORIES.map { DropDownData.CategoryItem(it) },
+                selectedItem = selectedCategory,
+                onItemSelected = {
+                    onCategoryChanged((it as DropDownData.CategoryItem).catItem)
+                }
+            )
+        }
+
+        Spacer(Modifier.height(8.dp))
+    }
+
+
+    @Composable
+    fun PriceSection(modifier:Modifier,price:String?,onPriceChanged:(String?)->Unit)
+    {
+        Text(modifier=modifier, text =stringResource(id = R.string.new_ad_price),
+            style = MaterialTheme.typography.titleMedium)
+
+        Row(modifier = modifier,verticalAlignment = Alignment.CenterVertically){
+
+            Row(modifier = Modifier.weight(0.4f),
+                verticalAlignment = Alignment.CenterVertically) {
+                Text(text = stringResource(id = R.string.no_price), modifier = Modifier.padding(end = 8.dp))
+                Switch(checked = price==null,
+                    onCheckedChange = {
+                        onPriceChanged(if (it) null else "")
+                    })
+            }
+            Spacer(Modifier.weight(0.05f))
+
+            PriceField(modifier = Modifier.weight(0.55f),
+                value = price ?: "", onValueChange = onPriceChanged)
 
         }
     }
@@ -317,71 +341,34 @@ class NewAdFragment : Fragment() {
 
     }
 
-
     @Composable
-    fun MyOutlinedTextField(modifier: Modifier=Modifier,minLines:Int=1,maxLines:Int=1,label:String,value:String,onValueChange:(String)->Unit){
-        OutlinedTextField(
-            value = value,
-            onValueChange = {
-                onValueChange(it)
-            },
-            modifier=modifier,
-            minLines = minLines,
-            maxLines=maxLines,
-            trailingIcon = {
-                if (value.isNotEmpty()) {
-                    IconButton(onClick = {
-                        onValueChange("")
-                    }) {
-                        Icon(Icons.Filled.Clear, contentDescription = "Clear")
-                    }
+    fun OkButton(modifier:Modifier,onOK: () -> Unit){
+        Column(modifier = modifier.recomposeHighlighter(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(modifier = Modifier.padding(horizontal = 32.dp),content = {
+                Row(modifier = modifier, horizontalArrangement = Arrangement.Center){
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = null,
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = stringResource(id = R.string.ok), style =  MaterialTheme.typography.titleMedium )
                 }
-            },
-            label = { Text(text = label) },
-        )
+
+            },onClick = onOK )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+
+    // *******************
+
+
     @Composable
-    fun MyDropDownMenu(modifier: Modifier, items:List<String>, selectedItemPosition:Int?, onItemSelected:(String)->Unit){
-        var expanded by remember { mutableStateOf(false) }
-
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            },
-            modifier = modifier
-        ) {
-            val title = selectedItemPosition?.let {
-                items[it]
-            }?: ""
-            Crossfade(targetState = title) {
-                OutlinedTextField(
-                    value = it ,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = {
-                        Text("دسته بندی...")
-                    },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor()
-                )
-            }
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                items.forEach { selectedItem ->
-                    DropdownMenuItem(onClick = {
-                        expanded = false
-                        onItemSelected(selectedItem)
-                    }, text = {
-                        Text(text = selectedItem)
-                    })
-                }
-            }
+    fun NewAdScreen(){
+        AppTheme{
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            NewAdForm(uiState)
         }
     }
 
@@ -391,7 +378,7 @@ class NewAdFragment : Fragment() {
     @Composable
     fun PreviewNewAdScreen(){
         AppTheme{
-            val ad = NewAd()
+            val ad = UiState()
             NewAdForm(ad)
         }
     }

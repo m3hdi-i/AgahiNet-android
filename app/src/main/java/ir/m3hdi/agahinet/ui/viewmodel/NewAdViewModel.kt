@@ -1,42 +1,79 @@
 package ir.m3hdi.agahinet.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import ir.m3hdi.agahinet.util.Constants
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.m3hdi.agahinet.data.local.entity.City
+import ir.m3hdi.agahinet.data.repository.CityRepository
+import ir.m3hdi.agahinet.domain.model.Category
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewAdViewModel : ViewModel() {
+@HiltViewModel
+class NewAdViewModel @Inject constructor(private val cityRepository: CityRepository) : ViewModel() {
 
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val _newAd = MutableStateFlow(NewAd())
-    val newAd = _newAd.asStateFlow()
+    init {
 
-    fun setCategory(catTitle:String){
-        _newAd.value = _newAd.value.copy(category = (Constants.CATEGORIES.find { it.title == catTitle }?.id) ?:0)
+        viewModelScope.launch {
+            val allProvinces = cityRepository.getAllProvinces()
+            _uiState.update { it.copy(allProvinces=allProvinces.toImmutableList()) }
+        }
+
+    }
+    fun setCategory(category:Category){
+        _uiState.update { it.copy(category = category) }
     }
 
     fun setTitle(title: String) {
-        _newAd.value = _newAd.value.copy(title = title)
+        _uiState.update { it.copy(title = title) }
     }
 
     fun setDescription(desc: String) {
-        _newAd.value = _newAd.value.copy(description = desc)
+        _uiState.update { it.copy(description = desc) }
     }
 
     fun setPrice(price: String?) {
-        _newAd.value = _newAd.value.copy(price = price)
+        _uiState.update { it.copy(price = price) }
+    }
+
+    fun setProvince(province: City) {
+
+        if (uiState.value.province != province){
+            viewModelScope.launch {
+                val subCities = cityRepository.getCitiesOfProvince(province.cityId)
+                _uiState.update {
+                    it.copy(province = province, city = null, citiesToSelect = subCities.toImmutableList()) }
+            }
+        }
+    }
+
+    fun setCity(city: City) {
+        _uiState.update { it.copy(city = city)  }
     }
 
 }
 
-data class NewAd(
+@Immutable
+data class UiState(
     val title: String="",
     val description: String="",
     val price: String?="",
-    val category: Int?=null,
-    val city: Int?=null,
-    val imagesList: List<String>?=null,
-    val mainImageId: String?=null
+    val category: Category?=null,
+    val province: City?=null,
+    val city: City?=null,
+    val imagesList: ImmutableList<String>?=null,
+    val mainImageId: String?=null,
+
+    val allProvinces:ImmutableList<City> = persistentListOf(),
+    val citiesToSelect:ImmutableList<City> = persistentListOf()
 )

@@ -108,7 +108,6 @@ class HomeViewModel @Inject constructor(private val adRepository: AdRepository,p
      * Functions related to filters change screens
      *
      */
-    suspend fun getCitiesOfProvince(provinceId:Int) = cityRepository.getCitiesOfProvince(provinceId)
 
     fun fillTempFilters(){
         _filters.value.let {

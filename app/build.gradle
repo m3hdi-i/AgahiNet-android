@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
-    id 'androidx.navigation.safeargs'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -80,6 +80,7 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+    //implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Paging3
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
@@ -91,10 +92,10 @@ dependencies {
     implementation "io.coil-kt:coil:2.4.0"
 
     // ROOM Database
-    def room_version = "2.5.1"
+    def room_version = "2.5.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-ktx:2.5.1"
+    implementation "androidx.room:room-ktx:$room_version"
 
     // Hilt DI
     def hilt_version = "2.45"
@@ -131,6 +132,9 @@ dependencies {
 
     // to use Java 8 features
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+
+    // Kotlin immutable collections
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
