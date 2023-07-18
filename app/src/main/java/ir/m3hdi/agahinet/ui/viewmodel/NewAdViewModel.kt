@@ -63,8 +63,6 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
 
 }
 
-const val MAX_IMAGES_COUNT = 6
-
 @Immutable
 data class UiState(
     val title: String="",
@@ -73,7 +71,8 @@ data class UiState(
     val category: Category?=null,
     val province: City?=null,
     val city: City?=null,
-    val imagesList: ImmutableList<Pair<String,Boolean>> = persistentListOf(),
+    val imagesList: ImmutableList<String>?=null,
+    val mainImageId: String?=null,
 
     val allProvinces:ImmutableList<City> = persistentListOf(),
     val citiesToSelect:ImmutableList<City> = persistentListOf()
