@@ -8,11 +8,13 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalTextInputService
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.domain.model.Category
 
@@ -37,16 +39,18 @@ fun MyDropDownMenu(modifier: Modifier, label: String, items:List<DropDownData>, 
         val title = selectedItem?.value?.toString() ?: ""
 
         Crossfade(targetState = title) {
-            OutlinedTextField(
-                value = it ,
-                onValueChange = {},
-                readOnly = true,
-                label = {
-                    Text(label)
-                },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
+            CompositionLocalProvider(LocalTextInputService provides null) {
+                OutlinedTextField(
+                    value = it,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(text = label) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier.menuAnchor(),
+                )
+            }
+
+
         }
 
         ExposedDropdownMenu(

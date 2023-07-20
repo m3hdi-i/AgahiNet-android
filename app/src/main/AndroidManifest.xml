@@ -39,6 +39,15 @@
             android:exported="true"
             />
 
+        <provider
+            android:name=".util.ComposeFileProvider"
+            android:authorities="ir.m3hdi.agahinet.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
     </application>
 

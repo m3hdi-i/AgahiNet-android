@@ -77,8 +77,7 @@ fun PriceField(modifier: Modifier = Modifier, value:String, onValueChange:(Strin
         supportingText = {
             Text(text = supportingText)
         },
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
-
-        )
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done)
+    )
 }
 

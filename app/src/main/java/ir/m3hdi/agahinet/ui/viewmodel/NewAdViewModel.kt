@@ -1,5 +1,6 @@
 package ir.m3hdi.agahinet.ui.viewmodel
 
+import android.net.Uri
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -61,9 +62,42 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
         _uiState.update { it.copy(city = city)  }
     }
 
+    fun addImage(uri: Uri){
+        val oldImageList = uiState.value.imagesList
+        if (uri !in oldImageList.map { it.uri }){
+            val newImageList= (oldImageList + NewAdImage(uri, isMainImage = (oldImageList.size == 0)))
+            _uiState.update { it.copy(imagesList = newImageList.toImmutableList())  }
+        }
+    }
+
+    fun deleteImage(image: NewAdImage) {
+        val oldImageList = uiState.value.imagesList
+        val newImageList= (oldImageList - image).toMutableList()
+
+        if (newImageList.firstOrNull { it.isMainImage } == null && newImageList.isNotEmpty()) {
+            newImageList[0] = newImageList[0].copy(isMainImage = true)
+        }
+
+        _uiState.update { it.copy(imagesList = newImageList.toImmutableList())  }
+    }
+
+    fun setMainImage(image: NewAdImage) {
+
+        val newImageList = uiState.value.imagesList.map { item ->
+            if (item == image)
+                item.copy(isMainImage = true)
+            else
+                item.copy(isMainImage = false)
+        }
+        _uiState.update { it.copy(imagesList = newImageList.toImmutableList())  }
+    }
+
 }
 
 const val MAX_IMAGES_COUNT = 6
+
+@Immutable
+data class NewAdImage(val uri:Uri, val isMainImage:Boolean=false, val uploadUrl:String?=null)
 
 @Immutable
 data class UiState(
@@ -73,8 +107,9 @@ data class UiState(
     val category: Category?=null,
     val province: City?=null,
     val city: City?=null,
-    val imagesList: ImmutableList<Pair<String,Boolean>> = persistentListOf(),
+    val imagesList: ImmutableList<NewAdImage> = persistentListOf(),
 
     val allProvinces:ImmutableList<City> = persistentListOf(),
     val citiesToSelect:ImmutableList<City> = persistentListOf()
 )
+
