@@ -8,7 +8,14 @@ import android.os.Build
 import android.util.Patterns
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.transition.TransitionManager
@@ -22,7 +29,9 @@ import ir.m3hdi.agahinet.data.remote.model.UserAuthResponse
 import ir.m3hdi.agahinet.domain.model.AuthedUser
 import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 
@@ -30,7 +39,7 @@ class AppUtils {
 
     companion object {
 
-        const val BASE_URL="http://10.0.2.2:8000/"
+        const val BASE_URL="http://10.0.3.2:8000/"
 
         val currentUser= MutableStateFlow<AuthedUser?>(null)
 
@@ -219,7 +228,7 @@ class AppUtils {
             return "توافقی"
         }
 
-        fun getImageUrlByImageId(imageId:Int) = "${BASE_URL}api/image?image_id=${imageId}"
+        fun getImageUrlByImageId(imageId:String) = "${BASE_URL}api/image?image_id=${imageId}"
 
 
         fun <T:Any> Observable<T>.ioOnUi():Observable<T>{
@@ -228,9 +237,21 @@ class AppUtils {
 
         fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
 
-        /*fun calculateNoOfColumns(totalAvailableWidth:Int ,columnWidthDp: Int): Int {
-            return (totalAvailableWidth / columnWidthDp)
-        }*/
+
+        // Utility function for observing one-shot events in jetpack compose screens
+        @Composable
+        inline fun <reified T> Flow<T>.observeWithLifecycle(
+            lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+            minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+            noinline action: suspend (T) -> Unit
+        ) {
+            LaunchedEffect(key1 = Unit) {
+                lifecycleOwner.lifecycleScope.launch {
+                    flowWithLifecycle(lifecycleOwner.lifecycle, minActiveState).collect(action)
+                }
+            }
+        }
+
     }
 
 }

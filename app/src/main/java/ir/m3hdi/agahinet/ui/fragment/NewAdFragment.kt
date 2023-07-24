@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Column
@@ -28,7 +32,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.databinding.FragmentNewAdBinding
@@ -38,8 +44,9 @@ import ir.m3hdi.agahinet.ui.components.HeaderSection
 import ir.m3hdi.agahinet.ui.components.ImagesSection
 import ir.m3hdi.agahinet.ui.components.LocationSection
 import ir.m3hdi.agahinet.ui.components.MyOutlinedTextField
-import ir.m3hdi.agahinet.ui.components.OkButton
+import ir.m3hdi.agahinet.ui.components.PublishButton
 import ir.m3hdi.agahinet.ui.components.PriceSection
+import ir.m3hdi.agahinet.ui.components.PublishedMessage
 import ir.m3hdi.agahinet.ui.components.RtlLayout
 import ir.m3hdi.agahinet.ui.components.SpacerV
 import ir.m3hdi.agahinet.ui.components.recomposeHighlighter
@@ -47,18 +54,21 @@ import ir.m3hdi.agahinet.ui.components.rememberImagePickerState
 import ir.m3hdi.agahinet.ui.theme.AppTheme
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdImage
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdViewModel
+import ir.m3hdi.agahinet.ui.viewmodel.FormState
+import ir.m3hdi.agahinet.ui.viewmodel.UiEvent
 import ir.m3hdi.agahinet.ui.viewmodel.UiState
 import ir.m3hdi.agahinet.util.AppUtils
+import ir.m3hdi.agahinet.util.AppUtils.Companion.observeWithLifecycle
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class NewAdFragment : Fragment() {
+open class NewAdFragment : Fragment() {
 
     private var _binding: FragmentNewAdBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: NewAdViewModel by viewModels()
+    val viewModel: NewAdViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNewAdBinding.inflate(inflater, container, false)
@@ -86,6 +96,44 @@ class NewAdFragment : Fragment() {
     }
 
 
+    
+    @Composable
+    fun NewAdScreen(){
+        AppTheme{
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            val isPublished = uiState.formState == FormState.DONE
+
+            AnimatedVisibility(visible = !isPublished , exit = fadeOut(), enter = fadeIn()) {
+                NewAdForm(uiState)
+            }
+
+            if (isPublished){
+                if (!uiState.isEditMode){
+                    PublishedMessage(adTitle = uiState.title) {
+                        viewModel.createNewAd()
+                    }
+                }else{
+                    Toasty.success(requireContext(),
+                        "آگهی با موفقیت بروزرسانی شد!"
+                        , Toast.LENGTH_LONG, false).show()
+                    findNavController().popBackStack()
+                }
+
+            }
+            viewModel.eventFlow.observeWithLifecycle { event ->
+                val message =  when (event){
+                    UiEvent.INCOMPLETE_INPUTS ->{ "لطفا تمام ورودی ها را تکمیل کنید." }
+                    UiEvent.WAIT_TO_UPLOAD_IMAGES ->{ "عکس ها در حال آپلود هستند، لطفا صبر کنید." }
+                    UiEvent.FAILED_TO_UPLOAD_IMAGE ->{"مشکل در آپلود عکس، لطفا دوباره تلاش کنید."}
+                    UiEvent.FAILED_TO_POST ->{ "مشکل در ارتباط با سرور آگهی نت، لطفا دوباره تلاش کنید." }
+                }
+                Toasty.warning(requireContext(), message, Toast.LENGTH_LONG, false).show()
+            }
+        }
+    }
+
+
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
@@ -101,80 +149,80 @@ class NewAdFragment : Fragment() {
                         .padding(horizontal = 32.dp)
                 }
 
-                val onAddImage :(Uri)->Unit = { viewModel.addImage(it) }
+                val onAddImage :(Uri)->Unit = {
+                    viewModel.addImage(it)
+                }
                 val imagePickerState = rememberImagePickerState(onAddImage,requireContext())
 
-                // New ad inputs
+
                 Column(modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                ) {
+                    .fillMaxSize()) {
 
-                    // header
-                    HeaderSection(modifier)
+                    // screen toolbar
+                    val cancelEdit:()->Unit = remember{{ findNavController().popBackStack() }}
+                    HeaderSection (isEditMode=state.isEditMode , cancelEdit = cancelEdit)
 
-                    // category
-                    val onCategoryChanged:(Category)->Unit = remember { { viewModel.setCategory(it) } }
-                    CategorySection(modifier = modifier,category = state.category, onCategoryChanged = onCategoryChanged)
+                    // inputs
+                    Column(modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                    ) {
 
-                    // title and description
-                    val onTitleChanged:(String)->Unit = remember { { viewModel.setTitle(it) } }
-                    val onDescriptionChanged:(String)->Unit = remember { { viewModel.setDescription(it) } }
+                        // category
+                        val onCategoryChanged:(Category)->Unit = remember { { viewModel.setCategory(it) } }
+                        CategorySection(modifier = modifier,category = state.category, onCategoryChanged = onCategoryChanged)
 
-                    MyOutlinedTextField(modifier = modifier,
-                        label = stringResource(id = R.string.new_ad_title), value = state.title, maxLength = 50
-                        , onValueChange = onTitleChanged)
-                    SpacerV(modifier = modifier,8.dp)
-                    MyOutlinedTextField(modifier = modifier, multiLine = true,
-                        label = stringResource(id = R.string.new_ad_description), value = state.description, onValueChange = onDescriptionChanged)
-                    SpacerV(modifier = modifier,height=16.dp)
+                        // title and description
+                        val onTitleChanged:(String)->Unit = remember { { viewModel.setTitle(it) } }
+                        val onDescriptionChanged:(String)->Unit = remember { { viewModel.setDescription(it) } }
 
-                    // images
-                    val showImagePicker:()->Unit = remember { { imagePickerState.showImagePickerBottomSheet = true} }
-                    val onDeletePhoto:(NewAdImage)->Unit = remember { { viewModel.deleteImage(it) } }
-                    val onSetMainPhoto:(NewAdImage)->Unit = remember { { viewModel.setMainImage(it) } }
-                    ImagesSection(modifier = modifier,images = state.imagesList,
-                        onAddPhoto = showImagePicker,
-                        onDeletePhoto = onDeletePhoto,
-                        onSetMainPhoto = onSetMainPhoto)
+                        MyOutlinedTextField(modifier = modifier,
+                            label = stringResource(id = R.string.new_ad_title), value = state.title, maxLength = 50
+                            , onValueChange = onTitleChanged)
+                        SpacerV(modifier = modifier,8.dp)
+                        MyOutlinedTextField(modifier = modifier, multiLine = true,
+                            label = stringResource(id = R.string.new_ad_description), value = state.description, onValueChange = onDescriptionChanged)
+                        SpacerV(modifier = modifier,height=16.dp)
 
-                    // price
-                    val onPriceChanged:(String?)->Unit = remember{ { viewModel.setPrice(it) } }
-                    PriceSection(modifier = modifier,price=state.price, onPriceChanged = onPriceChanged)
+                        // images
+                        val showImagePicker:()->Unit = remember { { imagePickerState.showImagePickerBottomSheet = true} }
+                        val onDeletePhoto:(NewAdImage)->Unit = remember { { viewModel.deleteImage(it) } }
+                        val onSetMainPhoto:(NewAdImage)->Unit = remember { { viewModel.setMainImage(it) } }
+                        ImagesSection(modifier = modifier,images = state.imagesList,
+                            onAddPhoto = showImagePicker,
+                            onDeletePhoto = onDeletePhoto,
+                            onSetMainPhoto = onSetMainPhoto)
+
+                        // price
+                        val onPriceChanged:(String?)->Unit = remember{ { viewModel.setPrice(it) } }
+                        PriceSection(modifier = modifier,price=state.price, onPriceChanged = onPriceChanged)
 
 
-                    // location (province and city)
-                    val onProvinceChanged:(City)->Unit = remember { { viewModel.setProvince(it) } }
-                    val onCityChanged:(City)->Unit = remember { { viewModel.setCity(it) } }
+                        // location (province and city)
+                        val onProvinceChanged:(City)->Unit = remember { { viewModel.setProvince(it) } }
+                        val onCityChanged:(City)->Unit = remember { { viewModel.setCity(it) } }
 
-                    LocationSection(modifier = modifier, city = state.city,
-                        allProvinces = state.allProvinces ,onCityChanged = onCityChanged, province = state.province,
-                        onProvinceChanged = onProvinceChanged, citiesToSelect = state.citiesToSelect)
+                        LocationSection(modifier = modifier, city = state.city,
+                            allProvinces = state.allProvinces ,onCityChanged = onCityChanged, province = state.province,
+                            onProvinceChanged = onProvinceChanged, citiesToSelect = state.citiesToSelect)
 
-                    // OK button
-                    OkButton(modifier=modifier, onOK = {
-                        println("ok")
-                    })
+
+                        // publish button
+                        val onPublish:()->Unit = remember { { viewModel.publishAd() } }
+                        PublishButton(modifier=modifier, onClick = onPublish, isEditMode= state.isEditMode, inProgress = state.formState==FormState.POSTING)
+                    }
                 }
             }
         }
     }
-    
-    @Composable
-    fun NewAdScreen(){
-        AppTheme{
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            NewAdForm(uiState)
-        }
-    }
 
-    // *******************
 
     @Preview(showSystemUi = false, showBackground = true, device = "id:Galaxy Nexus")
     @Composable
     fun PreviewNewAdScreen(){
         AppTheme{
             RtlLayout {
+
             }
         }
     }
@@ -183,5 +231,6 @@ class NewAdFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 
 }

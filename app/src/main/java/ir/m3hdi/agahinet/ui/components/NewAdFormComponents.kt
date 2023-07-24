@@ -25,23 +25,29 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,11 +57,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -65,19 +77,52 @@ import com.google.accompanist.permissions.shouldShowRationale
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.ui.theme.AppTheme
 import ir.m3hdi.agahinet.ui.viewmodel.MAX_IMAGES_COUNT
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdImage
 import ir.m3hdi.agahinet.util.ComposeFileProvider
 import ir.m3hdi.agahinet.util.Constants
 import kotlinx.collections.immutable.ImmutableList
+import ir.m3hdi.agahinet.ui.theme.seed
 
 @Composable
-fun HeaderSection(modifier: Modifier) {
-    Spacer(Modifier.height(16.dp))
-    Text(modifier=modifier,text = stringResource(id = R.string.title_new_ad),
-        style = MaterialTheme.typography.titleMedium)
-    Spacer(Modifier.height(8.dp))
-    Divider()
+fun HeaderSection(cancelEdit: () -> Unit, isEditMode: Boolean){
+
+    if (!isEditMode){
+        Toolbar("آگهی جدید")
+    }else{
+        Toolbar("ویرایش آگهی") {
+            IconButton(onClick = { cancelEdit() }) {
+                Icon(
+                    Icons.Filled.ArrowBack,
+                    contentDescription = "back",
+                    modifier = Modifier.scale(scaleX = -1f, scaleY = 1f)
+                )
+            }
+        }
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Toolbar(title: String,navigationIcon: @Composable () -> Unit = {}){
+    TopAppBar(modifier = Modifier.fillMaxWidth(),
+        title = {  Text(title, style = MaterialTheme.typography.titleLarge) },
+        navigationIcon=navigationIcon,
+        colors =topAppBarColors(containerColor = seed,
+            navigationIconContentColor = Color.White,
+            titleContentColor = Color.White ))
+}
+
+@Preview
+@Composable
+fun X(){
+    AppTheme{
+        RtlLayout {
+
+        }
+    }
 }
 
 @Composable
@@ -133,7 +178,7 @@ fun CategorySection(modifier: Modifier, category: Category?, onCategoryChanged:(
         MyDropDownMenu(
             modifier= Modifier.align(Alignment.CenterVertically),
             label = stringResource(id = R.string.new_ad_category_label),
-            items = Constants.CATEGORIES.map { DropDownData.CategoryItem(it) },
+            items = Constants.CATEGORIES_FOR_NEW_AD.map { DropDownData.CategoryItem(it) },
             selectedItem = selectedCategory,
             onItemSelected = {
                 onCategoryChanged((it as DropDownData.CategoryItem).catItem)
@@ -303,6 +348,13 @@ fun ImageItem(
                         )
                     }
                 }
+
+                // upload progressBar
+                if (image.uploadId == null)
+                    CircularProgressIndicator(modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(40.dp)
+                        .alpha(0.75f))
             }
         }
     }
@@ -333,24 +385,36 @@ fun PriceSection(modifier: Modifier, price:String?, onPriceChanged:(String?)->Un
 }
 
 @Composable
-fun OkButton(modifier: Modifier, onOK: () -> Unit){
+fun PublishButton(modifier: Modifier, onClick: () -> Unit, inProgress: Boolean, isEditMode: Boolean){
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = modifier.padding(horizontal = 32.dp),content = {
+        val buttonOnClick = if (!inProgress) onClick else {{}}
+        Button(modifier = modifier
+            .padding(horizontal = 32.dp)
+            .animateContentSize(),content = {
             Row(horizontalArrangement = Arrangement.Center){
-                Icon(
-                    Icons.Filled.Check,
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = stringResource(id = R.string.ok), style =  MaterialTheme.typography.titleMedium )
+                if (!inProgress){
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = null,
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    val text = if (!isEditMode) "تایید" else "بروزرسانی"
+                    Text(text = text, style =  MaterialTheme.typography.titleMedium )
+                }else{
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier
+                        .size(32.dp)
+                        .padding(2.dp))
+                }
+
             }
 
-        },onClick = onOK )
+        },onClick =buttonOnClick)
         Spacer(modifier = Modifier.height(16.dp))
+
+
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -368,6 +432,7 @@ fun ImagePickerBottomSheet(onDismiss: () -> Unit, onChooseGallery:()->Unit, onCh
         BottomSheetItem(iconDrawableId = R.drawable.ic_camera, title ="از دوربین", onClick = onChooseCamera)
         Divider()
         BottomSheetItem(iconDrawableId = R.drawable.ic_photo_library, title ="از گالری", onClick = onChooseGallery)
+        SpacerV(height = 16.dp)
 
     }
 }
@@ -444,4 +509,48 @@ class ImagePickerState internal constructor() {
     var takePictureFromCamera by mutableStateOf(false)
     var takePictureFromGallery by mutableStateOf(false)
     var tempImageUri by mutableStateOf<Uri?>(null)
+}
+
+
+
+
+@Composable
+fun PublishedMessage(adTitle:String, onCreateNewAd:()->Unit){
+    Box(Modifier.fillMaxSize()){
+        Column(
+            Modifier
+                .align(Alignment.Center)
+                .padding(horizontal = 32.dp)) {
+            Icon(
+                Icons.Filled.Check,
+                contentDescription = null,
+                modifier= Modifier
+                    .size(64.dp)
+                    .align(Alignment.CenterHorizontally),
+                tint = Color(0xFFA5D6A7)
+            )
+            SpacerV(height = 8.dp)
+            Text(
+
+                buildAnnotatedString {
+
+                    append("آگهی")
+                    withStyle(
+                        style = SpanStyle(color = Color.Blue)
+                    ) {
+                        append(" $adTitle ")
+                    }
+                    append("با موفقیت منتشر شد!")
+
+                }, style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Rtl, textAlign = TextAlign.Center)
+
+            )
+
+            SpacerV(height = 24.dp)
+
+            FilledTonalButton(onClick = onCreateNewAd, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Text(text = "ارسال آگهی جدید")
+            }
+        }
+    }
 }

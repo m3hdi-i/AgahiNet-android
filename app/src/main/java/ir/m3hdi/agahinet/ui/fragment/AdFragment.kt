@@ -154,7 +154,7 @@ class AdFragment : Fragment() {
                                     Toasty.error(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT, false).show()
                             }
                             is AdViewModel.UiEvent.AuthenticationRequired -> {
-                                navigationViewModel.goToAuthenicateScreen()
+                                navigationViewModel.goToAuthScreen()
                                 Toasty.warning(requireContext(), getString(R.string.authentication_required), Toast.LENGTH_SHORT, false).show()
                             }
                         }

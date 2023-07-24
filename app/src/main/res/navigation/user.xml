@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_myads_to_ad"
             app:destination="@id/ad_screen" />
+        <action
+            android:id="@+id/action_myads_to_edit_ad"
+            app:destination="@id/edit_screen" />
 
     </fragment>
 
@@ -53,6 +56,16 @@
 
         <argument android:name="ad"
             app:argType="ir.m3hdi.agahinet.domain.model.Ad"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_screen"
+        android:name="ir.m3hdi.agahinet.ui.fragment.EditAdFragment"
+        android:label="ویرایش آگهی"
+        tools:layout="@layout/fragment_new_ad" >
+
+        <argument android:name="ad"
+            app:argType="ir.m3hdi.agahinet.domain.model.Ad" />
     </fragment>
 
 </navigation>

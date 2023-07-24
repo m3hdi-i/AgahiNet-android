@@ -31,4 +31,15 @@ class CityRepository @Inject constructor(private val cityDao: CityDao) {
         }
     }
 
+    suspend fun getParentProvinceOfCity(cityId:Int):City {
+        return withContext(Dispatchers.IO){
+            cityDao.getParentProvinceOfCity(cityId)
+        }
+    }
+
+    suspend fun getCityById(cityId:Int):City {
+        return withContext(Dispatchers.IO){
+            cityDao.getCityById(cityId)
+        }
+    }
 }

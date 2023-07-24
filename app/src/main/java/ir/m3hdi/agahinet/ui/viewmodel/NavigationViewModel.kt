@@ -11,7 +11,7 @@ class NavigationViewModel :ViewModel(){
     private val _goToAuthScreenEvent= MutableSharedFlow<Unit>()
     val goToAuthScreenEvent = _goToAuthScreenEvent.asSharedFlow()
 
-    fun goToAuthenicateScreen(){
+    fun goToAuthScreen(){
         viewModelScope.launch {
             _goToAuthScreenEvent.emit(Unit)
         }

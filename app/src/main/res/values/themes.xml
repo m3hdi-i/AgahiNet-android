@@ -64,7 +64,7 @@
         <item name="shapeAppearance">@style/cutCorners8</item>
     </style>
 
-    <style name="simpleToolbarTitleAppearance" parent="TextAppearance.AppCompat.Title">
+    <style name="simpleToolbarTitleAppearance" parent="TextAppearance.Material3.TitleLarge">
         <item name="fontFamily">@font/vazirmatn_regular</item>
     </style>
 

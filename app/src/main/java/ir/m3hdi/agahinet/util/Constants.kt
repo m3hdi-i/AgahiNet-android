@@ -1,6 +1,5 @@
 package ir.m3hdi.agahinet.util
 
-import android.app.Application
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.domain.model.Category
@@ -22,6 +21,8 @@ class Constants {
             Category(10,"اجتماعی", R.drawable.ic_category),
             Category(11,"سایر", R.drawable.ic_category),
         )
+
+        val CATEGORIES_FOR_NEW_AD = CATEGORIES.drop(1)
 
         val ENTIRE_IRAN_CITY= City(0,null,"کل ایران")
 

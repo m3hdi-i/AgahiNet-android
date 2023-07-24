@@ -1,7 +1,6 @@
 package ir.m3hdi.agahinet.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,22 +10,18 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.FragmentMyAdsBinding
-import ir.m3hdi.agahinet.domain.model.NetworkException
 import ir.m3hdi.agahinet.domain.model.onFailure
 import ir.m3hdi.agahinet.domain.model.onLoading
 import ir.m3hdi.agahinet.domain.model.onSuccess
-import ir.m3hdi.agahinet.ui.adapter.AdAdapter
 import ir.m3hdi.agahinet.ui.adapter.AdManageAdapter
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.MyAdsViewModel
-import ir.m3hdi.agahinet.util.AppUtils
 
 @AndroidEntryPoint
 class MyAdsFragment : Fragment() {
@@ -76,7 +71,8 @@ class MyAdsFragment : Fragment() {
                 .show()
         }
         adAdapter.onItemEditFunction= {
-            // TODO: Goto edit screen
+            val action = MyAdsFragmentDirections.actionMyadsToEditAd(it)
+            findNavController().navigate(action)
         }
         binding.topAppBar.setNavigationOnClickListener{
             findNavController().popBackStack()

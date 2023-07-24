@@ -16,8 +16,10 @@ interface CityDao {
     @Query("SELECT * FROM city WHERE parent_province_id=:provinceId")
     suspend fun getCitiesOfProvince(provinceId:Int): List<City>
 
-    /*
-    @Query("SELECT title FROM city WHERE city_id = (SELECT parent_province_id FROM city WHERE city_id=:cityId)")
-    suspend fun getParentProvinceTitleOfCity(cityId:Int): String
-    */
+    @Query("SELECT * FROM city WHERE city_id = (SELECT parent_province_id FROM city WHERE city_id=:cityId)")
+    suspend fun getParentProvinceOfCity(cityId:Int): City
+
+    @Query("SELECT * FROM city WHERE city_id=:cityId LIMIT 1")
+    suspend fun getCityById(cityId:Int): City
+
 }
