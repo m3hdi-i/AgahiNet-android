@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Ad(
     @Json(name = "ad_id")
-    val adId: Int,
+    val adId: String,
     @Json(name = "title")
     val title: String,
     @Json(name = "description")

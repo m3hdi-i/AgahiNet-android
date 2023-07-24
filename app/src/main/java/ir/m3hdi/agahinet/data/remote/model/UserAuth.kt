@@ -16,7 +16,7 @@ data class UserSignin (
 )
 
 data class User(
-    @Json(name = "uid") val uid: String,
+    @Json(name = "uid") val uid: Int,
     @Json(name = "fullname") val fullname: String,
     @Json(name = "email") val email: String,
     @Json(name = "phone_number") val phoneNumber: String

@@ -57,9 +57,7 @@ fun MyOutlinedTextField(modifier: Modifier = Modifier, multiLine:Boolean=false, 
 @Composable
 fun PriceField(modifier: Modifier = Modifier, value:String, onValueChange:(String)->Unit){
 
-    val supportingText = remember(value) {
-        AppUtils.priceToPersianCurrencyLetters(value)
-    }
+    val supportingText = AppUtils.priceToPersianCurrencyLetters(value)
 
     OutlinedTextField(
         value = value,

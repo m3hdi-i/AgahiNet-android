@@ -17,7 +17,7 @@ const val NETWORK_PAGE_SIZE = 10
 private const val INITIAL_PAGE = 1
 
 
-class AdsPagingSource(private val service:ANetService,private val searchFilters: SearchFilters,private val context: Context) : PagingSource< Int, Ad>()  {
+class AdsPagingSource(private val service:ANetService,private val searchFilters: SearchFilters,private val context: Context) : PagingSource<Int, Ad>()  {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Ad> {
         // Start refresh at position 1 if undefined.

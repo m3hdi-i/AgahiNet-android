@@ -28,6 +28,7 @@ import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel.UiEvent.BookmarkSetOK
 import ir.m3hdi.agahinet.ui.viewmodel.AdViewModel.UiEvent.FailedToSetBookmark
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.NavigationViewModel
+import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPrice
 import kotlinx.coroutines.launch
 
@@ -99,6 +100,12 @@ class AdFragment : Fragment() {
                 setBookmarked(true)
             }
             modalBottomSheet.show(childFragmentManager, ContactInfoModal.TAG)
+        }
+
+        AppUtils.currentUser.value?.let {
+            if (ad.creator == it.user.uid){
+                binding.layContact.isGone = true
+            }
         }
     }
 

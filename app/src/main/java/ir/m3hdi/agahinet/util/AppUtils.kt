@@ -51,7 +51,7 @@ class AppUtils {
 
                 auth.user.let {
                     getSecureSharedPref(context).edit().apply{
-                        putString("uid",it.uid)
+                        putInt("uid",it.uid)
                         putString("fullname",it.fullname)
                         putString("email",it.email)
                         putString("phone_number",it.phoneNumber)
@@ -69,7 +69,7 @@ class AppUtils {
             val savedJwt = ssp.getString("jwt",null)
             savedJwt?.let {jwt->
                 val user =  User(
-                    uid = ssp.getString("uid",null) ?: "",
+                    uid = ssp.getInt("uid",-1) ,
                     fullname =  ssp.getString("fullname",null) ?: "",
                     email = ssp.getString("email",null) ?: "",
                     phoneNumber =  ssp.getString("phone_number",null) ?: "",
@@ -218,7 +218,7 @@ class AppUtils {
 
         private const val currencySuffix=" تومان"
         fun priceToPersianCurrencyLetters(text:String?): String {
-            return if (text.isNullOrBlank()) ""  else text.toString().spellToPersian() + currencySuffix
+            return if (text.isNullOrBlank()) ""  else text.spellToPersian() + currencySuffix
         }
 
         fun formatPrice(price:String?):String{

@@ -33,7 +33,7 @@ interface ANetService {
     suspend fun searchAds(@Body filters: SearchFiltersRequest): List<Ad>
 
     @GET("api/ad/{ad_id}/images")
-    suspend fun getImagesOfAd(@Path("ad_id") adId: Int): List<String>
+    suspend fun getImagesOfAd(@Path("ad_id") adId: String): List<String>
 
     @GET("api/contact_info")
     suspend fun getContactInfoOfUser(@Query("uid") userId:Int): ContactInfo
@@ -42,19 +42,19 @@ interface ANetService {
     suspend fun getMyAds(): List<Ad>
 
     @GET("api/ad/remove")
-    suspend fun deleteAd(@Query("ad_id") adId: Int): Response<ResponseBody>
+    suspend fun deleteAd(@Query("ad_id") adId: String): Response<ResponseBody>
 
     @GET("api/bookmark")
     suspend fun getMyBookmarks(): List<Ad>
 
     @GET("api/bookmark/create")
-    suspend fun addBookmark(@Query("ad_id") adId: Int): Response<ResponseBody>
+    suspend fun addBookmark(@Query("ad_id") adId: String): Response<ResponseBody>
 
     @GET("api/bookmark/remove")
-    suspend fun deleteBookmark(@Query("ad_id") adId: Int): Response<ResponseBody>
+    suspend fun deleteBookmark(@Query("ad_id") adId: String): Response<ResponseBody>
 
     @GET("api/has_bookmark")
-    suspend fun hasBookmark(@Query("ad_id") adId: Int): HasBookmark
+    suspend fun hasBookmark(@Query("ad_id") adId: String): HasBookmark
 
     @Multipart
     @POST("api/uploadimage")

@@ -512,8 +512,6 @@ class ImagePickerState internal constructor() {
 }
 
 
-
-
 @Composable
 fun PublishedMessage(adTitle:String, onCreateNewAd:()->Unit){
     Box(Modifier.fillMaxSize()){

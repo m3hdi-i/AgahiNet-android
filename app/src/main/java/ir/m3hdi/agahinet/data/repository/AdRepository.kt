@@ -44,7 +44,7 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         ).flow
     }
 
-    suspend fun getImagesOfAd(adId:Int) : Resultx<List<String>> = withContext(Dispatchers.IO){
+    suspend fun getImagesOfAd(adId:String) : Resultx<List<String>> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.getImagesOfAd(adId)
         }
@@ -62,7 +62,7 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         }
     }
 
-    suspend fun deleteAd(adId: Int) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun deleteAd(adId: String) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.deleteAd(adId).isSuccessful
         }
@@ -74,19 +74,19 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         }
     }
 
-    suspend fun addBookmark(adId: Int) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun addBookmark(adId: String) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.addBookmark(adId).isSuccessful
         }
     }
 
-    suspend fun deleteBookmark(adId: Int) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun deleteBookmark(adId: String) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.deleteBookmark(adId).isSuccessful
         }
     }
 
-    suspend fun hasBookmark(adId: Int) : Resultx<HasBookmark> = withContext(Dispatchers.IO){
+    suspend fun hasBookmark(adId: String) : Resultx<HasBookmark> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.hasBookmark(adId)
         }

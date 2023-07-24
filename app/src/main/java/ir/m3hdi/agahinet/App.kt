@@ -4,15 +4,8 @@ import android.app.Application
 import androidx.core.content.res.ResourcesCompat
 import coil.Coil
 import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.disk.DiskCache
-import coil.imageLoader
-import coil.memory.MemoryCache
 import dagger.hilt.android.HiltAndroidApp
 import es.dmoral.toasty.Toasty
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
 class App : Application(){
