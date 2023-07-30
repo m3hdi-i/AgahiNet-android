@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Ad(
     @Json(name = "ad_id")
-    val adId: String,
+    val adId: Long,
     @Json(name = "title")
     val title: String,
     @Json(name = "description")
@@ -23,5 +23,5 @@ data class Ad(
     @Json(name = "city")
     val city: Int,
     @Json(name = "main_image_id")
-    val mainImageId: String?
+    val mainImageId: Long?
 ) : Parcelable

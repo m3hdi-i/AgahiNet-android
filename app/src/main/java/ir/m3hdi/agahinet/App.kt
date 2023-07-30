@@ -6,6 +6,7 @@ import coil.Coil
 import coil.ImageLoader
 import dagger.hilt.android.HiltAndroidApp
 import es.dmoral.toasty.Toasty
+import timber.log.Timber
 
 @HiltAndroidApp
 class App : Application(){
@@ -39,6 +40,7 @@ class App : Application(){
 
         Coil.setImageLoader(coilImageLoader)
 
+        Timber.plant(Timber.DebugTree())
 
     }
 

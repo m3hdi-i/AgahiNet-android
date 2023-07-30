@@ -1,14 +1,14 @@
 package ir.m3hdi.agahinet.util
 
-import ir.m3hdi.agahinet.data.remote.model.EditAdRequest
-import ir.m3hdi.agahinet.data.remote.model.NewAdRequest
-import ir.m3hdi.agahinet.data.remote.model.SearchFiltersRequest
+import ir.m3hdi.agahinet.data.remote.model.ad.EditAdRequest
+import ir.m3hdi.agahinet.data.remote.model.ad.NewAdRequest
+import ir.m3hdi.agahinet.data.remote.model.ad.SearchFiltersRequest
 import ir.m3hdi.agahinet.domain.model.SearchFilters
-import ir.m3hdi.agahinet.ui.viewmodel.UiState
+import ir.m3hdi.agahinet.ui.viewmodel.NewAdViewModel
 
 class Mappers {
     companion object {
-        fun SearchFilters.toSearchFiltersRequest(limit:Int, offset:Int):SearchFiltersRequest{
+        fun SearchFilters.toSearchFiltersRequest(limit:Int, offset:Int): SearchFiltersRequest {
             return SearchFiltersRequest(this.keyword,
                 this.category?.id,
                 this.cities?.map { it.cityId },
@@ -18,8 +18,8 @@ class Mappers {
                 offset)
         }
 
-        // NewAdFragment's UI state object to publish ad request
-        fun UiState.toNewAdRequest(): NewAdRequest{
+
+        fun NewAdViewModel.UiState.toNewAdRequest(): NewAdRequest {
 
             return NewAdRequest(
                 title = this.title,
@@ -31,7 +31,7 @@ class Mappers {
                 mainImageId = this.imagesList.firstOrNull { it.isMainImage }?.uploadId
                 )
         }
-        fun UiState.toEditAdRequest(): EditAdRequest{
+        fun NewAdViewModel.UiState.toEditAdRequest(): EditAdRequest {
 
             return EditAdRequest(
                 adId = this.adId!!,
@@ -40,7 +40,7 @@ class Mappers {
                 price = this.price,
                 category = this.category!!.id,
                 city = this.city!!.cityId,
-                imagesListOld = this.oldImagesOfEditedAd,
+                imagesListOld = this.oldImages,
                 imagesListNew = this.imagesList.map { it.uploadId!! }.toList(),
                 mainImageId = this.imagesList.firstOrNull { it.isMainImage }?.uploadId
             )

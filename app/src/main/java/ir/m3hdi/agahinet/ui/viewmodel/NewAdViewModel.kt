@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewAdViewModel @Inject constructor(private val cityRepository: CityRepository,private val adRepository: AdRepository, ) : ViewModel() {
+class NewAdViewModel @Inject constructor(private val cityRepository: CityRepository,private val adRepository: AdRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -92,7 +92,7 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
             adRepository.uploadImage(uri).onSuccess { result->
                 if (result!=null){
                     val newImageList = uiState.value.imagesList.map {
-                        if (it.uri == uri) { it.copy(uploadId = result.image_id) } else { it }
+                        if (it.uri == uri) { it.copy(uploadId = result.imageId) } else { it }
                     }
                     println(newImageList.toString())
                     _uiState.update { it.copy(imagesList = newImageList.toImmutableList())  }
@@ -178,7 +178,7 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
         viewModelScope.launch {
             _uiState.update {state->
                 state.copy(
-                    adId=ad.adId.toString(),
+                    adId=ad.adId,
                     title = ad.title,
                     description = ad.description,
                     price = ad.price,
@@ -193,10 +193,10 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
             adRepository.getImagesOfAd(ad.adId).onSuccess {images->
                 val imagesUri = images.map {
                     val url = AppUtils.getImageUrlByImageId(it)
-                    NewAdImage(uri=Uri.parse(url), isMainImage = it==ad.mainImageId.toString(), uploadId = it)
+                    NewAdImage(uri=Uri.parse(url), isMainImage = it==ad.mainImageId, uploadId = it)
                 }
                 _uiState.update {
-                    it.copy(imagesList = imagesUri.toImmutableList(), oldImagesOfEditedAd = images)
+                    it.copy(imagesList = imagesUri.toImmutableList(), oldImages = images)
                 }
             }
 
@@ -205,32 +205,33 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
     }
 
 
+    @Immutable
+     data class UiState(
+        val title: String="",
+        val description: String="",
+        val price: String?="",
+        val category: Category?=null,
+        val province: City?=null,
+        val city: City?=null,
+        val imagesList: ImmutableList<NewAdImage> = persistentListOf(),
+
+        val allProvinces:ImmutableList<City> = persistentListOf(),
+        val citiesToSelect:ImmutableList<City> = persistentListOf(),
+
+        val isEditMode: Boolean = false,
+        val formState: FormState = FormState.IDLE,
+
+        val oldImages:List<Long>? = null,
+        val adId:Long? = null
+    )
+
+
 }
 
 const val MAX_IMAGES_COUNT = 6
 
 @Immutable
-data class NewAdImage(val uri:Uri, val isMainImage:Boolean=false, val uploadId:String?=null)
-
-@Immutable
-data class UiState(
-    val title: String="",
-    val description: String="",
-    val price: String?="",
-    val category: Category?=null,
-    val province: City?=null,
-    val city: City?=null,
-    val imagesList: ImmutableList<NewAdImage> = persistentListOf(),
-
-    val allProvinces:ImmutableList<City> = persistentListOf(),
-    val citiesToSelect:ImmutableList<City> = persistentListOf(),
-
-    val isEditMode: Boolean = false,
-    val formState: FormState = FormState.IDLE,
-
-    val oldImagesOfEditedAd:List<String>? = null,
-    val adId:String? = null
-)
+data class NewAdImage(val uri:Uri, val isMainImage:Boolean=false, val uploadId:Long?=null)
 
 enum class FormState {
     IDLE,

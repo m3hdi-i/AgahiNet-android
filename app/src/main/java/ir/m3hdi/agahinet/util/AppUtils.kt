@@ -32,6 +32,10 @@ import ir.m3hdi.agahinet.ui.fragment.NeedAuthFragment
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.Request
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import kotlin.coroutines.cancellation.CancellationException
 
 
@@ -40,6 +44,7 @@ class AppUtils {
     companion object {
 
         const val BASE_URL="http://10.0.3.2:8000/"
+        const val WS_URL="ws://10.0.3.2:8000/ws"
 
         val currentUser= MutableStateFlow<AuthedUser?>(null)
 
@@ -228,7 +233,7 @@ class AppUtils {
             return "توافقی"
         }
 
-        fun getImageUrlByImageId(imageId:String) = "${BASE_URL}api/image?image_id=${imageId}"
+        fun getImageUrlByImageId(imageId:Long) = "${BASE_URL}api/image?image_id=${imageId}"
 
 
         fun <T:Any> Observable<T>.ioOnUi():Observable<T>{
@@ -236,6 +241,14 @@ class AppUtils {
         }
 
         fun dpToPx(context: Context, dp: Int) = (dp * context.resources.displayMetrics.density).toInt()
+
+
+        /*private fun getCurrentDateTime(): String {
+            val zoneId = ZoneId.systemDefault()
+            val currentDateTime = LocalDateTime.now(zoneId)
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+            return currentDateTime.format(formatter)
+        }*/
 
 
         // Utility function for observing one-shot events in jetpack compose screens

@@ -7,13 +7,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.m3hdi.agahinet.data.remote.ANetService
+import ir.m3hdi.agahinet.data.remote.model.chat.wsResponseAdapterFactory
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.BASE_URL
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -43,11 +46,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    @Named("main")
+    fun provideMainMoshi(): Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
+    @Named("ws")
+    fun provideWsMoshi(): Moshi = Moshi.Builder().add(wsResponseAdapterFactory).addLast(KotlinJsonAdapterFactory()).build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient, @Named("main") moshi: Moshi): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -57,8 +66,6 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideANetService(retrofit: Retrofit): ANetService = retrofit.create(ANetService::class.java)
-
-
 
 }
 

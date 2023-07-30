@@ -1,10 +1,10 @@
-package ir.m3hdi.agahinet.data.remote.model
+package ir.m3hdi.agahinet.data.remote.model.ad
 
 import com.squareup.moshi.Json
 
 data class EditAdRequest(
     @Json(name = "ad_id")
-    val adId: String,
+    val adId: Long,
     @Json(name = "title")
     val title: String,
     @Json(name = "description")
@@ -16,10 +16,10 @@ data class EditAdRequest(
     @Json(name = "city")
     val city: Int,
     @Json(name = "images_list_old")
-    val imagesListOld: List<String>? = null,
+    val imagesListOld: List<Long>? = null,
     @Json(name = "images_list_new")
-    val imagesListNew: List<String>? = null,
+    val imagesListNew: List<Long>? = null,
     @Json(name = "main_image_id")
-    val mainImageId: String? = null
+    val mainImageId: Long? = null
 
 )

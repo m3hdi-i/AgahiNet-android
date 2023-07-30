@@ -6,7 +6,6 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.ceil
 
 class PersianTimeAgo {
 
@@ -22,7 +21,7 @@ class PersianTimeAgo {
         }
 
         /**
-         *  Converts DateTime string in yyyy-MM-dd HH:mm:ss.SSSSSS format to X Time ago text
+         *  Converts DateTime string in yyyy-MM-dd HH:mm:ss.SSSSSS format to X Time ago text in persian
          */
         fun dateTimeStringToTimeAgo(input: String): String {
             return try {

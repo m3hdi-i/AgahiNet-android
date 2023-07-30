@@ -56,7 +56,6 @@ import ir.m3hdi.agahinet.ui.viewmodel.NewAdImage
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdViewModel
 import ir.m3hdi.agahinet.ui.viewmodel.FormState
 import ir.m3hdi.agahinet.ui.viewmodel.UiEvent
-import ir.m3hdi.agahinet.ui.viewmodel.UiState
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.AppUtils.Companion.observeWithLifecycle
 import kotlinx.coroutines.launch
@@ -137,7 +136,7 @@ open class NewAdFragment : Fragment() {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun NewAdForm(state:UiState){
+    fun NewAdForm(state: NewAdViewModel.UiState){
 
         RtlLayout {
             CompositionLocalProvider(LocalOverscrollConfiguration provides null) {

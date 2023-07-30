@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.data.remote.model
+package ir.m3hdi.agahinet.data.remote.model.ad
 
 import com.squareup.moshi.Json
 
@@ -14,7 +14,7 @@ data class NewAdRequest(
     @Json(name = "city")
     val city: Int,
     @Json(name = "images_list")
-    val imagesList: List<String>? = null,
+    val imagesList: List<Long>? = null,
     @Json(name = "main_image_id")
-    val mainImageId: String? = null
+    val mainImageId: Long? = null
 )

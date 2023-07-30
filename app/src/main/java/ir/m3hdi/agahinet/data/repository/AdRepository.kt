@@ -9,10 +9,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import ir.m3hdi.agahinet.data.paging.AdsPagingSource
 import ir.m3hdi.agahinet.data.paging.NETWORK_PAGE_SIZE
 import ir.m3hdi.agahinet.data.remote.ANetService
-import ir.m3hdi.agahinet.data.remote.model.EditAdRequest
-import ir.m3hdi.agahinet.data.remote.model.HasBookmark
-import ir.m3hdi.agahinet.data.remote.model.ImageUploadResult
-import ir.m3hdi.agahinet.data.remote.model.NewAdRequest
+import ir.m3hdi.agahinet.data.remote.model.ad.EditAdRequest
+import ir.m3hdi.agahinet.data.remote.model.ad.HasBookmark
+import ir.m3hdi.agahinet.data.remote.model.ad.ImageUploadResult
+import ir.m3hdi.agahinet.data.remote.model.ad.NewAdRequest
 import ir.m3hdi.agahinet.domain.model.Ad
 import ir.m3hdi.agahinet.domain.model.ContactInfo
 import ir.m3hdi.agahinet.domain.model.Resultx
@@ -44,7 +44,7 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         ).flow
     }
 
-    suspend fun getImagesOfAd(adId:String) : Resultx<List<String>> = withContext(Dispatchers.IO){
+    suspend fun getImagesOfAd(adId:Long) : Resultx<List<Long>> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.getImagesOfAd(adId)
         }
@@ -62,7 +62,7 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         }
     }
 
-    suspend fun deleteAd(adId: String) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun deleteAd(adId: Long) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.deleteAd(adId).isSuccessful
         }
@@ -74,19 +74,19 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         }
     }
 
-    suspend fun addBookmark(adId: String) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun addBookmark(adId: Long) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.addBookmark(adId).isSuccessful
         }
     }
 
-    suspend fun deleteBookmark(adId: String) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun deleteBookmark(adId: Long) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.deleteBookmark(adId).isSuccessful
         }
     }
 
-    suspend fun hasBookmark(adId: String) : Resultx<HasBookmark> = withContext(Dispatchers.IO){
+    suspend fun hasBookmark(adId: Long) : Resultx<HasBookmark> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.hasBookmark(adId)
         }
@@ -126,13 +126,13 @@ class AdRepository @Inject constructor(private val api: ANetService, @Applicatio
         }
     }
 
-    suspend fun publishAd(ad:NewAdRequest) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun publishAd(ad: NewAdRequest) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.publishAd(ad).isSuccessful
         }
     }
 
-    suspend fun editAd(ad:EditAdRequest) : Resultx<Boolean> = withContext(Dispatchers.IO){
+    suspend fun editAd(ad: EditAdRequest) : Resultx<Boolean> = withContext(Dispatchers.IO){
         return@withContext suspendRunCatching {
             api.editAd(ad).isSuccessful
         }

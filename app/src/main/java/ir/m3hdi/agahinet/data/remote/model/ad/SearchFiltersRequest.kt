@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.data.remote.model
+package ir.m3hdi.agahinet.data.remote.model.ad
 
 import com.squareup.moshi.Json
 
