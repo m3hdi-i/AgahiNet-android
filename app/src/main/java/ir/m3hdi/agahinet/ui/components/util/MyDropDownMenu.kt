@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.ui.components
+package ir.m3hdi.agahinet.ui.components.util
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.material3.DropdownMenuItem
@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
 import ir.m3hdi.agahinet.data.local.entity.City
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Category
 
 sealed class DropDownData(val value:Any) {
     data class CategoryItem(val catItem: Category) : DropDownData(catItem)

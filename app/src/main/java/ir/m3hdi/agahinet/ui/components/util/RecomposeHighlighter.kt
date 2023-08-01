@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.ui.components
+package ir.m3hdi.agahinet.ui.components.util
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable

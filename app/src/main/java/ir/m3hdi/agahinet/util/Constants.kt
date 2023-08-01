@@ -2,7 +2,7 @@ package ir.m3hdi.agahinet.util
 
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Category
 
 class Constants {
     companion object{

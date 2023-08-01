@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ir.m3hdi.agahinet.data.repository.AD_MAX_IMAGES_NUMBER
 import ir.m3hdi.agahinet.databinding.RvNewAdImageBinding
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Category
 
 class NewAdImagesAdapter : RecyclerView.Adapter<NewAdImagesAdapter.ViewHolder>() {
 

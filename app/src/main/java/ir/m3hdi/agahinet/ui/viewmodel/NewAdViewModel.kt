@@ -8,8 +8,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.CityRepository
-import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Category
 import ir.m3hdi.agahinet.domain.model.onFailure
 import ir.m3hdi.agahinet.domain.model.onSuccess
 import ir.m3hdi.agahinet.util.AppUtils
@@ -42,7 +42,7 @@ class NewAdViewModel @Inject constructor(private val cityRepository: CityReposit
             _uiState.update { it.copy(allProvinces=allProvinces.toImmutableList()) }
         }
     }
-    fun setCategory(category:Category){
+    fun setCategory(category: Category){
         _uiState.update { it.copy(category = category) }
     }
 

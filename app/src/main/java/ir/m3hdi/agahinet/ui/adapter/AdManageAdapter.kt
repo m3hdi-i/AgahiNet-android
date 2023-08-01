@@ -3,12 +3,11 @@ package ir.m3hdi.agahinet.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.RvAdManageBinding
-import ir.m3hdi.agahinet.domain.model.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Ad
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
 import ir.m3hdi.agahinet.util.AppUtils
 

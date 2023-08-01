@@ -4,20 +4,19 @@ import android.content.Context
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ir.m3hdi.agahinet.data.remote.ANetService
-import ir.m3hdi.agahinet.domain.model.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Ad
 import ir.m3hdi.agahinet.domain.model.NetworkException
-import ir.m3hdi.agahinet.domain.model.SearchFilters
+import ir.m3hdi.agahinet.domain.model.ad.SearchFilters
 import ir.m3hdi.agahinet.util.AppUtils
 import ir.m3hdi.agahinet.util.Mappers.Companion.toSearchFiltersRequest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 const val NETWORK_PAGE_SIZE = 10
 private const val INITIAL_PAGE = 1
 
 
-class AdsPagingSource(private val service:ANetService,private val searchFilters: SearchFilters,private val context: Context) : PagingSource<Int, Ad>()  {
+class AdsPagingSource(private val service:ANetService, private val searchFilters: SearchFilters, private val context: Context) : PagingSource<Int, Ad>()  {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Ad> {
         // Start refresh at position 1 if undefined.

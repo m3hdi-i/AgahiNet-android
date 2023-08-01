@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -20,11 +23,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import ir.m3hdi.agahinet.databinding.FragmentChatBinding
-import ir.m3hdi.agahinet.ui.components.RtlLayout
+import ir.m3hdi.agahinet.ui.components.util.RtlLayout
+import ir.m3hdi.agahinet.ui.components.util.Toolbar
 import ir.m3hdi.agahinet.ui.theme.AppTheme
 import ir.m3hdi.agahinet.ui.viewmodel.ChatViewModel
 import ir.m3hdi.agahinet.util.AppUtils
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.lazy.items
+import ir.m3hdi.agahinet.domain.model.chat.Chat
+import ir.m3hdi.agahinet.ui.components.ChatTitle
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
@@ -40,7 +47,10 @@ class ChatFragment : Fragment() {
         binding.layoutContent.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                ChatScreen()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                val connectionState by viewModel.connectionStatus.collectAsStateWithLifecycle()
+
+                ChatScreen(chats = uiState.chats)
             }
         }
         return view
@@ -53,44 +63,44 @@ class ChatFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 AppUtils.currentUser.collect {
-                    AppUtils.handleNeedAuthFragment(true, childFragmentManager, binding.layoutParent, binding.layoutNeedAuth, binding.layoutContent)
+                    AppUtils.handleNeedAuthFragment(it!=null, childFragmentManager, binding.layoutParent, binding.layoutNeedAuth, binding.layoutContent)
                 }
             }
         }
-
-
     }
 
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun ChatScreen(){
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        val connectionState by viewModel.connectionStatus.collectAsStateWithLifecycle()
+    fun ChatScreen(chats:List<Chat>){
 
         AppTheme{
             RtlLayout {
+                CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
 
-                Column(Modifier.fillMaxSize()){
+                    Column(modifier = Modifier.fillMaxSize()){
 
-                    Button(onClick = { viewModel.getChatList() }) {
-                        Text("getChatList")
-                    }
-                    Button(onClick = { viewModel.getRoomMessages(66) }) {
-                        Text("getRoomMessages")
-                    }
-                    Button(onClick = { viewModel.sendMessage("hi",12) }) {
-                        Text("sendMessage")
-                    }
-                    Button(onClick = { viewModel.getUserFullName(12) }) {
-                        Text("getUserFullName")
-                    }
+                        Toolbar("چت ها")
+                        LazyColumn(modifier = Modifier.fillMaxSize()){
 
+                            items(
+                                items = chats,
+                                key = { it.contact.id }
+                            ) { chat ->
+                                Row(Modifier.animateItemPlacement()) {
+                                    ChatTitle(contact = chat.contact, lastMessage = chat.lastMessage, onClick = {})
+                                }
+
+
+
+                            }
+                        }
+                    }
                 }
-
             }
         }
-
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

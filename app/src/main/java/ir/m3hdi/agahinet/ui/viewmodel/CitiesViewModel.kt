@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.data.repository.CityRepository
-import ir.m3hdi.agahinet.domain.model.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Ad
 import ir.m3hdi.agahinet.util.PersianTimeAgo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

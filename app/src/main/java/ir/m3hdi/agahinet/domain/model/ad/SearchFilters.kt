@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.domain.model
+package ir.m3hdi.agahinet.domain.model.ad
 
 import ir.m3hdi.agahinet.data.local.entity.City
 

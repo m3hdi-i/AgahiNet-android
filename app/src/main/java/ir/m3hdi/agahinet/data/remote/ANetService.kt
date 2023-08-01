@@ -5,8 +5,8 @@ import ir.m3hdi.agahinet.data.remote.model.ad.HasBookmark
 import ir.m3hdi.agahinet.data.remote.model.ad.ImageUploadResult
 import ir.m3hdi.agahinet.data.remote.model.ad.NewAdRequest
 import ir.m3hdi.agahinet.data.remote.model.ad.SearchFiltersRequest
-import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.domain.model.ContactInfo
+import ir.m3hdi.agahinet.domain.model.ad.Ad
+import ir.m3hdi.agahinet.domain.model.ad.ContactInfo
 import ir.m3hdi.agahinet.data.remote.model.UserAuthResponse
 import ir.m3hdi.agahinet.data.remote.model.UserSignin
 import ir.m3hdi.agahinet.data.remote.model.UserSignup

@@ -13,10 +13,10 @@ import ir.m3hdi.agahinet.data.remote.model.ad.EditAdRequest
 import ir.m3hdi.agahinet.data.remote.model.ad.HasBookmark
 import ir.m3hdi.agahinet.data.remote.model.ad.ImageUploadResult
 import ir.m3hdi.agahinet.data.remote.model.ad.NewAdRequest
-import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.domain.model.ContactInfo
+import ir.m3hdi.agahinet.domain.model.ad.Ad
+import ir.m3hdi.agahinet.domain.model.ad.ContactInfo
 import ir.m3hdi.agahinet.domain.model.Resultx
-import ir.m3hdi.agahinet.domain.model.SearchFilters
+import ir.m3hdi.agahinet.domain.model.ad.SearchFilters
 import ir.m3hdi.agahinet.util.AppUtils.Companion.suspendRunCatching
 import ir.m3hdi.agahinet.util.ContentUriRequestBody
 import kotlinx.coroutines.Dispatchers

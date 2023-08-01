@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.repository.AdRepository
-import ir.m3hdi.agahinet.domain.model.ContactInfo
+import ir.m3hdi.agahinet.domain.model.ad.ContactInfo
 import ir.m3hdi.agahinet.domain.model.onSuccess
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

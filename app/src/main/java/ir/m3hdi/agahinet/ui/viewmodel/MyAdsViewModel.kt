@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.m3hdi.agahinet.data.repository.AdRepository
-import ir.m3hdi.agahinet.domain.model.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Ad
 import ir.m3hdi.agahinet.domain.model.Resultx
 import ir.m3hdi.agahinet.domain.model.onSuccess
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +28,7 @@ class MyAdsViewModel @Inject constructor(private val adRepository: AdRepository)
             _myAds.value = adRepository.getMyAds()
         }
     }
-    fun deleteAd(ad:Ad){
+    fun deleteAd(ad: Ad){
         viewModelScope.launch {
             adRepository.deleteAd(ad.adId).onSuccess {
                 getMyAds()

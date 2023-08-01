@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ir.m3hdi.agahinet.domain.model.SearchFilters
+import ir.m3hdi.agahinet.domain.model.ad.SearchFilters
 import ir.m3hdi.agahinet.databinding.RvFilterBinding
-import ir.m3hdi.agahinet.domain.model.Category
-import ir.m3hdi.agahinet.domain.model.FilterTag
+import ir.m3hdi.agahinet.domain.model.ad.FilterTag
 
 class FilterAdapter : ListAdapter<FilterTag, FilterAdapter.ViewHolder>(DiffUtilCallBack) {
 

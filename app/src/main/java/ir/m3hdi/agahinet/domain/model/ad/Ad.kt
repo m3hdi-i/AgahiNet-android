@@ -1,4 +1,4 @@
-package ir.m3hdi.agahinet.domain.model
+package ir.m3hdi.agahinet.domain.model.ad
 
 import android.os.Parcelable
 import com.squareup.moshi.Json

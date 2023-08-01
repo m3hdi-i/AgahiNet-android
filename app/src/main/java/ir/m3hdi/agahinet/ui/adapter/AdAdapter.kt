@@ -9,14 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.databinding.RvAdBinding
-import ir.m3hdi.agahinet.domain.model.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Ad
 import ir.m3hdi.agahinet.ui.viewmodel.CitiesViewModel
 import ir.m3hdi.agahinet.util.AppUtils.Companion.formatPrice
 import ir.m3hdi.agahinet.util.AppUtils.Companion.getImageUrlByImageId
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.properties.Delegates
 
 
 class AdAdapter(private val citiesViewModel: CitiesViewModel) : PagingDataAdapter<Ad, AdAdapter.ViewHolder>(DiffUtilCallBack) {

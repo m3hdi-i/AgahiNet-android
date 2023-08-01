@@ -38,18 +38,18 @@ import es.dmoral.toasty.Toasty
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.databinding.FragmentNewAdBinding
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Category
 import ir.m3hdi.agahinet.ui.components.CategorySection
 import ir.m3hdi.agahinet.ui.components.HeaderSection
 import ir.m3hdi.agahinet.ui.components.ImagesSection
 import ir.m3hdi.agahinet.ui.components.LocationSection
-import ir.m3hdi.agahinet.ui.components.MyOutlinedTextField
+import ir.m3hdi.agahinet.ui.components.util.MyOutlinedTextField
 import ir.m3hdi.agahinet.ui.components.PublishButton
 import ir.m3hdi.agahinet.ui.components.PriceSection
 import ir.m3hdi.agahinet.ui.components.PublishedMessage
-import ir.m3hdi.agahinet.ui.components.RtlLayout
-import ir.m3hdi.agahinet.ui.components.SpacerV
-import ir.m3hdi.agahinet.ui.components.recomposeHighlighter
+import ir.m3hdi.agahinet.ui.components.util.RtlLayout
+import ir.m3hdi.agahinet.ui.components.util.SpacerV
+import ir.m3hdi.agahinet.ui.components.util.recomposeHighlighter
 import ir.m3hdi.agahinet.ui.components.rememberImagePickerState
 import ir.m3hdi.agahinet.ui.theme.AppTheme
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdImage
@@ -88,7 +88,7 @@ open class NewAdFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 AppUtils.currentUser.collect {
-                    AppUtils.handleNeedAuthFragment(true, childFragmentManager, binding.layoutParent, binding.layoutNeedAuth, binding.layoutContent)
+                    AppUtils.handleNeedAuthFragment(it!=null, childFragmentManager, binding.layoutParent, binding.layoutNeedAuth, binding.layoutContent)
                 }
             }
         }

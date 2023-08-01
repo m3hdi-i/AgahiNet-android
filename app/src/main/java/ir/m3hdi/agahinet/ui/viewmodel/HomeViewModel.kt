@@ -11,10 +11,10 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import ir.m3hdi.agahinet.data.local.entity.City
 import ir.m3hdi.agahinet.data.repository.AdRepository
 import ir.m3hdi.agahinet.data.repository.CityRepository
-import ir.m3hdi.agahinet.domain.model.Ad
-import ir.m3hdi.agahinet.domain.model.Category
-import ir.m3hdi.agahinet.domain.model.FilterTag
-import ir.m3hdi.agahinet.domain.model.SearchFilters
+import ir.m3hdi.agahinet.domain.model.ad.Ad
+import ir.m3hdi.agahinet.domain.model.ad.Category
+import ir.m3hdi.agahinet.domain.model.ad.FilterTag
+import ir.m3hdi.agahinet.domain.model.ad.SearchFilters
 import ir.m3hdi.agahinet.util.Constants.Companion.ENTIRE_IRAN_CITY
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 
 private const val DEBOUNCE_TIMEOUT_MS=500L
-private val initialSearchFilters=SearchFilters()
+private val initialSearchFilters= SearchFilters()
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val adRepository: AdRepository,private val cityRepository: CityRepository,application: Application) : AndroidViewModel(application)  {

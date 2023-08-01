@@ -1,13 +1,7 @@
 package ir.m3hdi.agahinet.data.remote.model.chat
 
-import com.squareup.moshi.FromJson
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.ToJson
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import org.json.JSONObject
 
 sealed class WsResponse(@Json(name="response_type") val responseType: ResponseType, open val data: Any?){
 
@@ -19,10 +13,10 @@ sealed class WsResponse(@Json(name="response_type") val responseType: ResponseTy
     data class Error(override val data: ErrorData):WsResponse(ResponseType.ERROR,data)
 }
 
-data class ChatListData(@Json(name = "list") val chats:List<Chat>?)
-data class RoomMessagesData(@Json(name = "messages") val messages:List<Message>?)
+data class ChatListData(@Json(name = "list") val chats:List<ChatWs>?)
+data class RoomMessagesData(@Json(name = "messages") val messages:List<MessageWs>?)
 data class SendMessageData(@Json(name = "pending_id") val pendingId: Long)
-data class IncomingMessageData(@Json(name = "message") val message: Message)
+data class IncomingMessageData(@Json(name = "message") val message: MessageWs)
 data class UserFullNameData(@Json(name = "fullname") val fullName:String?)
 data class ErrorData(@Json(name = "status") val status: String)
 
@@ -31,7 +25,7 @@ enum class ResponseType {
 }
 
 
-data class Chat(
+data class ChatWs(
     @Json(name = "mid") val messageId: Long,
     @Json(name = "message_body") val messageBody: String,
     @Json(name = "creator_id") val creatorId: Int,
@@ -40,7 +34,7 @@ data class Chat(
     @Json(name = "is_read") val isRead: Boolean,
     @Json(name = "contact_name") val contactName: String
 )
-data class Message(
+data class MessageWs(
     @Json(name = "mid") val messageId: Long,
     @Json(name = "message_body") val messageBody: String,
     @Json(name = "creator_id") val creatorId: Int,
@@ -57,36 +51,3 @@ val wsResponseAdapterFactory: PolymorphicJsonAdapterFactory<WsResponse> = Polymo
     .withSubtype(WsResponse.IncomingMessage::class.java, ResponseType.INCOMING_MESSAGE.name)
     .withSubtype(WsResponse.UserFullName::class.java, ResponseType.USER_FULLNAME.name)
     .withSubtype(WsResponse.Error::class.java, ResponseType.ERROR.name)
-
-/*
-// Chat list
-data class GetChatListResponse(
-    @Json(name = "status")
-    val status: String,
-    @Json(name = "list")
-    val chats:List<Chat>?
-)
-
-
-// Room messages
-data class GetRoomMessagesResponse(
-    @Json(name = "status")
-    val status: String,
-    @Json(name = "messages")
-    val messages:List<Message>
-)
-
-
-// Send message
-data class SendMessageResponse(
-    @Json(name = "status")
-    val status: String
-)
-
-// Get user's full name
-data class GetUserFullNameResponse(
-    @Json(name = "status")
-    val status: String,
-    @Json(name = "fullname")
-    val fullName:String?
-)*/

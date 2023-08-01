@@ -46,8 +46,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,14 +74,20 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import ir.m3hdi.agahinet.R
 import ir.m3hdi.agahinet.data.local.entity.City
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Category
+import ir.m3hdi.agahinet.ui.components.util.BottomSheetItem
+import ir.m3hdi.agahinet.ui.components.util.DropDownData
+import ir.m3hdi.agahinet.ui.components.util.MyDropDownMenu
+import ir.m3hdi.agahinet.ui.components.util.PriceField
+import ir.m3hdi.agahinet.ui.components.util.RtlLayout
+import ir.m3hdi.agahinet.ui.components.util.SpacerV
+import ir.m3hdi.agahinet.ui.components.util.Toolbar
 import ir.m3hdi.agahinet.ui.theme.AppTheme
 import ir.m3hdi.agahinet.ui.viewmodel.MAX_IMAGES_COUNT
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdImage
 import ir.m3hdi.agahinet.util.ComposeFileProvider
 import ir.m3hdi.agahinet.util.Constants
 import kotlinx.collections.immutable.ImmutableList
-import ir.m3hdi.agahinet.ui.theme.seed
 
 @Composable
 fun HeaderSection(cancelEdit: () -> Unit, isEditMode: Boolean){
@@ -104,16 +108,7 @@ fun HeaderSection(cancelEdit: () -> Unit, isEditMode: Boolean){
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Toolbar(title: String,navigationIcon: @Composable () -> Unit = {}){
-    TopAppBar(modifier = Modifier.fillMaxWidth(),
-        title = {  Text(title, style = MaterialTheme.typography.titleLarge) },
-        navigationIcon=navigationIcon,
-        colors =topAppBarColors(containerColor = seed,
-            navigationIconContentColor = Color.White,
-            titleContentColor = Color.White ))
-}
+
 
 @Preview
 @Composable

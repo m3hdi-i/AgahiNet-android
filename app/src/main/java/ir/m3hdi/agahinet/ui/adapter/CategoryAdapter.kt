@@ -2,11 +2,9 @@ package ir.m3hdi.agahinet.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
-import ir.m3hdi.agahinet.R
-import ir.m3hdi.agahinet.domain.model.Category
+import ir.m3hdi.agahinet.domain.model.ad.Category
 import ir.m3hdi.agahinet.databinding.RvCategoryBinding
 
 class CategoryAdapter(private val items:List<Category>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {

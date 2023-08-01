@@ -3,7 +3,7 @@ package ir.m3hdi.agahinet.util
 import ir.m3hdi.agahinet.data.remote.model.ad.EditAdRequest
 import ir.m3hdi.agahinet.data.remote.model.ad.NewAdRequest
 import ir.m3hdi.agahinet.data.remote.model.ad.SearchFiltersRequest
-import ir.m3hdi.agahinet.domain.model.SearchFilters
+import ir.m3hdi.agahinet.domain.model.ad.SearchFilters
 import ir.m3hdi.agahinet.ui.viewmodel.NewAdViewModel
 
 class Mappers {

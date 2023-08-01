@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_ad" >
 
         <argument android:name="ad"
-            app:argType="ir.m3hdi.agahinet.domain.model.Ad"/>
+            app:argType="ir.m3hdi.agahinet.domain.model.ad.Ad"/>
     </fragment>
 
 </navigation>
